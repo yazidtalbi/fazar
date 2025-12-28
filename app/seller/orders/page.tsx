@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { UpdateOrderStatusButton } from "@/components/seller/update-order-status-button";
+import { Database } from "@/lib/database.types";
+
+type Order = Database["public"]["Tables"]["orders"]["Row"];
 
 export default async function SellerOrdersPage() {
   const supabase = await createClient();
@@ -45,7 +48,7 @@ export default async function SellerOrdersPage() {
 
         {ordersList.length > 0 ? (
           <div className="space-y-4">
-            {ordersList.map((order) => (
+            {ordersList.map((order: Order) => (
               <OrderCard key={order.id} order={order} storeId={store.id} />
             ))}
           </div>
@@ -61,7 +64,7 @@ export default async function SellerOrdersPage() {
   );
 }
 
-async function OrderCard({ order, storeId }: { order: any; storeId: string }) {
+async function OrderCard({ order, storeId }: { order: Order; storeId: string }) {
   const supabase = await createClient();
 
   // Get order items for this seller's products using RPC function
