@@ -3,9 +3,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 
-const inter = Inter({
+const interDisplay = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  display: "swap",
+  variable: "--font-inter-display",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${interDisplay.variable} font-sans antialiased`} style={{ fontFamily: 'var(--font-inter-display), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         <NuqsAdapterProvider>{children}</NuqsAdapterProvider>
       </body>
     </html>

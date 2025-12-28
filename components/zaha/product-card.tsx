@@ -78,9 +78,6 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-sm mb-1 line-clamp-2">{product.title}</h3>
-          {product.stores && (
-            <p className="text-xs text-muted-foreground mb-2">Artisan: {product.stores.name}</p>
-          )}
           <div className="flex items-center justify-between">
             <span className="font-bold text-primary">{priceFormatted}</span>
           </div>

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { AccountProvider } from "@/components/account-provider";
 import { loadAccountContext } from "@/lib/server/account/load-account";
-import { Header } from "@/components/zaha/header";
+import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { BottomNav } from "@/components/zaha/bottom-nav";
 
 export default async function AppLayout({
@@ -23,7 +23,9 @@ export default async function AppLayout({
 
   return (
     <AccountProvider account={account}>
-      <Header />
+      <HeaderDesktop />
+      {/* Spacer for desktop header (56px top bar + 40px nav bar + 1px border = 97px) */}
+      <div className="hidden md:block h-[97px]"></div>
       <main className="pb-16 md:pb-0">
         {children}
       </main>

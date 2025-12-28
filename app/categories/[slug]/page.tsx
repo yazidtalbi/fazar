@@ -2,7 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { HeaderDesktop } from "@/components/zaha/header-desktop";
+import { Footer } from "@/components/zaha/footer";
+import { ArrowLeft, ShoppingCart, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
 
 interface CategoryPageProps {
@@ -49,9 +51,26 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const { data: products } = await query.limit(50);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-background sticky top-14 md:top-16 z-30">
+    <div className="min-h-screen bg-white">
+      {/* Desktop Header */}
+      <HeaderDesktop />
+      
+      {/* Spacer for desktop header */}
+      <div className="hidden md:block h-[97px]"></div>
+
+      {/* Breadcrumbs - Desktop */}
+      <div className="hidden md:block border-b bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link href="/app" className="hover:text-foreground">Home</Link>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground">{category.name}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Header */}
+      <div className="md:hidden border-b bg-background sticky top-0 z-30">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-4 h-14">
             <Link href="/app">
@@ -74,8 +93,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         </div>
       </div>
 
-      {/* Filter/Sort Bar */}
-      <div className="border-b bg-background sticky top-28 md:top-30 z-20">
+      {/* Filter/Sort Bar - Mobile */}
+      <div className="md:hidden border-b bg-background sticky top-14 z-20">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-4 h-12 overflow-x-auto">
             <Button variant="ghost" size="sm" className="whitespace-nowrap">
@@ -95,10 +114,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       </div>
 
       {/* Products Grid */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
         {products && products.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold hidden md:block">{category.name}</h2>
+              <span className="text-sm text-muted-foreground">{products.length} items</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {products.map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -112,6 +135,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             <p className="text-muted-foreground">No products found in this category</p>
           </div>
         )}
+      </div>
+
+      {/* Desktop Footer */}
+      <div className="hidden md:block">
+        <Footer />
       </div>
     </div>
   );

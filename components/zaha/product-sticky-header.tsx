@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Share2 } from "lucide-react";
+import { Share2, ChevronLeft } from "lucide-react";
 
 interface ProductStickyHeaderProps {
   title: string;
@@ -13,6 +14,7 @@ interface ProductStickyHeaderProps {
 
 export function ProductStickyHeader({ title, imageUrl, productId }: ProductStickyHeaderProps): React.ReactElement {
   const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     function handleScroll() {
@@ -43,22 +45,29 @@ export function ProductStickyHeader({ title, imageUrl, productId }: ProductStick
     }
   }
 
+  function handleBack() {
+    router.back();
+  }
+
   return (
-    <div className="fixed top-0 left-0 right-0 bg-background border-b z-50 h-16 flex items-center px-4">
-      <div className="container mx-auto flex items-center gap-4">
+    <div className="md:hidden fixed top-0 left-0 right-0 bg-background border-b z-50 h-16 flex items-center px-4">
+      <div className="container mx-auto flex items-center gap-2">
+        <Button variant="ghost" size="icon" onClick={handleBack} className="flex-shrink-0">
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
         {imageUrl && (
-          <div className="relative w-12 h-12 bg-muted flex-shrink-0">
+          <div className="relative w-10 h-10 bg-muted flex-shrink-0">
             <Image
               src={imageUrl}
               alt={title}
               fill
               className="object-cover"
-              sizes="48px"
+              sizes="40px"
             />
           </div>
         )}
         <h1 className="text-base font-bold truncate flex-1">{title}</h1>
-        <Button variant="ghost" size="icon" onClick={handleShare}>
+        <Button variant="ghost" size="icon" onClick={handleShare} className="flex-shrink-0">
           <Share2 className="h-5 w-5" />
         </Button>
       </div>
