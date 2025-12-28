@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
+import { Toaster } from "@/components/ui/toaster";
 
 const interDisplay = Inter({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${interDisplay.variable} font-sans antialiased`} style={{ fontFamily: 'var(--font-inter-display), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         <NuqsAdapterProvider>{children}</NuqsAdapterProvider>
+        <Toaster />
       </body>
     </html>
   );

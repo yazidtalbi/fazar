@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddToCartButtonDesktopProps {
   productId: string;
@@ -14,6 +15,24 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
+
+  // Check if product is saved on mount
+  useEffect(() => {
+    async function checkSaved() {
+      try {
+        const response = await fetch("/api/saved");
+        if (response.ok) {
+          const data = await response.json();
+          const savedItems = data.savedItems || [];
+          const saved = savedItems.some((item: any) => item.product_id === productId);
+          setIsSaved(saved);
+        }
+      } catch (error) {
+        console.error("Error checking saved status:", error);
+      }
+    }
+    checkSaved();
+  }, [productId]);
 
   async function handleAddToCart() {
     setIsLoading(true);
@@ -45,21 +64,34 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
   async function handleSave() {
     setIsSaving(true);
     try {
-      // TODO: Implement save/favorite API endpoint
-      // const response = await fetch("/api/saved", {
-      //   method: isSaved ? "DELETE" : "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ productId }),
-      // });
-      
-      // For now, just toggle the state
+      const url = isSaved 
+        ? `/api/saved?productId=${productId}` 
+        : "/api/saved";
+      const response = await fetch(url, {
+        method: isSaved ? "DELETE" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: isSaved ? undefined : JSON.stringify({ productId }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to save product");
+      }
+
       setIsSaved(!isSaved);
+      
+      if (!isSaved) {
+        toast.success("Product added to saved items");
+      } else {
+        toast.success("Product removed from saved items");
+      }
+      
       router.refresh();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving product:", error);
-      alert("Failed to save product");
+      toast.error(error.message || "Failed to save product");
     } finally {
       setIsSaving(false);
     }
