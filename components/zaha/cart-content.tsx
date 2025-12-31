@@ -160,7 +160,7 @@ export function CartContent(): React.ReactElement {
             : null;
 
           return (
-            <Card key={item.id} className="border border-gray-200">
+            <Card key={item.id} className="border border-border">
               <CardContent className="p-4">
                 <div className="flex gap-4">
                   <Link href={`/p/${item.products.id}`} className="flex-shrink-0">
@@ -251,7 +251,7 @@ export function CartContent(): React.ReactElement {
 
       {/* Right Column - Order Summary */}
       <div>
-        <Card className="border border-gray-200 sticky top-4">
+        <Card className="border border-border sticky top-4">
           <CardContent className="p-6">
             {/* Payment Methods */}
             <div className="mb-6">

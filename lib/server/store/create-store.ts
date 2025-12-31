@@ -3,7 +3,8 @@ import { slugify, generateUniqueSlug } from "@/lib/utils/slug";
 
 export async function createStore(
   sellerId: string,
-  storeName: string
+  storeName: string,
+  city: string | null = null
 ): Promise<{ storeId: string; slug: string } | { error: string }> {
   const supabase = await createClient();
 
@@ -36,6 +37,7 @@ export async function createStore(
       seller_id: sellerId,
       name: storeName,
       slug,
+      city: city || null,
     })
     .select("id, slug")
     .single();

@@ -115,7 +115,7 @@ export function StoreProductsClient({ products, collections = [] }: StoreProduct
               setSortBy(e.target.value as SortOption);
               setCurrentPage(1);
             }}
-            className="text-sm border border-gray-300 rounded px-3 py-1.5 bg-white"
+            className="text-sm border border-border rounded-xl px-3 py-1.5 bg-white"
           >
             <option value="featured">Featured</option>
             <option value="newest">Newest</option>

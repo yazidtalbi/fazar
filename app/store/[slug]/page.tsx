@@ -157,7 +157,7 @@ export default async function StorePage({ params }: StorePageProps) {
         <div className="hidden md:block mb-8">
           <div className="flex items-start gap-6 mb-6">
             {/* Store Logo */}
-            <div className="relative w-24 h-24 rounded-full bg-muted overflow-hidden flex-shrink-0 border-2 border-white shadow-sm">
+            <div className="relative w-24 h-24 rounded-full bg-muted overflow-hidden flex-shrink-0 border-2 border-white">
               {store.logo_url ? (
                 <Image
                   src={store.logo_url}

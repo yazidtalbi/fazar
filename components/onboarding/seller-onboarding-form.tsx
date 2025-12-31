@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 
 export function SellerOnboardingForm(): React.ReactElement {
   const [storeName, setStoreName] = useState("");
+  const [city, setCity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -21,7 +22,7 @@ export function SellerOnboardingForm(): React.ReactElement {
     const response = await fetch("/api/store/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ storeName }),
+      body: JSON.stringify({ storeName, city: city.trim() || null }),
     });
 
     const data = await response.json();
@@ -58,6 +59,19 @@ export function SellerOnboardingForm(): React.ReactElement {
             />
             <p className="text-xs text-muted-foreground">
               This will be your shop's public name
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="city">CITY</Label>
+            <Input
+              id="city"
+              placeholder="e.g. Casablanca, Marrakech, Fez"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              The city where your store is located
             </p>
           </div>
 

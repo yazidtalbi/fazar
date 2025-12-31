@@ -38,15 +38,15 @@ const SheetContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed z-50 gap-4 bg-background p-6 shadow-lg",
+        "fixed z-50 gap-4 bg-background p-6",
         side === "top" &&
-          "inset-x-0 top-0 border-b",
+          "inset-x-0 top-0 border-b rounded-b-2xl",
         side === "bottom" &&
-          "inset-x-0 bottom-0 border-t",
+          "inset-x-0 bottom-0 border-t rounded-t-2xl",
         side === "right" &&
-          "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-lg",
+          "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-lg rounded-l-2xl",
         side === "left" &&
-          "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm rounded-r-2xl",
         className
       )}
       {...props}

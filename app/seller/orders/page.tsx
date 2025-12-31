@@ -89,7 +89,7 @@ async function OrderCard({ order, storeId }: { order: Order; storeId: string }) 
   const orderDate = new Date(order.created_at);
 
   return (
-    <Card className="border border-gray-200">
+    <Card className="border border-border">
       <CardContent className="p-6">
         <div className="grid md:grid-cols-3 gap-6">
           {/* Left Column - Order Items */}
@@ -184,7 +184,7 @@ async function OrderCard({ order, storeId }: { order: Order; storeId: string }) 
 
           {/* Right Column - Order Summary */}
           <div>
-            <Card className="border border-gray-200">
+            <Card className="border border-border">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
                 <div className="space-y-3 mb-4">

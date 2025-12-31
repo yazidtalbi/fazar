@@ -207,7 +207,7 @@ export function SearchClient({
                 <select
                   value={searchQuery.sort || "recommended"}
                   onChange={(e) => setSearchQuery({ sort: e.target.value })}
-                  className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:border-[#222222]"
+                  className="px-3 py-1.5 border border-border rounded-xl text-sm bg-white focus:outline-none focus:border-primary"
                 >
                   <option value="recommended">Le plus pertinent</option>
                   <option value="price-asc">Prix: croissant</option>

@@ -127,7 +127,7 @@ export function RecentOrders({ limit = 10, status, showReviewButton = false }: R
   return (
     <div className="space-y-4">
       {orders.map((order) => (
-        <Card key={order.id} className="hover:shadow-lg transition-shadow">
+        <Card key={order.id} className="hover:border-primary/30 transition-colors">
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div>

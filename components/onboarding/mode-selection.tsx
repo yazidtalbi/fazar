@@ -19,7 +19,7 @@ export function ModeSelection(): React.ReactElement {
   return (
     <div className="space-y-6">
       <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden border-0"
+        className="cursor-pointer hover:border-primary/30 transition-colors overflow-hidden border-0"
         onClick={() => handleSelectMode("buyer")}
       >
         <div className="relative h-48 bg-gradient-to-br from-primary/20 to-primary/5">
@@ -41,7 +41,7 @@ export function ModeSelection(): React.ReactElement {
       </Card>
 
       <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden border-0"
+        className="cursor-pointer hover:border-primary/30 transition-colors overflow-hidden border-0"
         onClick={() => handleSelectMode("seller")}
       >
         <div className="relative h-48 bg-gradient-to-br from-secondary/20 to-secondary/5">

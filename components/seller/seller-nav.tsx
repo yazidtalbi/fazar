@@ -49,10 +49,10 @@ export function SellerNav(): React.ReactElement {
       </nav>
 
       {/* Desktop: Vertical Sidebar */}
-      <aside className="hidden md:block fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 z-30">
+      <aside className="hidden md:block fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-border z-30">
         <div className="h-full flex flex-col">
           {/* Logo/Brand */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-6 border-b border-border">
             <Link href="/seller" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors">
               OFUS
             </Link>

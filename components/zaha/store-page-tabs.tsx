@@ -35,7 +35,7 @@ export function StorePageTabs({ store, products }: StorePageTabsProps): React.Re
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((product: any) => (
               <Link key={product.id} href={`/p/${product.id}`}>
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow border-0 rounded-lg">
+                <Card className="overflow-hidden hover:border-primary/30 transition-colors border-0 rounded-lg">
                   <div className="relative aspect-square w-full bg-muted overflow-hidden">
                     {product.cover_media && (
                       <Image

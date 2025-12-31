@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { storeName } = body;
+  const { storeName, city } = body;
 
   if (!storeName || typeof storeName !== "string" || storeName.trim().length < 3) {
     return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await createStore(user.id, storeName.trim());
+  const result = await createStore(user.id, storeName.trim(), city || null);
 
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });

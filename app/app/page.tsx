@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/zaha/product-card";
 import { Footer } from "@/components/zaha/footer";
 import { ProjectExplanation } from "@/components/zaha/project-explanation";
+import { StoreDiscoverySection } from "@/components/zaha/store-discovery-section";
 import { CarouselNavButton } from "@/components/zaha/carousel-nav-button";
 import { PromotionalBanner } from "@/components/zaha/promotional-banner";
 import { ProductAdBanner } from "@/components/zaha/product-ad-banner";
@@ -107,7 +108,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section - Mobile: Original Layout, Desktop: Split Layout */}
       {/* Mobile Hero */}
-      <div className="relative w-full h-64 md:hidden bg-gradient-to-r from-primary/20 to-background overflow-hidden">
+      <div className="relative w-full h-64 md:hidden bg-gradient-to-r from-accent/30 via-muted to-background overflow-hidden rounded-b-3xl">
         <div className="relative max-w-[100rem] mx-auto px-12 h-full flex items-center">
           <div className="max-w-md">
             <h2 className="text-4xl font-bold mb-4">DISCOVER THE SOUL OF MOROCCO</h2>
@@ -161,7 +162,7 @@ export default async function HomePage() {
         <div className="grid grid-cols-3 gap-6">
           {categoriesWithImages.map((category) => (
             <Link key={category.id} href={`/categories/${category.slug}`}>
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card className="overflow-hidden hover:border-primary/30 transition-colors">
                 <div className="relative aspect-square w-full bg-muted">
                   {category.imageUrl ? (
                     <Image
@@ -301,7 +302,7 @@ export default async function HomePage() {
               { title: "Cadeaux pour lui", image: "🎁", products: forHerProducts },
             ].map((category, idx) => (
               <Link key={idx} href={`/search?category=${category.title}`} className="flex-shrink-0 w-80 group">
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card className="overflow-hidden hover:border-primary/30 transition-colors">
                   <div className="relative aspect-[4/3] w-full bg-muted">
                     {category.products[0] ? (
                       (() => {
@@ -356,7 +357,9 @@ export default async function HomePage() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
           {cityProducts.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="flex-shrink-0 w-64">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </div>
@@ -373,7 +376,9 @@ export default async function HomePage() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
           {customizedProducts.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="flex-shrink-0 w-64">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </div>
@@ -390,7 +395,9 @@ export default async function HomePage() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
           {newProducts?.slice(0, 10).map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="flex-shrink-0 w-64">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </div>
@@ -407,9 +414,16 @@ export default async function HomePage() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
           {forHerProducts.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="flex-shrink-0 w-64">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
+      </div>
+
+      {/* Desktop: Store Discovery Section */}
+      <div className="hidden md:block">
+        <StoreDiscoverySection />
       </div>
 
       {/* Desktop: Project Explanation Section */}

@@ -4,11 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Search, Heart, Bell, Gift, Globe, LayoutDashboard, MapPin, ChevronDown, Sparkles, Grid3x3, Radio, Store, User } from "lucide-react";
+import { ShoppingCart, Search, Heart, Bell, Gift, Globe, LayoutDashboard, MapPin, ChevronDown, Sparkles, Grid3x3, Store, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { CartCountBadge } from "@/components/zaha/cart-count-badge";
 import { NotificationsDropdown } from "@/components/zaha/notifications-dropdown";
 import { ProfileDrawer } from "@/components/zaha/profile-drawer";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function HeaderDesktop(): React.ReactElement {
   const [isVisible, setIsVisible] = useState(true);
@@ -17,6 +18,7 @@ export function HeaderDesktop(): React.ReactElement {
   const [hasStore, setHasStore] = useState<boolean | null>(null);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+  const [allCategories, setAllCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -68,11 +70,12 @@ export function HeaderDesktop(): React.ReactElement {
       const { data } = await supabase
         .from("categories")
         .select("id, name, slug")
-        .order("name")
-        .limit(10);
+        .order("name");
       
       if (data) {
-        setCategories(data);
+        setAllCategories(data);
+        // Show first 7 categories in navbar
+        setCategories(data.slice(0, 7));
       }
     }
     
@@ -103,10 +106,10 @@ export function HeaderDesktop(): React.ReactElement {
         isVisible ? "translate-y-0" : "-translate-y-full"
       } bg-white`}
     >
-      {/* Top Bar - Dark Grey */}
-      <div className="bg-gray-800 text-white">
+      {/* Top Bar */}
+      <div style={{ backgroundColor: '#f5e8fb', color: 'rebeccapurple' }}>
         <div className="max-w-[100rem] mx-auto px-12">
-          <div className="flex items-center justify-between h-10 text-sm">
+          <div className="flex items-center justify-between h-10 text-sm font-semibold">
             {/* Left: Region/Language */}
             <div className="flex items-center gap-2">
               <Globe className="h-4 w-4" />
@@ -119,22 +122,35 @@ export function HeaderDesktop(): React.ReactElement {
             </div>
 
             {/* Right: Store Selection */}
-            <div className="flex items-center gap-2">
-              <Store className="h-4 w-4" />
-              <span>Choisir un magasin</span>
-            </div>
+            {user ? (
+              <Link 
+                href={hasStore ? "/seller" : "/onboarding/seller"}
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <Store className="h-4 w-4" />
+                <span>{hasStore ? "Manage my Ofus Shop" : "Sell on Ofus"}</span>
+              </Link>
+            ) : (
+              <Link 
+                href="/auth/login"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <Store className="h-4 w-4" />
+                <span>Sell on Ofus</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>
 
       {/* Main Navigation Bar - White */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-border">
         <div className="max-w-[100rem] mx-auto px-12">
           <div className="flex items-center gap-6 h-20">
             {/* Left: Logo + Search */}
             <div className="flex items-center gap-8 flex-1">
               <Link href="/app" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors flex-shrink-0">
-                OFUS
+                Ofus
               </Link>
               
               {/* Search Bar - Light Grey (next to logo) */}
@@ -216,14 +232,30 @@ export function HeaderDesktop(): React.ReactElement {
       <div className="bg-white">
         <div className="max-w-[100rem] mx-auto px-12">
           <nav className="flex items-center gap-6 h-12 overflow-x-auto scrollbar-hide">
-            {/* All Categories */}
-            <button className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors border-r border-gray-200 pr-6">
-              <Grid3x3 className="h-4 w-4" />
-              <span>All Categories</span>
-              <ChevronDown className="h-3 w-3" />
-            </button>
+            {/* All Categories - Popover */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors pr-6 px-3 py-1.5 rounded-xl bg-white">
+                  <Grid3x3 className="h-4 w-4" />
+                  <span>All Categories</span>
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-y-auto">
+                {allCategories.map((category) => (
+                  <DropdownMenuItem key={category.id} asChild>
+                    <Link
+                      href={`/categories/${category.slug}`}
+                      className="cursor-pointer"
+                    >
+                      {category.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            {/* Category Links */}
+            {/* Category Links - Maximum 7 */}
             {categories.map((category, index) => (
               <React.Fragment key={category.id}>
                 <Link
@@ -246,16 +278,6 @@ export function HeaderDesktop(): React.ReactElement {
               >
                 <Gift className="h-4 w-4" />
                 <span>Best Deals</span>
-              </Link>
-              <Link
-                href="/live"
-                className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
-              >
-                <span>OFUS Live</span>
-                <div className="relative">
-                  <Radio className="h-4 w-4 text-red-500" />
-                  <div className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full animate-pulse"></div>
-                </div>
               </Link>
             </div>
           </nav>

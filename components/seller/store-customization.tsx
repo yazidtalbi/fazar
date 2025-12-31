@@ -432,7 +432,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
             </CardHeader>
             <CardContent className="space-y-4">
               {logoPreview && (
-                <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-border">
                   <Image
                     src={logoPreview}
                     alt="Store logo"
@@ -468,7 +468,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
             </CardHeader>
             <CardContent className="space-y-4">
               {coverPreview && (
-                <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-gray-200">
+                <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-border">
                   <Image
                     src={coverPreview}
                     alt="Store cover"

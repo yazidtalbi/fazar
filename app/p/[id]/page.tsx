@@ -191,7 +191,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="hidden md:block h-[169px]"></div>
       
       {/* Breadcrumbs */}
-      <div className="hidden md:block border-b bg-white border-gray-200">
+      <div className="hidden md:block border-b bg-white border-border">
         <div className="max-w-[100rem] mx-auto px-12 py-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/app" className="hover:text-foreground">Home</Link>
@@ -210,7 +210,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Trust Indicators Bar (Ruban) */}
-      <div className="hidden md:block bg-gray-100 border-b border-gray-200">
+      <div className="hidden md:block bg-muted border-b border-border">
         <div className="max-w-[100rem] mx-auto px-12 py-3">
           <div className="flex items-center gap-6 text-sm text-[#222222]">
             <span className="font-medium">Achetez en toute confiance sur OFUS</span>
@@ -741,7 +741,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               { title: "Parchemin", image: "📜" },
             ].map((item, idx) => (
               <Link key={idx} href={`/search?q=${encodeURIComponent(item.title)}`}>
-                <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                <Card className="overflow-hidden hover:border-primary/30 transition-colors cursor-pointer">
                   <div className="flex items-center gap-4 p-4">
                     <div className="w-16 h-16 bg-muted flex items-center justify-center text-2xl flex-shrink-0">
                       {item.image}
@@ -776,7 +776,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-gray-300 rounded-full"
+                    className="bg-muted hover:bg-muted/80 text-foreground border-border rounded-full"
                   >
                     {tag}
                   </Button>

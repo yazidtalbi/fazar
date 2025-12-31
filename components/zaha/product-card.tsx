@@ -183,11 +183,11 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   }
 
   return (
-    <div className="group relative">
+    <div className="group relative w-full">
       <Link href={`/p/${product.id}`}>
-        <Card className="overflow-hidden hover:underline transition-all duration-300 border-0 bg-white">
+        <Card className="overflow-hidden transition-all duration-300 border-0 bg-transparent w-full">
           {/* Desktop: Hover image, Mobile: Carousel */}
-          <div className="relative aspect-square w-full bg-muted overflow-hidden">
+          <div className="relative aspect-square w-full bg-muted overflow-hidden rounded-2xl">
             {/* Mobile: Carousel */}
             <div className="md:hidden w-full h-full">
               {sortedMedia.length > 0 ? (
@@ -199,7 +199,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                           {item.media_type === "video" ? (
                             <video
                               src={item.media_url}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover rounded-2xl"
                               controls
                               playsInline
                             />
@@ -208,7 +208,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                               src={item.media_url}
                               alt={`${product.title} ${index + 1}`}
                               fill
-                              className="object-cover"
+                              className="object-cover rounded-2xl"
                               sizes="(max-width: 768px) 50vw"
                               priority={index === 0}
                             />
@@ -234,7 +234,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                     src={coverMedia.media_url}
                     alt={product.title}
                     fill
-                    className={`object-cover transition-opacity duration-300 ${
+                    className={`object-cover rounded-2xl transition-opacity duration-300 ${
                       secondMedia ? "group-hover/image:opacity-0" : ""
                     }`}
                     sizes="(max-width: 1200px) 33vw, 25vw"
@@ -245,7 +245,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                       src={secondMedia.media_url}
                       alt={`${product.title} hover`}
                       fill
-                      className="object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                      className="object-cover rounded-2xl opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
                       sizes="(max-width: 1200px) 33vw, 25vw"
                     />
                   )}
@@ -260,7 +260,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-sm transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full p-2 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
               aria-label={isSaved ? "Remove from saved" : "Save product"}
             >
               <Heart 
@@ -273,7 +273,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
             <button
               onClick={handleAddToCart}
               disabled={isAddingToCart}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-[#222222] text-white px-4 py-2 rounded-md font-medium text-sm transition-all opacity-0 md:group-hover:opacity-100 hover:bg-[#333333] shadow-lg whitespace-nowrap"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-primary text-white px-4 py-2 rounded-xl font-medium text-sm transition-all opacity-0 md:group-hover:opacity-100 hover:bg-primary/90 whitespace-nowrap"
             >
               {isAddingToCart ? "Ajout..." : "Ajouter au panier"}
             </button>

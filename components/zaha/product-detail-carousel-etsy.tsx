@@ -95,7 +95,7 @@ export function ProductDetailCarouselEtsy({ media }: ProductDetailCarouselEtsyPr
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white z-10"
               onClick={goToPrevious}
             >
               <ChevronLeft className="h-5 w-5" />
@@ -103,7 +103,7 @@ export function ProductDetailCarouselEtsy({ media }: ProductDetailCarouselEtsyPr
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white z-10"
               onClick={goToNext}
             >
               <ChevronRight className="h-5 w-5" />
