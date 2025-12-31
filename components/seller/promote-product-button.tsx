@@ -10,7 +10,7 @@ interface PromoteProductButtonProps {
   isPromoted: boolean;
 }
 
-export function PromoteProductButton({ productId, isPromoted }: PromoteProductButtonProps): React.ReactElement {
+export function PromoteProductButton({ productId, isPromoted }: PromoteProductButtonProps): React.ReactElement | null {
   const [open, setOpen] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
 

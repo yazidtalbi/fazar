@@ -13,6 +13,7 @@ import { ArrowLeft, Search, Share2, MapPin, ShoppingCart, Star, MessageCircle, H
 import { ProductCard } from "@/components/zaha/product-card";
 import { StoreProductsClient } from "@/components/zaha/store-products-client";
 import { StoreCollectionsSidebar } from "@/components/zaha/store-collections-sidebar";
+import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
 
 interface StorePageProps {
   params: Promise<{ slug: string }>;

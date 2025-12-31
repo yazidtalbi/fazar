@@ -110,7 +110,7 @@ export function CreditsPurchaseClient(): React.ReactElement {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {packages.map((pkg) => {
             const totalCredits = Number(pkg.credits_amount) + Number(pkg.bonus_credits);
-            const savings = pkg.bonus_credits > 0 ? ((pkg.bonus_credits / totalCredits) * 100).toFixed(0) : 0;
+            const savings = pkg.bonus_credits > 0 ? Math.round((Number(pkg.bonus_credits) / totalCredits) * 100) : 0;
 
             return (
               <Card key={pkg.id} className="relative">

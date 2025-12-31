@@ -22,7 +22,7 @@ interface ProductCollectionSelectorProps {
   storeId: string;
 }
 
-export function ProductCollectionSelector({ productId, storeId }: ProductCollectionSelectorProps): React.ReactElement {
+export function ProductCollectionSelector({ productId, storeId }: ProductCollectionSelectorProps): React.ReactElement | null {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [productCollections, setProductCollections] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);

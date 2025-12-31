@@ -45,6 +45,15 @@ export default async function StoreSettingsPage() {
     .eq("store_id", store.id)
     .order("order_index", { ascending: true });
 
+  // Transform collections to match expected type (products is returned as array from Supabase)
+  const transformedCollections = (collections || []).map(collection => ({
+    ...collection,
+    collection_products: (collection.collection_products || []).map((cp: any) => ({
+      product_id: cp.product_id,
+      products: Array.isArray(cp.products) ? cp.products[0] : cp.products,
+    })),
+  }));
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
@@ -52,7 +61,7 @@ export default async function StoreSettingsPage() {
         <StoreCustomization
           store={store}
           products={products || []}
-          collections={collections || []}
+          collections={transformedCollections}
         />
       </div>
     </div>
