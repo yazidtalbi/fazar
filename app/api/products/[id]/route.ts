@@ -48,22 +48,27 @@ export async function PATCH(
     status,
     isPromoted,
     isTrending,
+    isFeatured,
   } = body;
+
+  // Build update object dynamically
+  const updateData: any = {};
+  
+  if (title !== undefined) updateData.title = title;
+  if (categoryId !== undefined) updateData.category_id = categoryId || null;
+  if (condition !== undefined) updateData.condition = condition || "new";
+  if (description !== undefined) updateData.description = description || null;
+  if (price !== undefined) updateData.price = parseFloat(price);
+  if (stockQuantity !== undefined) updateData.stock_quantity = parseInt(stockQuantity) || 0;
+  if (daysToCraft !== undefined) updateData.days_to_craft = parseInt(daysToCraft) || 0;
+  if (status !== undefined) updateData.status = status || "draft";
+  if (isPromoted !== undefined) updateData.is_promoted = isPromoted || false;
+  if (isTrending !== undefined) updateData.is_trending = isTrending || false;
+  if (isFeatured !== undefined) updateData.is_featured = isFeatured || false;
 
   const { error } = await supabase
     .from("products")
-    .update({
-      title,
-      category_id: categoryId || null,
-      condition: condition || "new",
-      description: description || null,
-      price: parseFloat(price),
-      stock_quantity: parseInt(stockQuantity) || 0,
-      days_to_craft: parseInt(daysToCraft) || 0,
-      status: status || "draft",
-      is_promoted: isPromoted || false,
-      is_trending: isTrending || false,
-    })
+    .update(updateData)
     .eq("id", id);
 
   if (error) {

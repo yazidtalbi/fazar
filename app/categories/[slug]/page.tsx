@@ -56,7 +56,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       <HeaderDesktop />
       
       {/* Spacer for desktop header */}
-      <div className="hidden md:block h-[97px]"></div>
+      <div className="hidden md:block h-[114px]"></div>
 
       {/* Breadcrumbs - Desktop */}
       <div className="hidden md:block border-b bg-white">

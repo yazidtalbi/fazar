@@ -6,16 +6,15 @@ import { useRouter } from "next/navigation";
 
 interface AddToCartButtonProps {
   productId: string;
-  stockQuantity: number;
 }
 
-export function AddToCartButton({ productId, stockQuantity }: AddToCartButtonProps): React.ReactElement {
+export function AddToCartButton({ productId }: AddToCartButtonProps): React.ReactElement {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   async function handleAddToCart() {
-    if (quantity < 1 || quantity > stockQuantity) return;
+    if (quantity < 1) return;
 
     setIsLoading(true);
     try {
@@ -51,7 +50,6 @@ export function AddToCartButton({ productId, stockQuantity }: AddToCartButtonPro
           id="quantity"
           type="number"
           min="1"
-          max={stockQuantity}
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
           className="w-20 h-10 border border-input bg-background px-3 py-2 text-sm"
@@ -60,9 +58,9 @@ export function AddToCartButton({ productId, stockQuantity }: AddToCartButtonPro
       <Button
         className="flex-1"
         onClick={handleAddToCart}
-        disabled={isLoading || stockQuantity === 0}
+        disabled={isLoading}
       >
-        {isLoading ? "Adding..." : stockQuantity === 0 ? "Out of Stock" : "ADD TO BASKET"}
+        {isLoading ? "Adding..." : "ADD TO BASKET"}
       </Button>
     </div>
   );

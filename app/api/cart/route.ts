@@ -30,9 +30,10 @@ export async function GET(request: Request) {
         id,
         title,
         price,
+        promoted_price,
         currency,
-        stock_quantity,
-        product_media(media_url, is_cover, order_index)
+        product_media(media_url, is_cover, order_index),
+        stores!inner(id, name, slug)
       )
     `)
     .eq("buyer_id", user.id)
@@ -81,17 +82,13 @@ export async function POST(request: Request) {
   // Check if product exists and is active
   const { data: product } = await supabase
     .from("products")
-    .select("id, stock_quantity")
+    .select("id")
     .eq("id", productId)
     .eq("status", "active")
     .single();
 
   if (!product) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
-
-  if (product.stock_quantity < quantity) {
-    return NextResponse.json({ error: "Insufficient stock" }, { status: 400 });
   }
 
   // Upsert cart item

@@ -27,7 +27,7 @@ export default async function RegisterPage() {
               </Button>
             </Link>
             <div className="flex-1 text-center">
-              <h1 className="text-xl font-bold">ZAHA</h1>
+              <h1 className="text-xl font-bold">ANDALUS</h1>
             </div>
             <div className="w-10" /> {/* Spacer */}
           </div>

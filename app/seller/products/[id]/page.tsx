@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { PromoteProductButton } from "@/components/seller/promote-product-button";
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
@@ -132,11 +133,6 @@ export default async function SellerProductDetailPage({ params }: ProductDetailP
                 </div>
                 <Separator />
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">Stock Quantity</div>
-                  <div className="text-lg">{product.stock_quantity}</div>
-                </div>
-                <Separator />
-                <div>
                   <div className="text-sm font-medium text-muted-foreground">Category</div>
                   <div>{product.categories?.name || "Uncategorized"}</div>
                 </div>
@@ -188,6 +184,7 @@ export default async function SellerProductDetailPage({ params }: ProductDetailP
                     Edit Product
                   </Button>
                 </Link>
+                <PromoteProductButton productId={product.id} isPromoted={product.is_promoted} />
               </CardContent>
             </Card>
           </div>

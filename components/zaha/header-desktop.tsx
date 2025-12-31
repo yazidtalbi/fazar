@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Search, Heart, Menu, Gift, Globe } from "lucide-react";
+import { ShoppingCart, Search, Heart, Bell, Gift, Globe, LayoutDashboard, MapPin, ChevronDown, Sparkles, Grid3x3, Radio, Store, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { CartCountBadge } from "@/components/zaha/cart-count-badge";
+import { NotificationsDropdown } from "@/components/zaha/notifications-dropdown";
 
 export function HeaderDesktop(): React.ReactElement {
   const [isVisible, setIsVisible] = useState(true);
@@ -75,21 +77,17 @@ export function HeaderDesktop(): React.ReactElement {
     <header
       className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
-      } bg-white border-b`}
+      } bg-white border-b border-gray-100`}
     >
       {/* Top Bar */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* Left: Logo and Categories */}
-            <div className="flex items-center gap-6">
-              <Link href="/app" className="text-2xl font-serif text-primary hover:text-primary/90" style={{ fontFamily: 'serif' }}>
-                ZAHA
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Left: Logo */}
+            <div className="flex items-center">
+              <Link href="/app" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors">
+                ANDALUS
               </Link>
-              <button className="flex items-center gap-2 text-sm text-gray-900 hover:text-gray-700">
-                <Menu className="h-4 w-4" />
-                <span>Catégories</span>
-              </button>
             </div>
 
             {/* Center: Search Bar */}
@@ -98,7 +96,7 @@ export function HeaderDesktop(): React.ReactElement {
                 <input
                   type="text"
                   placeholder="Cherchez ce que vous voulez"
-                  className="w-full px-4 py-2.5 pr-12 rounded-full text-gray-900 placeholder-gray-400 border border-gray-300 focus:outline-none focus:border-primary transition-colors"
+                  className="w-full pl-4 pr-12 py-2.5 rounded-full text-[#222222] placeholder-gray-400 border border-gray-300 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       const query = (e.target as HTMLInputElement).value;
@@ -113,125 +111,180 @@ export function HeaderDesktop(): React.ReactElement {
                       router.push(`/search?q=${encodeURIComponent(input.value)}`);
                     }
                   }}
-                  className="absolute right-1 bg-primary hover:bg-primary/90 rounded-full p-2 transition-colors"
+                  className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors"
                   aria-label="Search"
                 >
-                  <Search className="h-4 w-4 text-white" />
+                  <Search className="h-5 w-5" />
                 </button>
               </div>
             </div>
 
-            {/* Right: User Actions */}
-            <div className="flex items-center gap-3">
-              {user ? (
-                <>
-                  {/* Show "Vendre avec ZAHA" if user doesn't have a store */}
-                  {hasStore === false && (
-                    <Link href="/onboarding/seller">
-                      <Button variant="outline" size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-gray-300">
-                        Vendre avec ZAHA
-                      </Button>
-                    </Link>
-                  )}
-                  <Link href="/app/saved">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100">
-                      <Heart className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/app/saved">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100">
-                      <Gift className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/app/cart">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100 relative">
-                      <ShoppingCart className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/auth/login">
-                    <span className="text-sm text-gray-900 hover:text-gray-700 cursor-pointer">
-                      Se connecter
-                    </span>
-                  </Link>
-                  <Link href="/auth/register">
-                    <Button variant="outline" size="sm" className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-gray-300">
-                      Vendre avec ZAHA
-                    </Button>
-                  </Link>
-                  <button className="w-8 h-8 rounded-full border border-gray-300 flex-shrink-0 relative overflow-hidden" aria-label="Language selector">
-                    {/* French flag colors - simplified */}
-                    <div className="absolute inset-0 flex">
-                      <div className="w-1/3 bg-blue-600"></div>
-                      <div className="w-1/3 bg-white"></div>
-                      <div className="w-1/3 bg-red-600"></div>
-                    </div>
-                  </button>
-                  <Link href="/app/saved">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100">
-                      <Heart className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/app/saved">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100">
-                      <Gift className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/app/cart">
-                    <Button variant="ghost" size="icon" className="text-gray-900 hover:bg-gray-100 relative">
-                      <ShoppingCart className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                </>
+            {/* Right: Icons */}
+            <div className="flex items-center gap-4">
+              {/* Saved Items */}
+              <Link 
+                href="/app/saved" 
+                className="text-gray-600 hover:text-primary transition-colors"
+                aria-label="Saved items"
+              >
+                <Heart className="h-5 w-5" />
+              </Link>
+
+              {/* Gifts/Best Deals */}
+              <Link 
+                href="/search?category=sale" 
+                className="text-gray-600 hover:text-primary transition-colors"
+                aria-label="Best deals"
+              >
+                <Gift className="h-5 w-5" />
+              </Link>
+
+              {/* Notifications */}
+              <NotificationsDropdown />
+
+              {/* Store/Marketplace */}
+              <Link 
+                href="/app" 
+                className="text-gray-600 hover:text-primary transition-colors"
+                aria-label="Store"
+              >
+                <Store className="h-5 w-5" />
+              </Link>
+
+              {/* Dashboard (if seller) */}
+              {user && hasStore === true && (
+                <Link 
+                  href="/seller" 
+                  className="text-gray-600 hover:text-primary transition-colors relative"
+                  aria-label="Dashboard"
+                >
+                  <div className="relative">
+                    <LayoutDashboard className="h-5 w-5" />
+                    <ChevronDown className="h-3 w-3 absolute -bottom-1 -right-1 text-gray-400" />
+                  </div>
+                </Link>
               )}
+
+              {/* User Account */}
+              {user ? (
+                <Link 
+                  href="/app/profile" 
+                  className="text-gray-600 hover:text-primary transition-colors relative"
+                  aria-label="Account"
+                >
+                  <div className="relative">
+                    <User className="h-5 w-5" />
+                    <ChevronDown className="h-3 w-3 absolute -bottom-1 -right-1 text-gray-400" />
+                  </div>
+                </Link>
+              ) : (
+                <Link 
+                  href="/auth/login" 
+                  className="text-gray-600 hover:text-primary transition-colors relative"
+                  aria-label="Sign in"
+                >
+                  <div className="relative">
+                    <User className="h-5 w-5" />
+                    <ChevronDown className="h-3 w-3 absolute -bottom-1 -right-1 text-gray-400" />
+                  </div>
+                </Link>
+              )}
+
+              {/* Cart */}
+              <CartCountBadge />
             </div>
           </div>
         </div>
       </div>
 
       {/* Secondary Navigation Bar */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <nav className="flex items-center gap-6 h-10 overflow-x-auto">
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <nav className="flex items-center gap-6 h-12 overflow-x-auto scrollbar-hide">
+            {/* All Categories */}
+            <button className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors border-r border-gray-200 pr-6">
+              <Grid3x3 className="h-4 w-4" />
+              <span>All Categories</span>
+              <ChevronDown className="h-3 w-3" />
+            </button>
+
+            {/* Category Links */}
             <Link
-              href="/search?category=gifts"
-              className="flex items-center gap-1.5 text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=electronics"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              <Gift className="h-4 w-4" />
-              <span>Cadeaux</span>
+              Electronics
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
             <Link
-              href="/search?category=sale"
-              className="text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=fashion"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              Trouvailles jusqu'à -50%
+              Fashion
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
             <Link
-              href="/categories?slug=deco"
-              className="text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=womens"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              Articles de déco
+              Women&apos;s
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
             <Link
-              href="/categories?slug=mode"
-              className="text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=kids"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              Articles de mode
+              Kids&apos; Fashion
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
             <Link
-              href="/search?category=gift-list"
-              className="text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=beauty"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              Liste de cadeaux
+              Healthy & Beauty
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
             <Link
-              href="/search?category=gift-cards"
-              className="text-sm text-gray-900 hover:text-gray-700 whitespace-nowrap"
+              href="/categories?slug=pharmacy"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
             >
-              Cartes cadeaux
+              Pharmacy
             </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
+            <Link
+              href="/categories?slug=groceries"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
+            >
+              Groceries
+            </Link>
+            <div className="w-px h-4 bg-gray-200"></div>
+            <Link
+              href="/categories?slug=luxury"
+              className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
+            >
+              Luxury Item
+            </Link>
+
+            {/* Best Deals */}
+            <div className="ml-auto flex items-center gap-4">
+              <Link
+                href="/search?category=sale"
+                className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
+              >
+                <Gift className="h-4 w-4" />
+                <span>Best Deals</span>
+              </Link>
+              <Link
+                href="/live"
+                className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
+              >
+                <span>ANDALUS Live</span>
+                <div className="relative">
+                  <Radio className="h-4 w-4 text-red-500" />
+                  <div className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full animate-pulse"></div>
+                </div>
+              </Link>
+            </div>
           </nav>
         </div>
       </div>

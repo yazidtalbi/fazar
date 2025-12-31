@@ -24,8 +24,8 @@ export default async function AppLayout({
   return (
     <AccountProvider account={account}>
       <HeaderDesktop />
-      {/* Spacer for desktop header (56px top bar + 40px nav bar + 1px border = 97px) */}
-      <div className="hidden md:block h-[97px]"></div>
+      {/* Spacer for desktop header (64px top bar + 1px border + 48px nav bar + 1px border = 114px) */}
+      <div className="hidden md:block h-[114px]"></div>
       <main className="pb-16 md:pb-0">
         {children}
       </main>

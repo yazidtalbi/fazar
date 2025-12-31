@@ -25,7 +25,6 @@ interface Product {
   condition: "new" | "vintage" | "used";
   description: string | null;
   price: number;
-  stock_quantity: number;
   days_to_craft: number;
   status: string;
   is_promoted: boolean;
@@ -56,7 +55,6 @@ export function ProductEditForm({ product, categories, storeId }: ProductEditFor
     condition: product.condition,
     description: product.description || "",
     price: product.price.toString(),
-    stockQuantity: product.stock_quantity.toString(),
     daysToCraft: product.days_to_craft,
     status: product.status,
     isPromoted: product.is_promoted,
@@ -72,13 +70,12 @@ export function ProductEditForm({ product, categories, storeId }: ProductEditFor
       const response = await fetch(`/api/products/${product.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+          body: JSON.stringify({
           title: formData.title,
           categoryId: formData.categoryId || null,
           condition: formData.condition,
           description: formData.description || null,
           price: parseFloat(formData.price),
-          stockQuantity: parseInt(formData.stockQuantity),
           daysToCraft: formData.daysToCraft,
           status: formData.status,
           isPromoted: formData.isPromoted,
@@ -181,18 +178,6 @@ export function ProductEditForm({ product, categories, storeId }: ProductEditFor
               min="0"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="stock">STOCK QUANTITY</Label>
-            <Input
-              id="stock"
-              type="number"
-              min="0"
-              value={formData.stockQuantity}
-              onChange={(e) => setFormData({ ...formData, stockQuantity: e.target.value })}
               required
             />
           </div>

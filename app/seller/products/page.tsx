@@ -3,8 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { ProductsListClient } from "@/components/seller/products-list-client";
 
 export default async function SellerProductsPage() {
   const supabase = await createClient();
@@ -33,7 +32,6 @@ export default async function SellerProductsPage() {
       title,
       price,
       status,
-      stock_quantity,
       is_promoted,
       is_trending,
       product_media!inner(media_url, is_cover, order_index)
@@ -56,7 +54,7 @@ export default async function SellerProductsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">My Inventory</h1>
           <Link href="/seller/products/new">
@@ -74,65 +72,7 @@ export default async function SellerProductsPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {productsWithCover.map((product: any) => (
-              <Card key={product.id} className="overflow-hidden">
-                <Link href={`/seller/products/${product.id}`}>
-                  <div className="relative aspect-square w-full bg-muted">
-                    {product.cover_media && (
-                      <Image
-                        src={product.cover_media}
-                        alt={product.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold line-clamp-2 flex-1">{product.title}</h3>
-                      <Badge
-                        variant={
-                          product.status === "active"
-                            ? "default"
-                            : product.status === "draft"
-                            ? "outline"
-                            : "secondary"
-                        }
-                        className="ml-2"
-                      >
-                        {product.status}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "MAD",
-                        }).format(Number(product.price))}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {product.stock_quantity} in stock
-                      </span>
-                    </div>
-                    <div className="flex gap-1 mt-2">
-                      {product.is_promoted && (
-                        <Badge variant="default" className="text-xs">
-                          Promoted
-                        </Badge>
-                      )}
-                      {product.is_trending && (
-                        <Badge variant="secondary" className="text-xs">
-                          Trending
-                        </Badge>
-                      )}
-                    </div>
-                  </CardContent>
-                </Link>
-              </Card>
-            ))}
-          </div>
+          <ProductsListClient products={productsWithCover} storeId={store.id} />
         )}
       </div>
     </div>

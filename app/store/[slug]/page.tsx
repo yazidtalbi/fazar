@@ -5,11 +5,14 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StorePageTabs } from "@/components/zaha/store-page-tabs";
-import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Footer } from "@/components/zaha/footer";
+import { FollowButton } from "@/components/zaha/follow-button";
+import { MessageStoreButton } from "@/components/zaha/message-store-button";
 import { ArrowLeft, Search, Share2, MapPin, ShoppingCart, Star, MessageCircle, Heart, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
+import { StoreProductsClient } from "@/components/zaha/store-products-client";
+import { StoreCollectionsSidebar } from "@/components/zaha/store-collections-sidebar";
 
 interface StorePageProps {
   params: Promise<{ slug: string }>;
@@ -32,6 +35,30 @@ export default async function StorePage({ params }: StorePageProps) {
     notFound();
   }
 
+  // Get collections
+  const { data: collections } = await supabase
+    .from("collections")
+    .select(`
+      *,
+      collection_products(
+        product_id,
+        products(
+          id,
+          title,
+          price,
+          currency,
+          status,
+          is_promoted,
+          is_trending,
+          is_featured,
+          days_to_craft,
+          product_media(media_url, media_type, order_index, is_cover)
+        )
+      )
+    `)
+    .eq("store_id", store.id)
+    .order("order_index", { ascending: true });
+
   const { data: products } = await supabase
     .from("products")
     .select(`
@@ -42,12 +69,14 @@ export default async function StorePage({ params }: StorePageProps) {
       status,
       is_promoted,
       is_trending,
+      is_featured,
       days_to_craft,
+      created_at,
       product_media(media_url, media_type, order_index, is_cover)
     `)
     .eq("store_id", store.id)
     .eq("status", "active")
-    .order("is_promoted", { ascending: false })
+    .order("is_featured", { ascending: false })
     .order("created_at", { ascending: false });
 
   // Get cover media for products
@@ -76,18 +105,7 @@ export default async function StorePage({ params }: StorePageProps) {
       <HeaderDesktop />
       
       {/* Spacer for desktop header */}
-      <div className="hidden md:block h-[97px]"></div>
-
-      {/* Breadcrumbs */}
-      <div className="hidden md:block border-b bg-white">
-        <div className="max-w-6xl mx-auto px-4 py-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/app" className="hover:text-foreground">Home</Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-foreground">{store.name}</span>
-          </div>
-        </div>
-      </div>
+      <div className="hidden md:block h-[114px]"></div>
 
       {/* Store Banner - Desktop */}
       {store.cover_url && (
@@ -125,11 +143,25 @@ export default async function StorePage({ params }: StorePageProps) {
 
             {/* Store Info */}
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold">{store.name}</h1>
-                {sellerProfile?.is_verified && (
-                  <Badge variant="outline" className="text-xs">Verified</Badge>
-                )}
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold">{store.name}</h1>
+                  {sellerProfile?.is_verified && (
+                    <Badge variant="outline" className="text-xs">Verified</Badge>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Heart className="h-4 w-4" />
+                    Follow
+                  </Button>
+                  <StoreContactSheet store={store}>
+                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4" />
+                      Message
+                    </Button>
+                  </StoreContactSheet>
+                </div>
               </div>
               
               <div className="flex items-center gap-4 mb-4">
@@ -143,21 +175,8 @@ export default async function StorePage({ params }: StorePageProps) {
                 <span className="text-sm text-muted-foreground">•</span>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  <span>Morocco</span>
+                  <span>{(store as any).city || "Morocco"}</span>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
-                  Follow
-                </Button>
-                <StoreContactSheet store={store}>
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4" />
-                    Message
-                  </Button>
-                </StoreContactSheet>
               </div>
             </div>
           </div>
@@ -188,27 +207,32 @@ export default async function StorePage({ params }: StorePageProps) {
               )}
             </div>
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-xl font-bold">{store.name}</h1>
-                {sellerProfile?.is_verified && (
-                  <Badge variant="outline" className="text-xs">Verified</Badge>
-                )}
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold">{store.name}</h1>
+                  {sellerProfile?.is_verified && (
+                    <Badge variant="outline" className="text-xs">Verified</Badge>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <FollowButton storeId={store.id} />
+                  <MessageStoreButton 
+                    storeId={store.id} 
+                    sellerId={store.seller_id}
+                    storeName={store.name}
+                  />
+                </div>
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
                 <Star className="h-3 w-3 fill-primary text-primary" />
                 <span>{rating.toFixed(1)}</span>
                 <span>•</span>
                 <span>{salesCount} sales</span>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="text-xs">
-                  Follow
-                </Button>
-                <StoreContactSheet store={store}>
-                  <Button variant="outline" size="sm" className="text-xs">
-                    Message
-                  </Button>
-                </StoreContactSheet>
+                <span>•</span>
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3" />
+                  <span>{(store as any).city || "Morocco"}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -217,35 +241,148 @@ export default async function StorePage({ params }: StorePageProps) {
           )}
         </div>
 
-        {/* Products Grid */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">Shop</h2>
-            <span className="text-sm text-muted-foreground">{productsWithCover.length} items</span>
-          </div>
-          
-          {productsWithCover.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No products available</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {productsWithCover.map((product: any) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+        {/* Products Grid with Collections Sidebar */}
+        <div className="flex gap-8">
+          {/* Collections Sidebar - Desktop Only */}
+          {collections && collections.length > 0 && (
+            <StoreCollectionsSidebar 
+              collections={collections.map((c: any) => ({ id: c.id, name: c.name }))} 
+              storeSlug={store.slug}
+            />
           )}
+          
+          {/* Products Content */}
+          <div className="flex-1">
+            <StoreProductsClient 
+              products={productsWithCover} 
+              collections={collections || []}
+            />
+          </div>
         </div>
 
-        {/* About Section */}
-        {store.description && (
-          <div className="border-t pt-8 mb-12">
-            <h3 className="text-xl font-semibold mb-4">About this shop</h3>
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line max-w-3xl">
-              {store.description}
-            </p>
+        {/* Additional Information Sections */}
+        <div className="border-t pt-8 space-y-12">
+          {/* About Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1">
+              <h3 className="text-lg font-semibold mb-4">A propos de {store.name}</h3>
+            </div>
+            <div className="md:col-span-2">
+              {store.description ? (
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                  {store.description}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">Aucune description disponible.</p>
+              )}
+              <div className="mt-6 grid grid-cols-2 gap-6">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Ventes</div>
+                  <div className="text-2xl font-bold">{salesCount}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Sur ANDALUS depuis</div>
+                  <div className="text-2xl font-bold">
+                    {new Date(store.created_at).getFullYear()}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Shop Members Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t pt-8">
+            <div className="md:col-span-1">
+              <h3 className="text-lg font-semibold mb-4">Membres de la boutique</h3>
+            </div>
+            <div className="md:col-span-2">
+              <div className="space-y-6">
+                {/* Owner/Seller */}
+                <div className="flex items-start gap-4">
+                  <div className="relative w-16 h-16 rounded-full bg-muted overflow-hidden flex-shrink-0">
+                    {store.logo_url ? (
+                      <Image
+                        src={store.logo_url}
+                        alt={store.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-lg font-bold text-muted-foreground">
+                        {store.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold mb-1">{store.name}</div>
+                    <div className="text-sm text-muted-foreground mb-2">Propriétaire, Designer, Fabricant</div>
+                    <p className="text-sm text-gray-700">
+                      Soutenez toutes sortes de personnalisation! Si vous avez des besoins de personnalisation, s&apos;il vous plaît contactez-moi!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Terms and Conditions Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t pt-8">
+            <div className="md:col-span-1">
+              <h3 className="text-lg font-semibold mb-4">Conditions générales de vente</h3>
+            </div>
+            <div className="md:col-span-2 space-y-8">
+              <div>
+                <div className="text-sm text-muted-foreground mb-2">
+                  Mise à jour : {new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2">Livraison</h4>
+                <p className="text-sm text-gray-700 mb-4">
+                  Consultez les détails de l&apos;article pour obtenir une estimation de la date d&apos;arrivée.
+                </p>
+                <div>
+                  <h5 className="font-semibold text-sm mb-2">Taxes de douane et d&apos;import</h5>
+                  <p className="text-sm text-gray-700">
+                    Les éventuelles taxes de douane et d&apos;importation sont à la charge des acheteurs. Je ne suis pas responsable des délais causés par la douane.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2">Options de paiement</h4>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">🔒</span>
+                  <span className="font-semibold text-sm">Options sécurisées</span>
+                </div>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="text-xs font-semibold bg-blue-600 text-white px-3 py-1.5 rounded">Amana</div>
+                </div>
+                <p className="text-sm text-gray-700">
+                  Les paiements sont traités de manière sécurisée. Les boutiques n&apos;ont jamais accès aux informations liées à votre carte de crédit.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2">Retours et échanges</h4>
+                <p className="text-sm text-gray-700">
+                  Consultez les détails de l&apos;article pour l&apos;éligibilité aux retours et aux échanges.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2">Annulations</h4>
+                <p className="text-sm text-gray-700 mb-2">
+                  Annulations : non acceptées
+                </p>
+                <p className="text-sm text-gray-700">
+                  Contactez le vendeur en cas de problème avec votre commande.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Reviews Section - Desktop */}
         <div className="hidden md:block border-t pt-8 mb-12">
@@ -277,11 +414,11 @@ export default async function StorePage({ params }: StorePageProps) {
 
       {/* Mobile Contact Button */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50 p-4">
-        <StoreContactSheet store={store}>
-          <Button className="w-full" size="lg">
-            CONTACT SELLER
-          </Button>
-        </StoreContactSheet>
+        <MessageStoreButton 
+          storeId={store.id} 
+          sellerId={store.seller_id}
+          storeName={store.name}
+        />
       </div>
     </div>
   );

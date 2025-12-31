@@ -23,11 +23,15 @@ export default async function SellerLayout({
 
   return (
     <AccountProvider account={account}>
-      <HeaderDesktop />
-      {/* Spacer for desktop header (56px top bar + 40px nav bar + 1px border = 97px) */}
-      <div className="hidden md:block h-[97px]"></div>
       <SellerNav />
-      {children}
+      <div className="flex">
+        {/* Desktop: Vertical sidebar is part of SellerNav */}
+        <div className="hidden md:block w-64 flex-shrink-0"></div>
+        {/* Content area */}
+        <div className="flex-1 min-w-0">
+          {children}
+        </div>
+      </div>
     </AccountProvider>
   );
 }

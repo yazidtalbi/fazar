@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/zaha/quantity-selector";
 import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface AddToCartWithQuantityProps {
   productId: string;
@@ -35,10 +36,14 @@ export function AddToCartWithQuantity({ productId, className }: AddToCartWithQua
         throw new Error("Failed to add to cart");
       }
 
-      router.refresh();
+      toast.success("Item added to cart");
+      // Dispatch custom event to update cart count
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
+      // Redirect to cart page
+      router.push("/app/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Failed to add item to cart");
+      toast.error("Failed to add item to cart");
     } finally {
       setIsLoading(false);
     }

@@ -8,7 +8,7 @@ export default function WelcomePage() {
       {/* Logo */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-2">ZAHA</h1>
+          <h1 className="text-5xl font-bold mb-2">ANDALUS</h1>
           <p className="text-sm text-muted-foreground uppercase">ARTISAN MARKETPLACE</p>
         </div>
 
@@ -18,7 +18,7 @@ export default function WelcomePage() {
 
         {/* Headline */}
         <div className="text-center mb-8 max-w-md">
-          <h2 className="text-3xl md:text-4xl font-serif mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Timeless Crafts. Direct from the Atlas.
           </h2>
           <p className="text-muted-foreground">

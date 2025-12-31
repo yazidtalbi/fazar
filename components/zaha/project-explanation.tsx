@@ -7,7 +7,7 @@ export function ProjectExplanation(): React.ReactElement {
       <div className="container mx-auto px-4">
         {/* Title */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif mb-4">What is ZAHA?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">What is ANDALUS?</h2>
           <Link 
             href="/search" 
             className="text-sm text-muted-foreground underline hover:text-foreground transition-colors"
@@ -22,7 +22,7 @@ export function ProjectExplanation(): React.ReactElement {
           <div>
             <h3 className="font-bold text-lg mb-4">A community with positive impact</h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              ZAHA is an online marketplace where people create, sell, buy, and collect unique items. 
+              ANDALUS is an online marketplace where people create, sell, buy, and collect unique items. 
               We are a community aiming for positive changes for small businesses, individuals, and the planet.
             </p>
             <Link 
@@ -37,7 +37,7 @@ export function ProjectExplanation(): React.ReactElement {
           <div>
             <h3 className="font-bold text-lg mb-4">Support for independent creators</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ZAHA does not have a warehouse but connects millions of individuals who sell what they love. 
+              ANDALUS does not have a warehouse but connects millions of individuals who sell what they love. 
               We facilitate direct contact between buyers and creators to discover extraordinary items.
             </p>
           </div>
@@ -46,7 +46,7 @@ export function ProjectExplanation(): React.ReactElement {
           <div>
             <h3 className="font-bold text-lg mb-4">Peace of mind</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ZAHA places high importance on data confidentiality. 
+              ANDALUS places high importance on data confidentiality. 
               Assistance is readily available if needed.
             </p>
           </div>

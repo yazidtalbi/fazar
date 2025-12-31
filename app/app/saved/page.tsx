@@ -36,7 +36,6 @@ export default async function SavedPage() {
         title,
         price,
         currency,
-        stock_quantity,
         days_to_craft,
         is_promoted,
         is_trending,
@@ -71,7 +70,7 @@ export default async function SavedPage() {
       <HeaderDesktop />
       
       {/* Spacer for desktop header */}
-      <div className="hidden md:block h-[97px]"></div>
+      <div className="hidden md:block h-[114px]"></div>
 
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
         <h1 className="text-3xl font-bold mb-6">Saved Items</h1>

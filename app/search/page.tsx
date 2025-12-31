@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { HeaderDesktop } from "@/components/zaha/header-desktop";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
@@ -57,8 +58,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-background sticky top-0 z-40">
+      {/* Desktop Header */}
+      <HeaderDesktop />
+      
+      {/* Mobile Header */}
+      <div className="md:hidden border-b bg-background sticky top-0 z-40">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             <Link href="/app">
@@ -76,17 +80,34 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-6">
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchClient
-            initialProducts={initialProducts}
-            categories={categories || []}
-            initialQuery={params.q || ""}
-            initialCategory={params.category || ""}
-            initialSort={params.sort || "recommended"}
-          />
-        </Suspense>
+      {/* Desktop Content */}
+      <div className="hidden md:block pt-[114px]">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <Suspense fallback={<div>Loading...</div>}>
+            <SearchClient
+              initialProducts={initialProducts}
+              categories={categories || []}
+              initialQuery={params.q || ""}
+              initialCategory={params.category || ""}
+              initialSort={params.sort || "recommended"}
+            />
+          </Suspense>
+        </div>
+      </div>
+
+      {/* Mobile Content */}
+      <div className="md:hidden">
+        <div className="container mx-auto px-4 py-6">
+          <Suspense fallback={<div>Loading...</div>}>
+            <SearchClient
+              initialProducts={initialProducts}
+              categories={categories || []}
+              initialQuery={params.q || ""}
+              initialCategory={params.category || ""}
+              initialSort={params.sort || "recommended"}
+            />
+          </Suspense>
+        </div>
       </div>
     </div>
   );

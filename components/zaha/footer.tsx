@@ -5,11 +5,11 @@ export function Footer(): React.ReactElement {
     <footer className="bg-background border-t">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
-          {/* About ZAHA */}
+          {/* About ANDALUS */}
           <div>
-            <h3 className="font-bold uppercase mb-4">About ZAHA</h3>
+            <h3 className="font-bold uppercase mb-4">About ANDALUS</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              ZAHA connects you with authentic Moroccan artisans, promoting fair trade, heritage, and craftsmanship. 
+              ANDALUS connects you with authentic Moroccan artisans, promoting fair trade, heritage, and craftsmanship. 
               Discover unique handmade treasures or share your creations with the world.
             </p>
           </div>
@@ -30,7 +30,7 @@ export function Footer(): React.ReactElement {
               </li>
               <li>
                 <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  ZAHA Blog
+                  ANDALUS Blog
                 </Link>
               </li>
             </ul>
@@ -42,7 +42,7 @@ export function Footer(): React.ReactElement {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Sell on ZAHA
+                  Sell on ANDALUS
                 </Link>
               </li>
               <li>
@@ -90,7 +90,7 @@ export function Footer(): React.ReactElement {
         <div className="border-t mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div>
-              <span className="font-bold">ZAHA</span> © {new Date().getFullYear()} Zaha, Inc.
+              <span className="font-bold">ANDALUS</span> © {new Date().getFullYear()} Andalus, Inc.
             </div>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="#" className="hover:text-foreground transition-colors">

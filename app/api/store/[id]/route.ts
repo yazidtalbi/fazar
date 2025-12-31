@@ -27,18 +27,21 @@ export async function PATCH(
   }
 
   const body = await request.json();
-  const { name, description, phone, email, whatsapp, instagram, facebook } = body;
+  const { name, description, city, phone, email, whatsapp, instagram, facebook, logo_url, cover_url } = body;
 
   const { error } = await supabase
     .from("stores")
     .update({
       name,
       description,
+      city: city || null,
       phone,
       email,
       whatsapp,
       instagram,
       facebook,
+      logo_url: logo_url || null,
+      cover_url: cover_url || null,
     })
     .eq("id", id);
 

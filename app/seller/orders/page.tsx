@@ -43,11 +43,11 @@ export default async function SellerOrdersPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+      <div className="container mx-auto px-4 py-6 md:px-6 md:py-8 max-w-7xl">
+        <h1 className="text-3xl font-bold mb-6">Orders</h1>
 
         {ordersList.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {ordersList.map((order: Order) => (
               <OrderCard key={order.id} order={order} storeId={store.id} />
             ))}
@@ -55,7 +55,10 @@ export default async function SellerOrdersPage() {
         ) : (
           <Card>
             <CardContent className="p-12 text-center">
-              <p className="text-muted-foreground">No orders yet</p>
+              <p className="text-muted-foreground mb-4">No orders yet</p>
+              <p className="text-sm text-muted-foreground">
+                Orders from your store will appear here once customers make purchases.
+              </p>
             </CardContent>
           </Card>
         )}
@@ -83,88 +86,163 @@ async function OrderCard({ order, storeId }: { order: Order; storeId: string }) 
     return sum + Number(item.price_at_purchase) * item.quantity;
   }, 0);
 
+  const orderDate = new Date(order.created_at);
+
   return (
-    <Card>
+    <Card className="border border-gray-200">
       <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <Link href={`/seller/orders/${order.id}`}>
-              <div className="font-semibold mb-1 hover:text-primary cursor-pointer">
-                {order.order_number}
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Left Column - Order Items */}
+          <div className="md:col-span-2 space-y-4">
+            {/* Order Header */}
+            <div className="flex items-start justify-between pb-4 border-b">
+              <div>
+                <Link href={`/seller/orders/${order.id}`}>
+                  <h2 className="text-lg font-semibold hover:text-primary cursor-pointer mb-1">
+                    Order {order.order_number}
+                  </h2>
+                </Link>
+                <p className="text-sm text-muted-foreground">
+                  {orderDate.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
               </div>
-            </Link>
-            <div className="text-sm text-muted-foreground">
-              {new Date(order.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
+              <Badge
+                variant={
+                  order.status === "delivered"
+                    ? "default"
+                    : order.status === "cancelled"
+                    ? "destructive"
+                    : "secondary"
+                }
+                className="text-xs"
+              >
+                {order.status.toUpperCase()}
+              </Badge>
+            </div>
+
+            {/* Order Items */}
+            <div className="space-y-4">
+              {storeItems.map((item: any) => {
+                const itemPrice = Number(item.price_at_purchase);
+                const itemTotal = itemPrice * item.quantity;
+                const priceFormatted = new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "MAD",
+                }).format(itemPrice);
+
+                return (
+                  <div key={item.id} className="flex gap-4">
+                    <Link href={`/p/${item.product_id}`} className="flex-shrink-0">
+                      <div className="relative w-24 h-24 bg-muted rounded">
+                        {item.product_media_url ? (
+                          <Image
+                            src={item.product_media_url}
+                            alt={item.product_title || "Product"}
+                            fill
+                            className="object-cover rounded"
+                            sizes="96px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                            No image
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                    <div className="flex-1 min-w-0">
+                      <Link href={`/p/${item.product_id}`}>
+                        <h3 className="font-semibold mb-1 hover:text-primary line-clamp-2">
+                          {item.product_title || "Product"}
+                        </h3>
+                      </Link>
+                      <div className="text-sm text-muted-foreground mb-2">
+                        Quantity: {item.quantity}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-base font-bold">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "MAD",
+                          }).format(itemTotal)}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {priceFormatted} each
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
               })}
             </div>
           </div>
-          <Badge
-            variant={
-              order.status === "delivered"
-                ? "default"
-                : order.status === "cancelled"
-                ? "destructive"
-                : "secondary"
-            }
-          >
-            {order.status.toUpperCase()}
-          </Badge>
-        </div>
 
-        <div className="space-y-3 mb-4">
-          {storeItems.map((item: any) => {
-            return (
-              <div key={item.id} className="flex gap-4">
-                {item.product_media_url && (
-                  <div className="relative w-16 h-16 bg-muted flex-shrink-0">
-                    <Image
-                      src={item.product_media_url}
-                      alt={item.product_title || "Product"}
-                      fill
-                      className="object-cover"
-                      sizes="64px"
-                    />
+          {/* Right Column - Order Summary */}
+          <div>
+            <Card className="border border-gray-200">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+                <div className="space-y-3 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="font-semibold">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "MAD",
+                      }).format(itemsTotal)}
+                    </span>
                   </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <Link href={`/p/${item.product_id}`}>
-                    <h3 className="font-medium hover:text-primary line-clamp-1">
-                      {item.product_title || "Product"}
-                    </h3>
-                  </Link>
-                  <div className="text-sm text-muted-foreground">
-                    Qty: {item.quantity} × {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "MAD",
-                    }).format(Number(item.price_at_purchase))}
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Shipping</span>
+                    <span>
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "MAD",
+                      }).format(Number(order.shipping_cost || 0))}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Tax</span>
+                    <span>
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "MAD",
+                      }).format(Number(order.tax || 0))}
+                    </span>
+                  </div>
+                  <Separator className="my-3" />
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span>
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "MAD",
+                      }).format(Number(order.total))}
+                    </span>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
 
-        <Separator className="my-4" />
+                <div className="pt-4 border-t">
+                  <UpdateOrderStatusButton orderId={order.id} currentStatus={order.status} />
+                </div>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm text-muted-foreground">Subtotal</div>
-            <div className="font-bold text-lg">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "MAD",
-              }).format(itemsTotal)}
-            </div>
+                <div className="mt-4 pt-4 border-t">
+                  <Link href={`/seller/orders/${order.id}`}>
+                    <Button variant="outline" className="w-full">
+                      View Order Details
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <UpdateOrderStatusButton orderId={order.id} currentStatus={order.status} />
         </div>
       </CardContent>
     </Card>
   );
 }
-

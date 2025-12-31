@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft, Home } from "lucide-react";
+import { CreditsBalance } from "@/components/seller/credits-balance";
 
 export default async function SellerDashboardPage() {
   const supabase = await createClient();
@@ -44,10 +46,26 @@ export default async function SellerDashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Seller Dashboard</h1>
-          <p className="text-muted-foreground">Salam, {user.email}</p>
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <h1 className="text-3xl font-bold">Seller Dashboard</h1>
+              <p className="text-muted-foreground">Salam, {user.email}</p>
+            </div>
+            <Link href="/app">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden md:inline">Back to App</span>
+                <span className="md:hidden">App</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Credits Balance */}
+        <div className="mb-6">
+          <CreditsBalance />
         </div>
 
         {/* Stats Cards */}

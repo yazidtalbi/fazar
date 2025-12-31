@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { StoreSettingsForm } from "@/components/seller/store-settings-form";
+import { StoreCustomization } from "@/components/seller/store-customization";
 
 export default async function StoreSettingsPage() {
   const supabase = await createClient();
@@ -22,11 +22,38 @@ export default async function StoreSettingsPage() {
     redirect("/onboarding/seller");
   }
 
+  // Get products for featured items
+  const { data: products } = await supabase
+    .from("products")
+    .select("id, title, price, is_featured")
+    .eq("store_id", store.id)
+    .order("title", { ascending: true });
+
+  // Get collections with their products
+  const { data: collections } = await supabase
+    .from("collections")
+    .select(`
+      id,
+      name,
+      description,
+      order_index,
+      collection_products(
+        product_id,
+        products(id, title, price)
+      )
+    `)
+    .eq("store_id", store.id)
+    .order("order_index", { ascending: true });
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-2xl">
-        <h1 className="text-3xl font-bold mb-6">Store Settings</h1>
-        <StoreSettingsForm store={store} />
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        <h1 className="text-3xl font-bold mb-6">Customize Store</h1>
+        <StoreCustomization
+          store={store}
+          products={products || []}
+          collections={collections || []}
+        />
       </div>
     </div>
   );

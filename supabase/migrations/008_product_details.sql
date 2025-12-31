@@ -1,0 +1,12 @@
+-- Add product details fields
+ALTER TABLE products 
+ADD COLUMN IF NOT EXISTS keywords TEXT[],
+ADD COLUMN IF NOT EXISTS size TEXT,
+ADD COLUMN IF NOT EXISTS weight TEXT,
+ADD COLUMN IF NOT EXISTS delivery_estimate_days INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS delivery_conditions TEXT,
+ADD COLUMN IF NOT EXISTS return_policy TEXT,
+ADD COLUMN IF NOT EXISTS shipping_cost DECIMAL(10, 2),
+ADD COLUMN IF NOT EXISTS shipping_origin_country TEXT,
+ADD COLUMN IF NOT EXISTS materials TEXT;
+

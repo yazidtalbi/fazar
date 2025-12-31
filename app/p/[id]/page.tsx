@@ -11,12 +11,13 @@ import { ProductCollapsibleSection } from "@/components/zaha/product-collapsible
 import { AddToCartWithQuantity } from "@/components/zaha/add-to-cart-with-quantity";
 import { EstimatedReadyDate } from "@/components/zaha/estimated-ready-date";
 import { ProductStickyHeader } from "@/components/zaha/product-sticky-header";
-import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2 } from "lucide-react";
+import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2, Calendar, Package, Truck, Ruler, Weight, Hand, Scissors, Hash } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
 import { AddToCartButtonDesktop } from "@/components/zaha/add-to-cart-button-desktop";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Footer } from "@/components/zaha/footer";
 import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
+import { ProductVariations } from "@/components/zaha/product-variations";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -45,6 +46,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .eq("id", id)
     .eq("status", "active")
     .single();
+
+  // Get product variations
+  const { data: variations } = await supabase
+    .from("product_variations")
+    .select(`
+      *,
+      product_variation_options(*)
+    `)
+    .eq("product_id", id)
+    .order("order_index");
+
+  // Get product personalizations
+  const { data: personalizations } = await supabase
+    .from("product_personalizations")
+    .select("*")
+    .eq("product_id", id)
+    .order("order_index");
 
   if (productError || !product) {
     notFound();
@@ -137,8 +155,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {/* Sticky Header (Mobile) */}
       <ProductStickyHeader title={product.title} imageUrl={coverMedia} productId={product.id} />
       
-      {/* Spacer for desktop header (56px top bar + 40px nav bar + 1px border = 97px) */}
-      <div className="hidden md:block h-[97px]"></div>
+      {/* Spacer for desktop header (64px top bar + 1px border + 48px nav bar + 1px border = 114px) */}
+      <div className="hidden md:block h-[114px]"></div>
       
       {/* Breadcrumbs */}
       <div className="hidden md:block border-b bg-white border-gray-200">
@@ -159,6 +177,33 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
+      {/* Trust Indicators Bar (Ruban) */}
+      <div className="hidden md:block bg-gray-100 border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-6 text-sm text-[#222222]">
+            <span className="font-medium">Achetez en toute confiance sur ANDALUS</span>
+            <div className="flex items-center gap-1">
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Protection sur les achats d'ANDALUS
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Options de paiement sécurisées
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-[#222222] text-[#222222]" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Avis vérifiés
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content - Desktop Side-by-Side Layout */}
       <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 bg-white md:bg-white">
         <div className="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 mb-12">
@@ -168,6 +213,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="mt-4 text-xs text-muted-foreground">
               <Link href="#" className="hover:underline">Report this item</Link>
             </div>
+            {/* Empty space below image to align with collapsibles */}
+            <div className="mt-8"></div>
           </div>
 
           {/* Right: Product Details */}
@@ -206,6 +253,43 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <span className="text-sm text-muted-foreground">({rating.toFixed(1)})</span>
             </div>
 
+            {/* Keywords */}
+            {(product as any).keywords && Array.isArray((product as any).keywords) && (product as any).keywords.length > 0 && (
+              <div className="pt-4 border-t">
+                <p className="text-sm text-[#222222]">
+                  {(product as any).keywords.join(", ")}
+                </p>
+              </div>
+            )}
+
+            {/* Variations & Personalizations */}
+            {(variations && variations.length > 0) || (personalizations && personalizations.length > 0) ? (
+              <div className="pt-4 border-t">
+                <ProductVariations
+                  variations={(variations || []).map((v: any) => ({
+                    id: v.id,
+                    name: v.name,
+                    display_name: v.display_name,
+                    is_required: v.is_required,
+                    options: (v.product_variation_options || []).map((opt: any) => ({
+                      id: opt.id,
+                      value: opt.value,
+                      display_value: opt.display_value,
+                      price_modifier: opt.price_modifier || 0,
+                    })),
+                  }))}
+                  personalizations={(personalizations || []).map((p: any) => ({
+                    id: p.id,
+                    label: p.label,
+                    placeholder: p.placeholder,
+                    max_length: p.max_length,
+                    is_required: p.is_required,
+                    price_modifier: p.price_modifier || 0,
+                  }))}
+                />
+              </div>
+            ) : null}
+
             {/* Add to Cart Button */}
             <div className="pt-4">
               <AddToCartButtonDesktop productId={product.id} />
@@ -213,12 +297,43 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Item Details (Collapsible) */}
             <div className="border-t pt-4">
-              <ProductCollapsibleSection title="Item details" defaultOpen={true}>
+              <ProductCollapsibleSection title="Détails de l'article" defaultOpen={true}>
                 <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="font-semibold">Designed by: </span>
-                    <Link href={`/store/${store.slug}`} className="hover:underline">{store.name}</Link>
+                  <div className="font-semibold mb-2">Principaux détails</div>
+                  <div className="flex items-start gap-3">
+                    <Hand className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold">Fabriqué par </span>
+                      <Link href={`/store/${store.slug}`} className="font-semibold hover:underline">{store.name}</Link>
+                    </div>
                   </div>
+                  {(product as any).materials && (
+                    <div className="flex items-start gap-3">
+                      <Scissors className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Matériaux: </span>
+                        <span>{(product as any).materials}</span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).size && (
+                    <div className="flex items-start gap-3">
+                      <Ruler className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Taille: </span>
+                        <span>{(product as any).size}</span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).weight && (
+                    <div className="flex items-start gap-3">
+                      <Weight className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Poids: </span>
+                        <span>{(product as any).weight}</span>
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <span className="font-semibold">Condition: </span>
                     <span>{product.condition || "New"}</span>
@@ -245,17 +360,63 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
               </ProductCollapsibleSection>
 
-              {/* Shipping & Returns */}
-              <ProductCollapsibleSection title="Shipping & Returns">
+              {/* Conditions de livraison et de retour */}
+              <ProductCollapsibleSection title="Conditions de livraison et de retour">
                 <div className="space-y-3 text-sm">
-                  <div>
-                    <p className="font-medium mb-1">Shipping:</p>
-                    <p>Cash on Delivery (COD) available. Default shipping method is Amana. Shipping details will be confirmed during checkout.</p>
-                  </div>
-                  <div>
-                    <p className="font-medium mb-1">Returns:</p>
-                    <p>Please contact the artisan directly for return and refund policies.</p>
-                  </div>
+                  {(product as any).delivery_estimate_days > 0 && (
+                    <div className="flex items-start gap-3">
+                      <Calendar className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span>Commandez aujourd&apos;hui pour une réception d&apos;ici le </span>
+                        <span className="underline decoration-dotted">
+                          {new Date(Date.now() + (product as any).delivery_estimate_days * 24 * 60 * 60 * 1000).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).return_policy && (
+                    <div className="flex items-start gap-3">
+                      <Package className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="underline decoration-dotted">{(product as any).return_policy}</span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).shipping_cost !== null && (product as any).shipping_cost !== undefined && (
+                    <div className="flex items-start gap-3">
+                      <Truck className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Frais d&apos;envoi : </span>
+                        <span>{(product as any).shipping_cost.toLocaleString()} {product.currency || "MAD"}</span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).shipping_origin_country && (
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Pays d&apos;expédition : </span>
+                        <span>{(product as any).shipping_origin_country}</span>
+                      </div>
+                    </div>
+                  )}
+                  {(product as any).delivery_conditions && (
+                    <div className="mt-3">
+                      <p className="text-muted-foreground">{(product as any).delivery_conditions}</p>
+                    </div>
+                  )}
+                  {!((product as any).delivery_estimate_days > 0 || (product as any).return_policy || (product as any).shipping_cost !== null) && (
+                    <div className="space-y-2">
+                      <div>
+                        <p className="font-medium mb-1">Shipping:</p>
+                        <p>Cash on Delivery (COD) available. Default shipping method is Amana. Shipping details will be confirmed during checkout.</p>
+                      </div>
+                      <div>
+                        <p className="font-medium mb-1">Returns:</p>
+                        <p>Please contact the artisan directly for return and refund policies.</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </ProductCollapsibleSection>
             </div>
@@ -422,7 +583,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           <span>4.9 ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
                         </div>
                         <span>13.3K sales</span>
-                        <span>7 years on ZAHA</span>
+                        <span>7 years on ANDALUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
                         <StoreContactSheet store={store}>

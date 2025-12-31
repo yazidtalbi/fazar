@@ -82,8 +82,8 @@ export function SearchClient({
 
   return (
     <div className="space-y-6">
-      {/* Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="flex gap-2">
+      {/* Mobile Search Bar */}
+      <form onSubmit={handleSearchSubmit} className="md:hidden flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -101,8 +101,147 @@ export function SearchClient({
         />
       </form>
 
-      {/* Category Filters */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      {/* Desktop Layout */}
+      <div className="hidden md:block">
+        <div className="flex gap-6">
+          {/* Left Sidebar - Filters */}
+          <div className="w-64 flex-shrink-0">
+            <div className="sticky top-24 space-y-6">
+              {/* Filter Buttons */}
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {}}
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Afficher les filtres
+                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Articles physiques
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Pays d'expédition : FR
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Moins de 20 €
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Top vendeur
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Vintage
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    En promo
+                  </Button>
+                </div>
+              </div>
+
+              {/* Category Filters */}
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold">Categories</h3>
+                <div className="space-y-1">
+                  <Button
+                    variant={!searchQuery.category ? "default" : "ghost"}
+                    size="sm"
+                    className="w-full justify-start text-xs"
+                    onClick={() => setSearchQuery({ category: "" })}
+                  >
+                    All
+                  </Button>
+                  {categories.map((cat) => (
+                    <Button
+                      key={cat.id}
+                      variant={searchQuery.category === cat.id ? "default" : "ghost"}
+                      size="sm"
+                      className="w-full justify-start text-xs"
+                      onClick={() => setSearchQuery({ category: cat.id })}
+                    >
+                      {cat.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="text-sm text-muted-foreground">
+                {products.length > 0 ? (
+                  <>+ de {products.length} articles et des annonces</>
+                ) : (
+                  <>Aucun résultat</>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Trier par:</span>
+                <select
+                  value={searchQuery.sort || "recommended"}
+                  onChange={(e) => setSearchQuery({ sort: e.target.value })}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:border-[#222222]"
+                >
+                  <option value="recommended">Le plus pertinent</option>
+                  <option value="price-asc">Prix: croissant</option>
+                  <option value="price-desc">Prix: décroissant</option>
+                  <option value="newest">Plus récent</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            {isLoading ? (
+              <div className="text-center py-12">Recherche en cours...</div>
+            ) : products.length > 0 ? (
+              <div className="grid grid-cols-4 gap-4">
+                {products.map((product: any) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="p-12 text-center">
+                  <p className="text-muted-foreground">Aucun produit trouvé</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Essayez d'ajuster votre recherche ou vos filtres
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Category Filters */}
+      <div className="md:hidden flex gap-2 overflow-x-auto pb-2">
         <Button
           variant={!searchQuery.category ? "default" : "outline"}
           size="sm"
@@ -151,28 +290,30 @@ export function SearchClient({
         </div>
       )}
 
-      {/* Recommended for You / Results */}
-      {isLoading ? (
-        <div className="text-center py-12">Searching...</div>
-      ) : products.length > 0 ? (
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium">Recommended for You</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+      {/* Mobile Recommended for You / Results */}
+      <div className="md:hidden">
+        {isLoading ? (
+          <div className="text-center py-12">Recherche en cours...</div>
+        ) : products.length > 0 ? (
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Recommandé pour vous</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {products.map((product: any) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground">No products found</p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Try adjusting your search or filters
-            </p>
-          </CardContent>
-        </Card>
-      )}
+        ) : (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <p className="text-muted-foreground">Aucun produit trouvé</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Essayez d'ajuster votre recherche ou vos filtres
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

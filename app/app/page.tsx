@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/zaha/product-card";
 import { Footer } from "@/components/zaha/footer";
 import { ProjectExplanation } from "@/components/zaha/project-explanation";
+import { CarouselNavButton } from "@/components/zaha/carousel-nav-button";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
@@ -89,6 +90,15 @@ export default async function HomePage() {
 
   // Get products for "Original Moroccan Gifts" carousel
   const giftBoxProducts = newProducts?.slice(0, 5) || [];
+
+  // Get products by cities (mock - in real app, filter by store location)
+  const cityProducts = newProducts?.slice(0, 5) || [];
+
+  // Get customized name items (products with personalization)
+  const customizedProducts = newProducts?.slice(0, 5) || [];
+
+  // Get "For her" gifts (products in gift/fashion categories)
+  const forHerProducts = newProducts?.slice(0, 5) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -223,19 +233,34 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Desktop: Best of Winter 2025 Section */}
-      {trendingProducts && trendingProducts.length > 0 && (
+      {/* Desktop: Todays Best Deals For You! Section */}
+      {promotedProducts && promotedProducts.length > 0 && (
         <div className="hidden md:block container mx-auto px-4 py-16">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-4xl font-bold uppercase">Best of Winter 2025</h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-4xl font-bold text-[#222222]">Todays Best Deals For You!</h2>
             <Link href="/search?sort=recommended">
-              <Button variant="ghost" className="text-sm uppercase">
-                View All
-              </Button>
+              <span className="text-sm text-primary hover:underline cursor-pointer">View All &gt;</span>
             </Link>
           </div>
-          <div className="grid grid-cols-4 gap-6">
-            {trendingProducts.slice(0, 4).map((product: any) => (
+          <div className="grid grid-cols-5 gap-4">
+            {promotedProducts.slice(0, 5).map((product: any) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Desktop: Discount Section (60% Off Or More) */}
+      {trendingProducts && trendingProducts.length > 0 && (
+        <div className="hidden md:block container mx-auto px-4 py-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-4xl font-bold text-[#222222]">60% Off Or More On Winter-Wear</h2>
+            <Link href="/search?category=winter">
+              <span className="text-sm text-primary hover:underline cursor-pointer">View All &gt;</span>
+            </Link>
+          </div>
+          <div className="grid grid-cols-5 gap-4">
+            {trendingProducts.slice(0, 5).map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -272,49 +297,131 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Desktop: Original Moroccan Gifts Section - Carousel */}
-      {giftBoxProducts.length > 0 && (
-        <div className="hidden md:block container mx-auto px-4 py-16">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-4xl font-bold uppercase">Original Moroccan Gifts</h2>
-            <div className="flex gap-2">
-              <Button variant="ghost" size="icon">
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
+      {/* Desktop: Category Rails - Gift Categories */}
+      <div className="hidden md:block container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8 text-[#222222]">
+          Des cadeaux aussi extraordinaires que leur destinataire
+        </h2>
+        <div className="relative">
           <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-            {giftBoxProducts.map((product: any) => {
-              const mediaArray = Array.isArray(product.product_media) ? product.product_media : [];
-              const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
-              return (
-                <div key={product.id} className="flex-shrink-0 w-64">
-                  <Card className="overflow-hidden">
-                    <div className="relative aspect-square w-full bg-muted">
-                      {coverMedia?.media_url ? (
-                        <Image
-                          src={coverMedia.media_url}
-                          alt={product.title}
-                          fill
-                          className="object-cover"
-                          sizes="256px"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                          {product.title}
-                        </div>
-                      )}
+            {[
+              { title: "Cadeaux bien-être", image: "🧘", products: giftsProducts },
+              { title: "Cadeaux douillets", image: "🛏️", products: giftBoxProducts },
+              { title: "Cadeaux pour crémaillère", image: "🏠", products: cityProducts },
+              { title: "Cadeaux pour bébés", image: "👶", products: customizedProducts },
+              { title: "Cadeaux pour lui", image: "🎁", products: forHerProducts },
+            ].map((category, idx) => (
+              <Link key={idx} href={`/search?category=${category.title}`} className="flex-shrink-0 w-80 group">
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="relative aspect-[4/3] w-full bg-muted">
+                    {category.products[0] ? (
+                      (() => {
+                        const mediaArray = Array.isArray(category.products[0].product_media) 
+                          ? category.products[0].product_media 
+                          : [];
+                        const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
+                        return coverMedia?.media_url ? (
+                          <Image
+                            src={coverMedia.media_url}
+                            alt={category.title}
+                            fill
+                            className="object-cover"
+                            sizes="320px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-gray-100 to-gray-200">
+                            {category.image}
+                          </div>
+                        );
+                      })()
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-gray-100 to-gray-200">
+                        {category.image}
+                      </div>
+                    )}
+                    {/* Search overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-4">
+                      <div className="flex items-center gap-2 text-sm font-medium text-[#222222]">
+                        <Search className="h-4 w-4" />
+                        <span>{category.title}</span>
+                      </div>
                     </div>
-                  </Card>
-                </div>
-              );
-            })}
+                  </div>
+                </Card>
+              </Link>
+            ))}
           </div>
+          <CarouselNavButton />
         </div>
-      )}
+      </div>
+
+      {/* Desktop: Cities Rail */}
+      <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-[#222222]">Par ville</h2>
+          <Link href="/search?sort=newest">
+            <Button variant="ghost" className="text-sm">
+              Voir tout
+            </Button>
+          </Link>
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+          {cityProducts.map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Customized Name Items Rail */}
+      <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-[#222222]">Articles personnalisés</h2>
+          <Link href="/search?category=personalized">
+            <Button variant="ghost" className="text-sm">
+              Voir tout
+            </Button>
+          </Link>
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+          {customizedProducts.map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Newest Rail */}
+      <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-[#222222]">Nouveautés</h2>
+          <Link href="/search?sort=newest">
+            <Button variant="ghost" className="text-sm">
+              Voir tout
+            </Button>
+          </Link>
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+          {newProducts?.slice(0, 10).map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: For Her Gifts Rail */}
+      <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-[#222222]">Cadeaux pour elle</h2>
+          <Link href="/search?category=for-her">
+            <Button variant="ghost" className="text-sm">
+              Voir tout
+            </Button>
+          </Link>
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+          {forHerProducts.map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
 
       {/* Desktop: Project Explanation Section */}
       <div className="hidden md:block">

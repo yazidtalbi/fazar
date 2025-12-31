@@ -52,10 +52,14 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
         throw new Error("Failed to add to cart");
       }
 
-      router.refresh();
+      toast.success("Item added to cart");
+      // Dispatch custom event to update cart count
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
+      // Redirect to cart page
+      router.push("/app/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Failed to add item to cart");
+      toast.error("Failed to add item to cart");
     } finally {
       setIsLoading(false);
     }
