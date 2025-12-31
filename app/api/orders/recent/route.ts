@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ orders: [] });
   }
 
-  const orderIds = orders.map((o) => o.id);
+  const orderIds = orders.map((o: any) => o.id);
 
   // Get order items for these orders
   const { data: orderItems, error: itemsError } = await supabase

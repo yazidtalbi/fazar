@@ -8,7 +8,7 @@ interface ProductReviewSectionProps {
   productId: string;
 }
 
-export function ProductReviewSection({ productId }: ProductReviewSectionProps): React.ReactElement {
+export function ProductReviewSection({ productId }: ProductReviewSectionProps): React.ReactElement | null {
   const [canReview, setCanReview] = useState(false);
   const [hasOrdered, setHasOrdered] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
