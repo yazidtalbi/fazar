@@ -20,24 +20,28 @@ export async function POST(request: Request) {
 
   // Check if user has ordered this product
   if (orderId) {
-    const { data: order } = await supabase
-      .from("orders")
-      .select("id, buyer_id")
-      .eq("id", orderId)
-      .eq("buyer_id", user.id)
-      .single();
+    // Use RPC function to avoid RLS issues
+    const { data: orderData, error: orderError } = await supabase.rpc("get_order_by_id", {
+      p_order_id: orderId,
+    });
 
-    if (!order) {
+    if (orderError || !orderData || orderData.length === 0) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Check if product is in this order
-    const { data: orderItem } = await supabase
-      .from("order_items")
-      .select("id")
-      .eq("order_id", orderId)
-      .eq("product_id", productId)
-      .single();
+    const order = orderData[0];
+
+    // Check if product is in this order using RPC function
+    const { data: orderItemsData, error: itemsError } = await supabase.rpc("get_order_items", {
+      p_order_id: orderId,
+    });
+
+    if (itemsError) {
+      console.error("Error fetching order items:", itemsError);
+      return NextResponse.json({ error: "Failed to verify order items" }, { status: 500 });
+    }
+
+    const orderItem = orderItemsData?.find((item: any) => item.product_id === productId);
 
     if (!orderItem) {
       return NextResponse.json({ error: "Product not found in this order" }, { status: 404 });

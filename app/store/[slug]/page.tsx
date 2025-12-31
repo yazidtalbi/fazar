@@ -96,9 +96,39 @@ export default async function StorePage({ params }: StorePageProps) {
   });
 
   const sellerProfile = store.seller_profiles as { is_verified: boolean } | null;
-  const salesCount = productsWithCover.length > 0 ? (productsWithCover.length * 100).toLocaleString() : "0";
-  const rating = 4.9;
-  const reviewCount = 128;
+  
+  // Get product IDs for this store
+  const productIds = productsWithCover.map(p => p.id);
+  
+  // Fetch real sales count (from order_items)
+  let salesCount = 0;
+  if (productIds.length > 0) {
+    const { data: orderItems } = await supabase
+      .from("order_items")
+      .select("quantity")
+      .in("product_id", productIds);
+    
+    salesCount = orderItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
+  }
+  
+  // Fetch real reviews for products in this store
+  let rating = 0;
+  let reviewCount = 0;
+  if (productIds.length > 0) {
+    const { data: reviewsData } = await supabase
+      .from("reviews")
+      .select("rating")
+      .in("product_id", productIds);
+    
+    const reviews = reviewsData || [];
+    reviewCount = reviews.length;
+    rating = reviewCount > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+      : 0;
+  }
+  
+  // Calculate years on OFUS
+  const yearsOnOfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
 
   return (
     <div className="min-h-screen bg-white">
@@ -168,11 +198,11 @@ export default async function StorePage({ params }: StorePageProps) {
               <div className="flex items-center gap-4 mb-4">
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-primary text-primary" />
-                  <span className="text-sm font-medium">{rating.toFixed(1)}</span>
-                  <span className="text-sm text-muted-foreground">({reviewCount} reviews)</span>
+                  <span className="text-sm font-medium">{rating > 0 ? rating.toFixed(1) : '0.0'}</span>
+                  <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
                 </div>
                 <span className="text-sm text-muted-foreground">•</span>
-                <span className="text-sm text-muted-foreground">{salesCount} sales</span>
+                <span className="text-sm text-muted-foreground">{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
                 <span className="text-sm text-muted-foreground">•</span>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
@@ -226,9 +256,9 @@ export default async function StorePage({ params }: StorePageProps) {
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
                 <Star className="h-3 w-3 fill-primary text-primary" />
-                <span>{rating.toFixed(1)}</span>
+                <span>{rating > 0 ? rating.toFixed(1) : '0.0'}</span>
                 <span>•</span>
-                <span>{salesCount} sales</span>
+                <span>{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
                 <span>•</span>
                 <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3" />
@@ -279,12 +309,12 @@ export default async function StorePage({ params }: StorePageProps) {
               <div className="mt-6 grid grid-cols-2 gap-6">
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Ventes</div>
-                  <div className="text-2xl font-bold">{salesCount}</div>
+                  <div className="text-2xl font-bold">{salesCount.toLocaleString()}</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Sur OFUS depuis</div>
                   <div className="text-2xl font-bold">
-                    {new Date(store.created_at).getFullYear()}
+                    {yearsOnOfus > 0 ? `${yearsOnOfus} ${yearsOnOfus === 1 ? 'an' : 'ans'}` : new Date(store.created_at).getFullYear()}
                   </div>
                 </div>
               </div>
@@ -390,20 +420,26 @@ export default async function StorePage({ params }: StorePageProps) {
           <h3 className="text-xl font-semibold mb-6">Reviews</h3>
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="text-3xl font-bold">{rating.toFixed(1)}</div>
+              <div className="text-3xl font-bold">{rating > 0 ? rating.toFixed(1) : '0.0'}</div>
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-5 w-5 ${i < Math.floor(rating) ? "fill-primary text-primary" : "text-muted-foreground"}`}
+                    className={`h-5 w-5 ${i < Math.floor(rating) ? "fill-primary text-primary" : i < rating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">({reviewCount} reviews)</span>
+              <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
-            <div className="text-sm text-muted-foreground">
-              <p>No reviews yet. Be the first to leave a review!</p>
-            </div>
+            {reviewCount === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                <p>No reviews yet. Be the first to leave a review!</p>
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                <p>Based on {reviewCount} {reviewCount === 1 ? 'review' : 'reviews'} from customers.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

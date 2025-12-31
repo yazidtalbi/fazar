@@ -141,3 +141,56 @@ export async function POST(
   });
 }
 
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id: productId } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Verify product ownership
+  const { data: store } = await supabase
+    .from("stores")
+    .select("id")
+    .eq("seller_id", user.id)
+    .single();
+
+  if (!store) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("id, store_id")
+    .eq("id", productId)
+    .single();
+
+  if (!product || product.store_id !== store.id) {
+    return NextResponse.json({ error: "Product not found or forbidden" }, { status: 403 });
+  }
+
+  // Unpromote the product
+  const { error: productUpdateError } = await supabase
+    .from("products")
+    .update({
+      is_promoted: false,
+      promoted_start_date: null,
+      promoted_end_date: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", productId);
+
+  if (productUpdateError) {
+    return NextResponse.json({ error: productUpdateError.message }, { status: 400 });
+  }
+
+  return NextResponse.json({ success: true });
+}
+

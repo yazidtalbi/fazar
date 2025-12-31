@@ -10,6 +10,7 @@ import { ProjectExplanation } from "@/components/zaha/project-explanation";
 import { CarouselNavButton } from "@/components/zaha/carousel-nav-button";
 import { PromotionalBanner } from "@/components/zaha/promotional-banner";
 import { ProductAdBanner } from "@/components/zaha/product-ad-banner";
+import { MasonryGrid } from "@/components/zaha/masonry-grid";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
@@ -204,7 +205,7 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Mobile: New Arrivals Section */}
+      {/* Mobile: New Arrivals Section with Masonry Grid */}
       {newProducts && newProducts.length > 0 && (
         <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
           <div className="flex items-center justify-between mb-4">
@@ -213,11 +214,11 @@ export default async function HomePage() {
               <Filter className="h-5 w-5" />
             </Button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <MasonryGrid columns={{ mobile: 2 }}>
             {newProducts.slice(0, 8).map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </MasonryGrid>
         </div>
       )}
 

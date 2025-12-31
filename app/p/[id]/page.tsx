@@ -19,6 +19,7 @@ import { Footer } from "@/components/zaha/footer";
 import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
 import { ProductVariations } from "@/components/zaha/product-variations";
 import { ProductReviewSection } from "@/components/zaha/product-review-section";
+import { ProductReviewsList } from "@/components/zaha/product-reviews-list";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -37,6 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         id,
         name,
         slug,
+        created_at,
         seller_profiles(
           id,
           is_verified
@@ -137,9 +139,38 @@ export default async function ProductPage({ params }: ProductPageProps) {
     order_index: number;
   }>;
 
-  // Mock reviews data - in real app, fetch from reviews table
-  const reviewCount = 42;
-  const rating = 4.9;
+  // Fetch real reviews data
+  const { data: reviewsData } = await supabase
+    .from("reviews")
+    .select("rating")
+    .eq("product_id", product.id);
+
+  const reviews = reviewsData || [];
+  const reviewCount = reviews.length;
+  const rating = reviewCount > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+    : 0;
+
+  // Fetch real sales count for the store
+  const { data: storeProducts } = await supabase
+    .from("products")
+    .select("id")
+    .eq("store_id", store.id)
+    .eq("status", "active");
+
+  const storeProductIds = storeProducts?.map(p => p.id) || [];
+  let storeSalesCount = 0;
+  if (storeProductIds.length > 0) {
+    const { data: orderItems } = await supabase
+      .from("order_items")
+      .select("quantity")
+      .in("product_id", storeProductIds);
+    
+    storeSalesCount = orderItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
+  }
+
+  // Calculate years on OFUS
+  const yearsOnOfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
 
   const coverMedia = media[0]?.media_url || null;
   const category = product.categories as any;
@@ -247,11 +278,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 ${i < Math.floor(rating) ? "fill-primary text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${i < Math.floor(rating) ? "fill-primary text-primary" : i < rating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">({rating.toFixed(1)})</span>
+              <span className="text-sm text-muted-foreground">({rating > 0 ? rating.toFixed(1) : '0.0'})</span>
             </div>
 
             {/* Keywords */}
@@ -440,11 +471,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-5 w-5 ${i < Math.floor(rating) ? "fill-primary text-primary" : "text-muted-foreground"}`}
+                    className={`h-5 w-5 ${i < Math.floor(rating) ? "fill-primary text-primary" : i < rating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">({reviewCount} reviews)</span>
+              <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
 
             <Card className="border">
@@ -512,44 +543,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {/* Review Form Section */}
               <ProductReviewSection productId={product.id} />
 
-              {/* Reviews Section */}
-              <div className="border-t pt-8">
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl font-bold">★ {rating.toFixed(1)}</span>
-                    </div>
-                    <div className="flex items-center gap-6 text-sm text-muted-foreground mb-2">
-                      <div className="flex items-center gap-1">
-                        <span className="font-medium">Article:</span> {rating.toFixed(1)}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-medium">Quality:</span> {rating.toFixed(1)}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-medium">Delivery:</span> {rating.toFixed(1)}
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <Badge className="bg-green-600 hover:bg-green-700 text-white">100% of buyers recommend</Badge>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Mock Review */}
-                <div className="border-b pb-4 mb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold">Joe</span>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                      ))}
-                    </div>
-                    <span className="text-sm text-muted-foreground">Oct 20, 2025</span>
-                  </div>
-                  <p className="text-sm">Helpful tips and tricks 😊</p>
-                </div>
-              </div>
+              {/* Reviews List Section */}
+              <ProductReviewsList productId={product.id} />
 
               {/* Seller Information Section */}
               <div className="border-t pt-8">
@@ -584,10 +579,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <div className="flex items-center gap-4 text-sm mb-4">
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span>4.9 ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
+                          <span>{rating > 0 ? rating.toFixed(1) : '0.0'} ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
                         </div>
-                        <span>13.3K sales</span>
-                        <span>7 years on OFUS</span>
+                        <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
+                        <span>{yearsOnOfus > 0 ? `${yearsOnOfus} ${yearsOnOfus === 1 ? 'year' : 'years'}` : new Date(store.created_at).getFullYear()} on OFUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
                         <StoreContactSheet store={store}>

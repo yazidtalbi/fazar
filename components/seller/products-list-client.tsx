@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ProductCollectionSelector } from "@/components/seller/product-collection-selector";
 import { PromoteProductDialog } from "@/components/seller/promote-product-dialog";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -26,8 +29,11 @@ interface ProductsListClientProps {
 }
 
 export function ProductsListClient({ products, storeId }: ProductsListClientProps): React.ReactElement {
+  const router = useRouter();
   const [balance, setBalance] = useState<number | null>(null);
   const [promoteProductId, setPromoteProductId] = useState<string | null>(null);
+  const [deleteProductId, setDeleteProductId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchBalance() {
@@ -53,6 +59,31 @@ export function ProductsListClient({ products, storeId }: ProductsListClientProp
       window.removeEventListener("creditsUpdated", handleCreditsUpdate);
     };
   }, []);
+
+  async function handleDelete() {
+    if (!deleteProductId) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/products/${deleteProductId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to delete product");
+      }
+
+      toast.success("Product deleted successfully");
+      setDeleteProductId(null);
+      router.refresh();
+    } catch (error: any) {
+      console.error("Error deleting product:", error);
+      toast.error(error.message || "Failed to delete product");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -115,21 +146,35 @@ export function ProductsListClient({ products, storeId }: ProductsListClientProp
                   <ProductCollectionSelector productId={product.id} storeId={storeId} />
                 </div>
               </div>
-              {!product.is_promoted && (
+              <div className="flex gap-2 mt-2">
+                {!product.is_promoted && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setPromoteProductId(product.id);
+                    }}
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Promote
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full mt-2"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setPromoteProductId(product.id);
+                    setDeleteProductId(product.id);
                   }}
                 >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Promote
+                  <Trash2 className="h-4 w-4" />
                 </Button>
-              )}
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -143,6 +188,34 @@ export function ProductsListClient({ products, storeId }: ProductsListClientProp
           currentBalance={balance}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteProductId} onOpenChange={(open) => !open && setDeleteProductId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Product</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteProductId(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

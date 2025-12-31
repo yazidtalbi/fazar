@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
+import { OrderItemReview } from "@/components/zaha/order-item-review";
 
 interface OrderDetailPageProps {
   params: Promise<{ id: string }>;
@@ -161,6 +162,14 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
                               }).format(Number(item.price_at_purchase) * item.quantity)}
                             </span>
                           </div>
+                          {/* Review Button - Only show for delivered/shipped orders */}
+                          {(order.status === "delivered" || order.status === "shipped" || order.status === "confirmed") && (
+                            <OrderItemReview
+                              productId={product?.id}
+                              orderId={order.id}
+                              productTitle={product?.title || "Product"}
+                            />
+                          )}
                         </div>
                       </div>
                       <Separator className="mt-4" />
