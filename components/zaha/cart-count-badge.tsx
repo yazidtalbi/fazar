@@ -48,7 +48,7 @@ export function CartCountBadge(): React.ReactElement {
   return (
     <Link 
       href="/app/cart" 
-      className="text-gray-600 hover:text-primary transition-colors relative"
+      className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors relative"
       aria-label="Shopping cart"
     >
       <div className="relative">

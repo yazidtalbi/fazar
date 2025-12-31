@@ -13,6 +13,11 @@ import { format } from "date-fns";
 import { addDays } from "date-fns";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 type Product = Database["public"]["Tables"]["products"]["Row"] & {
   product_media: Array<{
@@ -50,7 +55,9 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const [user, setUser] = useState<any>(null);
   
   const mediaArray = Array.isArray(product.product_media) ? product.product_media : [];
-  const coverMedia = mediaArray.find((m) => m.is_cover) || mediaArray[0];
+  const sortedMedia = [...mediaArray].sort((a, b) => a.order_index - b.order_index);
+  const coverMedia = sortedMedia.find((m) => m.is_cover) || sortedMedia[0];
+  const secondMedia = sortedMedia.length > 1 ? sortedMedia[1] : null;
   
   // Calculate discount if promoted price exists
   // Check if product has a promoted_price field (from database)
@@ -178,21 +185,77 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   return (
     <div className="group relative">
       <Link href={`/p/${product.id}`}>
-        <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 bg-white">
-          <div className="relative aspect-square w-full bg-muted">
-            {coverMedia?.media_url ? (
-              <Image
-                src={coverMedia.media_url}
-                alt={product.title}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                No image
-              </div>
-            )}
+        <Card className="overflow-hidden hover:underline transition-all duration-300 border-0 bg-white">
+          {/* Desktop: Hover image, Mobile: Carousel */}
+          <div className="relative aspect-square w-full bg-muted overflow-hidden">
+            {/* Mobile: Carousel */}
+            <div className="md:hidden w-full h-full">
+              {sortedMedia.length > 0 ? (
+                <Carousel className="w-full h-full">
+                  <CarouselContent className="h-full">
+                    {sortedMedia.map((item, index) => (
+                      <CarouselItem key={index} className="h-full">
+                        <div className="relative w-full h-full">
+                          {item.media_type === "video" ? (
+                            <video
+                              src={item.media_url}
+                              className="w-full h-full object-cover"
+                              controls
+                              playsInline
+                            />
+                          ) : (
+                            <Image
+                              src={item.media_url}
+                              alt={`${product.title} ${index + 1}`}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 50vw"
+                              priority={index === 0}
+                            />
+                          )}
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                  No image
+                </div>
+              )}
+            </div>
+
+            {/* Desktop: Hover image effect */}
+            <div className="hidden md:block relative w-full h-full group/image">
+              {coverMedia?.media_url ? (
+                <>
+                  {/* Default Image */}
+                  <Image
+                    src={coverMedia.media_url}
+                    alt={product.title}
+                    fill
+                    className={`object-cover transition-opacity duration-300 ${
+                      secondMedia ? "group-hover/image:opacity-0" : ""
+                    }`}
+                    sizes="(max-width: 1200px) 33vw, 25vw"
+                  />
+                  {/* Hover Image (Second image if available) */}
+                  {secondMedia && (
+                    <Image
+                      src={secondMedia.media_url}
+                      alt={`${product.title} hover`}
+                      fill
+                      className="object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                      sizes="(max-width: 1200px) 33vw, 25vw"
+                    />
+                  )}
+                </>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                  No image
+                </div>
+              )}
+            </div>
             {/* Heart Icon - Top Right (Always visible on mobile, hover on desktop) */}
             <button
               onClick={handleSave}
@@ -217,7 +280,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
             {/* Discount Badge - Top Left */}
             {discount && (
               <div className="absolute top-3 left-3 z-10">
-                <Badge className="bg-red-500 text-white text-xs font-semibold px-2 py-1">
+                <Badge className="bg-green-600 text-white text-xs font-semibold px-2 py-1">
                   -{discount}%
                 </Badge>
               </div>
@@ -237,14 +300,14 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
               </div>
             )}
           </div>
-          <CardContent className="pt-4 px-4 pb-4">
-            <h3 className="font-medium text-sm line-clamp-2 text-[#222222] min-h-[2.5rem] mb-0">
+          <CardContent className="pt-4  px-0 pb-4">
+            <h3 className="font-medium text-sm line-clamp-2 text-[#222222]  mb-0">
               {product.title}
             </h3>
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-2 ">
               {originalPriceFormatted ? (
                 <>
-                  <span className="font-bold text-red-500 text-base">
+                  <span className="font-bold text-green-600 text-base">
                     {priceFormatted}
                   </span>
                   <span className="text-sm text-gray-500 line-through">
@@ -252,7 +315,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                   </span>
                 </>
               ) : (
-                <span className="font-bold text-[#222222] text-base">
+                <span className="font-bold text-[#222222] text-base no-underline">
                   {priceFormatted}
                 </span>
               )}

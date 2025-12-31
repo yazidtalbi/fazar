@@ -8,7 +8,7 @@ export default function WelcomePage() {
       {/* Logo */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-2">ANDALUS</h1>
+          <h1 className="text-5xl font-bold mb-2">OFUS</h1>
           <p className="text-sm text-muted-foreground uppercase">ARTISAN MARKETPLACE</p>
         </div>
 

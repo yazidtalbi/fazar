@@ -105,8 +105,8 @@ export default async function StorePage({ params }: StorePageProps) {
       {/* Desktop Header */}
       <HeaderDesktop />
       
-      {/* Spacer for desktop header */}
-      <div className="hidden md:block h-[114px]"></div>
+      {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
+      <div className="hidden md:block h-[169px]"></div>
 
       {/* Store Banner - Desktop */}
       {store.cover_url && (
@@ -122,7 +122,7 @@ export default async function StorePage({ params }: StorePageProps) {
       )}
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 bg-white">
+      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8 bg-white">
         {/* Store Header Section - Desktop */}
         <div className="hidden md:block mb-8">
           <div className="flex items-start gap-6 mb-6">
@@ -282,7 +282,7 @@ export default async function StorePage({ params }: StorePageProps) {
                   <div className="text-2xl font-bold">{salesCount}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Sur ANDALUS depuis</div>
+                  <div className="text-sm text-muted-foreground mb-1">Sur OFUS depuis</div>
                   <div className="text-2xl font-bold">
                     {new Date(store.created_at).getFullYear()}
                   </div>

@@ -69,10 +69,10 @@ export default async function SavedPage() {
       {/* Desktop Header */}
       <HeaderDesktop />
       
-      {/* Spacer for desktop header */}
-      <div className="hidden md:block h-[114px]"></div>
+      {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
+      <div className="hidden md:block h-[169px]"></div>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
+      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8">
         <h1 className="text-3xl font-bold mb-6">Saved Items</h1>
         
         {productsWithCover.length === 0 ? (

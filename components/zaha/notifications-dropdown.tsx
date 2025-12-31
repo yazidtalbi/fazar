@@ -119,7 +119,7 @@ export function NotificationsDropdown(): React.ReactElement {
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <button
-          className="text-gray-600 hover:text-primary transition-colors relative"
+          className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors relative"
           aria-label="Notifications"
         >
           <div className="relative">
@@ -132,7 +132,7 @@ export function NotificationsDropdown(): React.ReactElement {
           </div>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto p-0">
+      <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto p-0 bg-white">
         <div className="p-4 border-b">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg">Notifications</h3>

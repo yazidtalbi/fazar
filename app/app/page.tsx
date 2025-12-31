@@ -8,6 +8,8 @@ import { ProductCard } from "@/components/zaha/product-card";
 import { Footer } from "@/components/zaha/footer";
 import { ProjectExplanation } from "@/components/zaha/project-explanation";
 import { CarouselNavButton } from "@/components/zaha/carousel-nav-button";
+import { PromotionalBanner } from "@/components/zaha/promotional-banner";
+import { ProductAdBanner } from "@/components/zaha/product-ad-banner";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
@@ -105,7 +107,7 @@ export default async function HomePage() {
       {/* Hero Section - Mobile: Original Layout, Desktop: Split Layout */}
       {/* Mobile Hero */}
       <div className="relative w-full h-64 md:hidden bg-gradient-to-r from-primary/20 to-background overflow-hidden">
-        <div className="relative container mx-auto px-4 h-full flex items-center">
+        <div className="relative max-w-[100rem] mx-auto px-12 h-full flex items-center">
           <div className="max-w-md">
             <h2 className="text-4xl font-bold mb-4">DISCOVER THE SOUL OF MOROCCO</h2>
             <p className="text-lg mb-6 text-muted-foreground">
@@ -118,32 +120,18 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Desktop Hero - Split Layout */}
-      <div className="hidden md:block relative w-full min-h-[600px] bg-background">
-        <div className="grid md:grid-cols-2 gap-0 items-stretch">
-          {/* Left Side - Text Content */}
-          <div className="flex items-center px-8 lg:px-12 xl:px-16 py-20">
-            <div className="space-y-6 max-w-lg">
-              <p className="text-sm uppercase tracking-wider text-muted-foreground">RAMADAN COLLECTION 2023</p>
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                AUTHENTIC MOROCCAN<br />
-                <span className="text-primary">CRAFTSMANSHIP</span>
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Discover hand-woven rugs, intricate ceramics, and leather goods made by master artisans from Fez to Marrakech.
-              </p>
-              <Link href="/search">
-                <Button size="lg" className="uppercase">
-                  Explore Collection
-                </Button>
-              </Link>
+      {/* Desktop Hero - Two Section Layout */}
+      <div className="hidden md:block relative w-full min-h-[500px] bg-background">
+        <div className="max-w-[100rem] mx-auto px-12 py-8">
+          <div className="grid md:grid-cols-3 gap-6 h-[500px]">
+            {/* Left Section - Promotional Carousel (2/3 width) */}
+            <div className="md:col-span-2 h-full">
+              <PromotionalBanner />
             </div>
-          </div>
-          {/* Right Side - Image */}
-          <div className="relative w-full h-full min-h-[600px] bg-muted">
-            {/* Placeholder for hero image - you can replace with actual image */}
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-              Hero Image
+            
+            {/* Right Section - Product Advertisement (1/3 width) */}
+            <div className="h-full">
+              <ProductAdBanner />
             </div>
           </div>
         </div>
@@ -151,7 +139,7 @@ export default async function HomePage() {
 
       {/* Browse by Category Section */}
       {/* Mobile: Horizontal Scroll */}
-      <div className="container mx-auto px-4 py-6 md:hidden">
+      <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold uppercase">CATEGORIES</h2>
         </div>
@@ -167,7 +155,7 @@ export default async function HomePage() {
       </div>
 
       {/* Desktop: Grid Layout */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <h2 className="text-4xl font-bold uppercase mb-12">Browse by Category</h2>
         <div className="grid grid-cols-3 gap-6">
           {categoriesWithImages.map((category) => (
@@ -199,7 +187,7 @@ export default async function HomePage() {
 
       {/* Mobile: Trending Now Section */}
       {trendingProducts && trendingProducts.length > 0 && (
-        <div className="container mx-auto px-4 py-6 md:hidden">
+        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold uppercase">TRENDING NOW</h2>
             <Link href="/search?sort=recommended">
@@ -218,7 +206,7 @@ export default async function HomePage() {
 
       {/* Mobile: New Arrivals Section */}
       {newProducts && newProducts.length > 0 && (
-        <div className="container mx-auto px-4 py-6 md:hidden">
+        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold uppercase">NEW ARRIVALS</h2>
             <Button variant="ghost" size="icon">
@@ -235,7 +223,7 @@ export default async function HomePage() {
 
       {/* Desktop: Todays Best Deals For You! Section */}
       {promotedProducts && promotedProducts.length > 0 && (
-        <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-4xl font-bold text-[#222222]">Todays Best Deals For You!</h2>
             <Link href="/search?sort=recommended">
@@ -252,7 +240,7 @@ export default async function HomePage() {
 
       {/* Desktop: Discount Section (60% Off Or More) */}
       {trendingProducts && trendingProducts.length > 0 && (
-        <div className="hidden md:block container mx-auto px-4 py-16">
+        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-4xl font-bold text-[#222222]">60% Off Or More On Winter-Wear</h2>
             <Link href="/search?category=winter">
@@ -270,7 +258,7 @@ export default async function HomePage() {
       {/* Desktop: Gifts for the Soul Section - Split Layout */}
       {giftsProducts.length > 0 && (
         <div className="hidden md:block bg-muted py-16">
-          <div className="container mx-auto px-4">
+          <div className="max-w-[100rem] mx-auto px-12">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               {/* Left Side - Text Content */}
               <div className="space-y-6">
@@ -298,7 +286,7 @@ export default async function HomePage() {
       )}
 
       {/* Desktop: Category Rails - Gift Categories */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <h2 className="text-3xl font-bold mb-8 text-[#222222]">
           Des cadeaux aussi extraordinaires que leur destinataire
         </h2>
@@ -356,7 +344,7 @@ export default async function HomePage() {
       </div>
 
       {/* Desktop: Cities Rail */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-[#222222]">Par ville</h2>
           <Link href="/search?sort=newest">
@@ -373,7 +361,7 @@ export default async function HomePage() {
       </div>
 
       {/* Desktop: Customized Name Items Rail */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-[#222222]">Articles personnalisés</h2>
           <Link href="/search?category=personalized">
@@ -390,7 +378,7 @@ export default async function HomePage() {
       </div>
 
       {/* Desktop: Newest Rail */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-[#222222]">Nouveautés</h2>
           <Link href="/search?sort=newest">
@@ -407,7 +395,7 @@ export default async function HomePage() {
       </div>
 
       {/* Desktop: For Her Gifts Rail */}
-      <div className="hidden md:block container mx-auto px-4 py-16">
+      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-[#222222]">Cadeaux pour elle</h2>
           <Link href="/search?category=for-her">

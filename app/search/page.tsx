@@ -63,7 +63,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       
       {/* Mobile Header */}
       <div className="md:hidden border-b bg-background sticky top-0 z-40">
-        <div className="container mx-auto px-4">
+        <div className="max-w-[100rem] mx-auto px-12">
           <div className="flex items-center justify-between h-14">
             <Link href="/app">
               <Button variant="ghost" size="icon">
@@ -82,7 +82,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* Desktop Content */}
       <div className="hidden md:block pt-[114px]">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-[100rem] mx-auto px-12 py-8">
           <Suspense fallback={<div>Loading...</div>}>
             <SearchClient
               initialProducts={initialProducts}

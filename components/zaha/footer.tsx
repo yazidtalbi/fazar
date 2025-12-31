@@ -3,13 +3,13 @@ import Link from "next/link";
 export function Footer(): React.ReactElement {
   return (
     <footer className="bg-background border-t">
-      <div className="container mx-auto px-4 py-12 md:py-16">
+      <div className="max-w-[100rem] mx-auto px-12 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
-          {/* About ANDALUS */}
+          {/* About OFUS */}
           <div>
-            <h3 className="font-bold uppercase mb-4">About ANDALUS</h3>
+            <h3 className="font-bold uppercase mb-4">About OFUS</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              ANDALUS connects you with authentic Moroccan artisans, promoting fair trade, heritage, and craftsmanship. 
+              OFUS connects you with authentic Moroccan artisans, promoting fair trade, heritage, and craftsmanship. 
               Discover unique handmade treasures or share your creations with the world.
             </p>
           </div>
@@ -30,7 +30,7 @@ export function Footer(): React.ReactElement {
               </li>
               <li>
                 <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  ANDALUS Blog
+                  OFUS Blog
                 </Link>
               </li>
             </ul>
@@ -42,7 +42,7 @@ export function Footer(): React.ReactElement {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Sell on ANDALUS
+                  Sell on OFUS
                 </Link>
               </li>
               <li>
@@ -90,7 +90,7 @@ export function Footer(): React.ReactElement {
         <div className="border-t mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div>
-              <span className="font-bold">ANDALUS</span> © {new Date().getFullYear()} Andalus, Inc.
+              <span className="font-bold">OFUS</span> © {new Date().getFullYear()} Ofus, Inc.
             </div>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="#" className="hover:text-foreground transition-colors">

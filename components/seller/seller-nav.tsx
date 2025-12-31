@@ -54,7 +54,7 @@ export function SellerNav(): React.ReactElement {
           {/* Logo/Brand */}
           <div className="p-6 border-b border-gray-200">
             <Link href="/seller" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors">
-              ANDALUS
+              OFUS
             </Link>
             <p className="text-xs text-muted-foreground mt-1">Seller Dashboard</p>
             <Link 

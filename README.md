@@ -1,4 +1,4 @@
-# Andalus - Authentic Moroccan Craft Marketplace
+# Ofus - Authentic Moroccan Craft Marketplace
 
 A mobile-first Etsy-like marketplace for Morocco with an editorial, heritage-inspired UI.
 

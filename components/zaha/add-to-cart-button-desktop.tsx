@@ -107,11 +107,7 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
         onClick={handleAddToCart}
         disabled={isLoading}
         size="lg" 
-        className="flex-1 bg-[#222222] hover:bg-[#333333] text-white h-12 text-base font-medium btn-scoop"
-        style={{
-          cornerShape: 'scoop',
-          borderRadius: '8px',
-        } as React.CSSProperties}
+        className="flex-1 bg-[#371837] hover:bg-[#371837]/90 text-white h-12 text-base font-medium"
       >
         {isLoading ? "Adding..." : "Add to cart"}
       </Button>
@@ -121,9 +117,6 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
         size="lg"
         variant="ghost"
         className="h-12 w-12 bg-gray-100 hover:bg-gray-200 p-0 flex-shrink-0"
-        style={{
-          borderRadius: '8px',
-        } as React.CSSProperties}
         aria-label={isSaved ? "Remove from saved" : "Save product"}
       >
         <Heart 

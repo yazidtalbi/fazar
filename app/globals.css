@@ -2,7 +2,7 @@
 
 :root {
   /* Clean white palette */
-  --background: #f3f4f0;
+  --background: #ffffff;
   --foreground: #222222;
   --card: #ffffff;
   --card-foreground: #222222;
@@ -42,25 +42,49 @@
   --font-sans: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Instrument Sans", monospace;
   
-  /* Sharp edges - no border radius */
-  --radius: 0;
+  /* Fully rounded buttons */
+  --radius: 9999px;
 }
 
 * {
   border-color: var(--border);
 }
 
+html {
+  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.025em;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: inherit;
+  letter-spacing: inherit;
 }
 
-/* Sharp edges for all elements */
+/* Apply tracking-tight to all text elements */
 *,
 *::before,
 *::after {
-  border-radius: 0 !important;
+  letter-spacing: inherit;
+}
+
+/* Explicitly set font and letter-spacing for form elements that might not inherit properly */
+input,
+textarea,
+select,
+button {
+  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* Fully rounded buttons */
+button,
+[role="button"],
+.btn,
+input[type="button"],
+input[type="submit"] {
+  border-radius: 9999px !important;
 }
 
 /* Hide scrollbar */
@@ -77,4 +101,48 @@ body {
 .btn-scoop {
   corner-shape: scoop;
   border-radius: 8px !important;
+}
+
+/* Animation utilities for shadcn Sheet/Drawer */
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@theme inline {
+  --animate-in: slide-in-from-right 0.5s ease-out;
+  --animate-out: slide-out-to-right 0.3s ease-in;
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-fade-out: fade-out 0.3s ease-in;
 }

@@ -18,6 +18,7 @@ import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Footer } from "@/components/zaha/footer";
 import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
 import { ProductVariations } from "@/components/zaha/product-variations";
+import { ProductReviewSection } from "@/components/zaha/product-review-section";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -155,12 +156,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {/* Sticky Header (Mobile) */}
       <ProductStickyHeader title={product.title} imageUrl={coverMedia} productId={product.id} />
       
-      {/* Spacer for desktop header (64px top bar + 1px border + 48px nav bar + 1px border = 114px) */}
-      <div className="hidden md:block h-[114px]"></div>
+      {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
+      <div className="hidden md:block h-[169px]"></div>
       
       {/* Breadcrumbs */}
       <div className="hidden md:block border-b bg-white border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-2">
+        <div className="max-w-[100rem] mx-auto px-12 py-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/app" className="hover:text-foreground">Home</Link>
             {category && (
@@ -179,13 +180,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       {/* Trust Indicators Bar (Ruban) */}
       <div className="hidden md:block bg-gray-100 border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-3">
+        <div className="max-w-[100rem] mx-auto px-12 py-3">
           <div className="flex items-center gap-6 text-sm text-[#222222]">
-            <span className="font-medium">Achetez en toute confiance sur ANDALUS</span>
+            <span className="font-medium">Achetez en toute confiance sur OFUS</span>
             <div className="flex items-center gap-1">
               <CheckCircle2 className="h-4 w-4" />
               <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
-                Protection sur les achats d'ANDALUS
+                Protection sur les achats d'OFUS
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -205,7 +206,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Main Content - Desktop Side-by-Side Layout */}
-      <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 bg-white md:bg-white">
+      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8 bg-white md:bg-white">
         <div className="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 mb-12">
           {/* Left: Product Images */}
           <div className="col-span-8">
@@ -218,15 +219,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Right: Product Details */}
-          <div className="col-span-4 space-y-6">
+          <div className="col-span-4 ">
             {/* Cart Count */}
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground mb-4">
               In {cartCount}+ carts
             </div>
 
             {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold">{Number(product.price).toLocaleString()} {product.currency || "MAD"}</span>
+            <div className="flex items-baseline gap- mb-4">
+              <span className="text-3xl font-bold mr-4">{Number(product.price).toLocaleString()} {product.currency || "MAD"}</span>
               {originalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
                   {originalPrice.toLocaleString()} {product.currency || "MAD"}
@@ -235,12 +236,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl font-bold leading-tight text-[#222222]">{product.title}</h1>
+            <h1 className="text-2xl font-bold leading-tight text-[#222222] mb-2">{product.title}</h1>
 
             {/* Seller Info with Rating */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 -mt-1">
               <Link href={`/store/${store.slug}`} className="text-sm font-medium hover:underline">
-                {store.name}
+               By  {store.name}
               </Link>
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
@@ -255,7 +256,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Keywords */}
             {(product as any).keywords && Array.isArray((product as any).keywords) && (product as any).keywords.length > 0 && (
-              <div className="pt-4 border-t">
+              <div className="pt-4">
                 <p className="text-sm text-[#222222]">
                   {(product as any).keywords.join(", ")}
                 </p>
@@ -264,7 +265,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Variations & Personalizations */}
             {(variations && variations.length > 0) || (personalizations && personalizations.length > 0) ? (
-              <div className="pt-4 border-t">
+              <div className="pt-4">
                 <ProductVariations
                   variations={(variations || []).map((v: any) => ({
                     id: v.id,
@@ -508,6 +509,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="grid grid-cols-12 gap-8 lg:gap-12">
             {/* Content - 8 columns (matching image section width) */}
             <div className="col-span-8 space-y-8">
+              {/* Review Form Section */}
+              <ProductReviewSection productId={product.id} />
+
               {/* Reviews Section */}
               <div className="border-t pt-8">
                 <div className="flex items-start justify-between mb-6">
@@ -583,7 +587,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           <span>4.9 ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
                         </div>
                         <span>13.3K sales</span>
-                        <span>7 years on ANDALUS</span>
+                        <span>7 years on OFUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
                         <StoreContactSheet store={store}>

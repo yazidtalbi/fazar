@@ -4,7 +4,7 @@ import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Andalus - Authentic Moroccan Craft",
+  title: "Ofus - Authentic Moroccan Craft",
   description: "Discover authentic handmade treasures or share your creations with the world",
 };
 
@@ -31,7 +31,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className="font-sans antialiased" style={{ fontFamily: '"Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      <body className="font-sans antialiased">
         <NuqsAdapterProvider>{children}</NuqsAdapterProvider>
         <Toaster />
       </body>
