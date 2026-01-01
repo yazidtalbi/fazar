@@ -24,7 +24,7 @@
 - [x] Real reviews and ratings display on product page
 - [x] Real reviews and ratings display on store page
 - [x] Real sales count calculation
-- [x] Real creation time/years on OFUS display
+- [x] Real creation time/years on AFUS display
 - [x] Categories page (`/categories/[slug]`)
 - [x] Search page (`/search`) with nuqs integration
 
@@ -83,7 +83,7 @@
   - [x] Real average rating calculation
   - [x] Real review count display
   - [x] Real sales count calculation
-  - [x] Real creation time/years on OFUS display
+  - [x] Real creation time/years on AFUS display
 
 ## ❌ Not Yet Implemented
 

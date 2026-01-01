@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { getGuestCartCount } from "@/lib/utils/guest-cart";
 
 export function CartCountBadge(): React.ReactElement {
   const [cartCount, setCartCount] = useState(0);
@@ -21,12 +22,15 @@ export function CartCountBadge(): React.ReactElement {
           const totalCount = items.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
           setCartCount(totalCount);
         } else if (response.status === 401) {
-          // User not authenticated, set count to 0
-          setCartCount(0);
+          // User not authenticated, use guest cart count
+          const guestCount = getGuestCartCount();
+          setCartCount(guestCount);
         }
       } catch (error) {
         console.error("Failed to fetch cart count:", error);
-        setCartCount(0);
+        // On error, try guest cart
+        const guestCount = getGuestCartCount();
+        setCartCount(guestCount);
       }
     }
 
@@ -36,18 +40,29 @@ export function CartCountBadge(): React.ReactElement {
     const handleCartUpdate = () => {
       fetchCartCount();
     };
+    
+    // Listen for guest cart update events
+    const handleGuestCartUpdate = () => {
+      const guestCount = getGuestCartCount();
+      setCartCount(guestCount);
+    };
 
-    // Listen for custom cart update event
+    // Listen for custom cart update events
     window.addEventListener("cartUpdated", handleCartUpdate);
+    window.addEventListener("guestCartUpdated", handleGuestCartUpdate);
 
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("guestCartUpdated", handleGuestCartUpdate);
     };
   }, []);
 
+  // Determine which cart page to link to
+  const cartLink = cartCount > 0 && pathname?.startsWith("/app") === false ? "/cart" : "/app/cart";
+
   return (
     <Link 
-      href="/app/cart" 
+      href={cartLink}
       className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors relative"
       aria-label="Shopping cart"
     >

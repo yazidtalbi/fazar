@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Store, Package, ShoppingBag, User, Megaphone, ArrowLeft, Home, Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -53,8 +54,16 @@ export function SellerNav(): React.ReactElement {
         <div className="h-full flex flex-col">
           {/* Logo/Brand */}
           <div className="p-6 border-b border-border">
-            <Link href="/seller" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors">
-              OFUS
+            <Link href="/seller" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <Image
+                src="/icon.png"
+                alt="Afus"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+                priority
+              />
+              <span className="text-2xl font-bold text-[#222222]">Afus</span>
             </Link>
             <p className="text-xs text-muted-foreground mt-1">Seller Dashboard</p>
             <Link 

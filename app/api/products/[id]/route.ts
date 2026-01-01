@@ -1,6 +1,32 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  // Fetch product with store and media (public endpoint)
+  const { data: product, error } = await supabase
+    .from("products")
+    .select(`
+      *,
+      product_media(media_url, media_type, order_index, is_cover),
+      stores!inner(id, name, slug)
+    `)
+    .eq("id", id)
+    .eq("status", "active")
+    .single();
+
+  if (error || !product) {
+    return NextResponse.json({ error: "Product not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ product });
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

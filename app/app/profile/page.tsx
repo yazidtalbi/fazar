@@ -42,7 +42,7 @@ export default async function ProfilePage() {
     "use server";
     const supabase = await createClient();
     await supabase.auth.signOut();
-    redirect("/auth/login");
+    redirect("/");
   }
 
   // Get order stats
@@ -169,16 +169,16 @@ export default async function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Link href="/app/orders">
-                  <Button variant="outline" className="w-full justify-start">
-                    My Orders
-                  </Button>
-                </Link>
-                <Link href="/app/cart">
-                  <Button variant="outline" className="w-full justify-start">
-                    Shopping Cart
-                  </Button>
-                </Link>
+              <Link href="/app/orders">
+                <Button variant="outline" className="w-full justify-start">
+                  My Orders
+                </Button>
+              </Link>
+              <Link href="/app/cart">
+                <Button variant="outline" className="w-full justify-start">
+                  Shopping Cart
+                </Button>
+              </Link>
                 <Link href="/app/saved">
                   <Button variant="outline" className="w-full justify-start">
                     Saved Items

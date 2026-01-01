@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { addToGuestCart } from "@/lib/utils/guest-cart";
+import { useSavedItems } from "@/components/saved-items-provider";
 
 type Product = Database["public"]["Tables"]["products"]["Row"] & {
   product_media: Array<{
@@ -49,10 +51,15 @@ function EstimatedReadyDate({ daysToCraft }: { daysToCraft: number }): React.Rea
 
 export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const router = useRouter();
-  const [isSaved, setIsSaved] = useState(false);
+  const { savedItems, refreshSavedItems } = useSavedItems();
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  // Compute isSaved from savedItems
+  const isSaved = useMemo(() => {
+    return savedItems.some((item: any) => item.product_id === product.id);
+  }, [savedItems, product.id]);
   
   const mediaArray = Array.isArray(product.product_media) ? product.product_media : [];
   const sortedMedia = [...mediaArray].sort((a, b) => a.order_index - b.order_index);
@@ -82,27 +89,13 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
     : null;
 
   useEffect(() => {
-    async function checkUserAndSaved() {
+    async function checkUser() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
-      
-      if (user) {
-        try {
-          const response = await fetch("/api/saved");
-          if (response.ok) {
-            const data = await response.json();
-            const savedItems = data.savedItems || [];
-            const saved = savedItems.some((item: any) => item.product_id === product.id);
-            setIsSaved(saved);
-          }
-        } catch (error) {
-          console.error("Error checking saved status:", error);
-        }
-      }
     }
-    checkUserAndSaved();
-  }, [product.id]);
+    checkUser();
+  }, []);
 
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
@@ -131,7 +124,8 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         throw new Error(error.error || "Failed to save product");
       }
 
-      setIsSaved(!isSaved);
+      // Refresh saved items in context to update all components
+      await refreshSavedItems();
       
       if (!isSaved) {
         toast.success("Product added to saved items");
@@ -150,6 +144,24 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
     e.preventDefault();
     e.stopPropagation();
     
+    // If guest, use localStorage
+    if (!user) {
+      setIsAddingToCart(true);
+      try {
+        addToGuestCart(product.id, 1);
+        toast.success("Item added to cart");
+        // Redirect to cart page (will need to handle guest cart)
+        router.push("/cart");
+      } catch (error: any) {
+        console.error("Error adding to guest cart:", error);
+        toast.error("Failed to add item to cart");
+      } finally {
+        setIsAddingToCart(false);
+      }
+      return;
+    }
+    
+    // For authenticated users, use API
     setIsAddingToCart(true);
     try {
       const response = await fetch("/api/cart", {
@@ -256,19 +268,21 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                 </div>
               )}
             </div>
-            {/* Heart Icon - Top Right (Always visible on mobile, hover on desktop) */}
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full p-2 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
-              aria-label={isSaved ? "Remove from saved" : "Save product"}
-            >
-              <Heart 
-                className={`h-5 w-5 transition-colors ${
-                  isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
-                }`} 
-              />
-            </button>
+            {/* Heart Icon - Top Right (Only for authenticated users) */}
+            {user && (
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full p-2 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                aria-label={isSaved ? "Remove from saved" : "Save product"}
+              >
+                <Heart 
+                  className={`h-5 w-5 transition-colors ${
+                    isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
+                  }`} 
+                />
+              </button>
+            )}
             {/* Add to Cart Button - Bottom Center (Desktop only on hover) */}
             <button
               onClick={handleAddToCart}

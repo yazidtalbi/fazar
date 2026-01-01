@@ -14,7 +14,7 @@ export async function Header(): Promise<React.ReactElement> {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href="/app" className="flex items-center gap-2">
-            <span className="text-2xl font-bold">OFUS</span>
+            <span className="text-2xl font-bold">AFUS</span>
             <span className="text-xs text-muted-foreground hidden sm:inline">
               ARTISAN MARKETPLACE
             </span>

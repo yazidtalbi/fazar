@@ -4,8 +4,13 @@ import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Ofus - Authentic Moroccan Craft",
+  title: "Afus - Authentic Moroccan Craft",
   description: "Discover authentic handmade treasures or share your creations with the world",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -16,20 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <style dangerouslySetInnerHTML={{
-          __html: `
-            @font-face {
-              font-family: 'Instrument Sans';
-              src: url('https://cdn.jsdelivr.net/gh/Instrument/instrument-sans@main/fonts/variable/InstrumentSans-Variable.woff2') format('woff2');
-              font-weight: 100 900;
-              font-style: normal;
-              font-display: swap;
-            }
-          `
-        }} />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-sans antialiased">
         <NuqsAdapterProvider>{children}</NuqsAdapterProvider>

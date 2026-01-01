@@ -82,7 +82,8 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/auth/login");
+    router.push("/");
+    router.refresh();
   }
 
   return (

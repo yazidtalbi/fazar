@@ -1,85 +1,138 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Facebook, Linkedin, Twitter } from "lucide-react";
 
 export function Footer(): React.ReactElement {
   return (
-    <footer className="bg-background border-t">
-      <div className="max-w-[100rem] mx-auto px-12 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
-          {/* About OFUS */}
-          <div>
-            <h3 className="font-bold uppercase mb-4">About OFUS</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              OFUS connects you with authentic Moroccan artisans, promoting fair trade, heritage, and craftsmanship. 
-              Discover unique handmade treasures or share your creations with the world.
+    <footer className="text-white" style={{ backgroundColor: '#1D0D2C' }}>
+      <div className="max-w-[100rem] mx-auto px-12 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:gap-y-8 md:gap-x-20 mb-12">
+          {/* Left Column - Branding */}
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/icon.png"
+                alt="Afus"
+                width={120}
+                height={40}
+                className="h-6 w-auto"
+              />
+              <span className="text-xl font-bold">Afus</span>
+            </div>
+
+            {/* Description */}
+            <p className="text-base text-white/80 mb-8 max-w-md">
+              Afus est une marketplace de produits artisanaux marocains authentiques. Découvrez des créations faites main ou partagez vos propres créations avec le monde.
             </p>
+
+            {/* Social Media Icons */}
+            <div className="flex gap-3 mt-8">
+              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Facebook">
+                <span className="text-sm font-bold">f</span>
+              </Link>
+              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="LinkedIn">
+                <Linkedin className="h-4 w-4" />
+              </Link>
+              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Twitter">
+                <Twitter className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
-          {/* Shop */}
-          <div>
-            <h3 className="font-bold uppercase mb-4">Shop</h3>
+          {/* Afus Column */}
+          <div className="md:col-span-1">
+            <h3 className="font-bold mb-4">Afus</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Gift Cards
+                <Link href="/search" className="text-white/80 hover:text-white transition-colors">
+                  À propos d&apos;Afus
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Sitemap
-                </Link>
-              </li>
-              <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  OFUS Blog
+                <Link href="/search" className="text-white/80 hover:text-white transition-colors">
+                  Comment ça marche
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Sell */}
-          <div>
-            <h3 className="font-bold uppercase mb-4">Sell</h3>
+          {/* For shopping Column */}
+          <div className="md:col-span-1">
+            <h3 className="font-bold mb-4">Pour les achats</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Sell on OFUS
+                <Link href="/search" className="text-white/80 hover:text-white transition-colors">
+                  Rechercher des produits
                 </Link>
               </li>
               <li>
-                <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Teams
+                <Link href="/app/cart" className="text-white/80 hover:text-white transition-colors">
+                  Mon panier
                 </Link>
               </li>
               <li>
-                <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Forums
+                <Link href="/search?category=sale" className="text-white/80 hover:text-white transition-colors">
+                  Meilleures offres
                 </Link>
               </li>
               <li>
-                <Link href="/seller" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Affiliates
+                <Link href="/app/orders" className="text-white/80 hover:text-white transition-colors">
+                  Mes commandes
+                </Link>
+              </li>
+              <li>
+                <Link href="/app/saved" className="text-white/80 hover:text-white transition-colors">
+                  Mes favoris
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Help */}
-          <div>
-            <h3 className="font-bold uppercase mb-4">Help</h3>
+          {/* For business Column */}
+          <div className="md:col-span-1">
+            <h3 className="font-bold mb-4">Pour les vendeurs</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Help Center
+                <Link href="/onboarding/seller" className="text-white/80 hover:text-white transition-colors">
+                  Devenir vendeur
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Trust and Safety
+                <Link href="/seller" className="text-white/80 hover:text-white transition-colors">
+                  Tableau de bord
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Privacy Settings
+                <Link href="/seller/products" className="text-white/80 hover:text-white transition-colors">
+                  Mes produits
+                </Link>
+              </li>
+              <li>
+                <Link href="/seller/orders" className="text-white/80 hover:text-white transition-colors">
+                  Mes commandes
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support Column */}
+          <div className="md:col-span-1">
+            <h3 className="font-bold mb-4">Support</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/search" className="text-white/80 hover:text-white transition-colors">
+                  Aide
+                </Link>
+              </li>
+              <li>
+                <Link href="/app/messages" className="text-white/80 hover:text-white transition-colors">
+                  Nous contacter
+                </Link>
+              </li>
+              <li>
+                <Link href="/app/profile" className="text-white/80 hover:text-white transition-colors">
+                  Mon compte
                 </Link>
               </li>
             </ul>
@@ -87,26 +140,17 @@ export function Footer(): React.ReactElement {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-            <div>
-              <span className="font-bold">OFUS</span> © {new Date().getFullYear()} Ofus, Inc.
+        <div className="border-t border-white/20 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+            <div className="text-white/80">
+              {new Date().getFullYear()} © Afus. All rights reserved.
             </div>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="#" className="hover:text-foreground transition-colors">
-                Terms of Use
+            <div className="flex gap-4">
+              <Link href="#" className="text-white/80 hover:text-white transition-colors">
+                Terms of Service
               </Link>
-              <span>|</span>
-              <Link href="#" className="hover:text-foreground transition-colors">
-                Privacy
-              </Link>
-              <span>|</span>
-              <Link href="#" className="hover:text-foreground transition-colors">
-                Interest-based ads
-              </Link>
-              <span>|</span>
-              <Link href="#" className="hover:text-foreground transition-colors">
-                Regions
+              <Link href="#" className="text-white/80 hover:text-white transition-colors">
+                Legal
               </Link>
             </div>
           </div>

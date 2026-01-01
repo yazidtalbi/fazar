@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Search, Heart, Bell, Gift, Globe, LayoutDashboard, MapPin, ChevronDown, Sparkles, Grid3x3, Store, User } from "lucide-react";
@@ -10,6 +11,7 @@ import { CartCountBadge } from "@/components/zaha/cart-count-badge";
 import { NotificationsDropdown } from "@/components/zaha/notifications-dropdown";
 import { ProfileDrawer } from "@/components/zaha/profile-drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AuthModal } from "@/components/auth/auth-modal";
 
 export function HeaderDesktop(): React.ReactElement {
   const [isVisible, setIsVisible] = useState(true);
@@ -17,6 +19,7 @@ export function HeaderDesktop(): React.ReactElement {
   const [user, setUser] = useState<any>(null);
   const [hasStore, setHasStore] = useState<boolean | null>(null);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [allCategories, setAllCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const router = useRouter();
@@ -74,9 +77,19 @@ export function HeaderDesktop(): React.ReactElement {
       
       if (data) {
         setAllCategories(data);
-        // Show first 7 categories in navbar
-        setCategories(data.slice(0, 7));
       }
+      
+      // Use static list of categories matching home page (don't fetch each time)
+      const staticCategories = [
+        { id: 'jewelry', name: 'Jewelry', slug: 'jewelry' },
+        { id: 'art', name: 'Art', slug: 'art' },
+        { id: 'beauty', name: 'Beauty', slug: 'beauty' },
+        { id: 'clothing', name: 'Clothing', slug: 'clothing' },
+        { id: 'bags', name: 'Bags', slug: 'bags' },
+        { id: 'home-living', name: 'Home Living', slug: 'home-living' },
+        { id: 'baby', name: 'Baby', slug: 'baby' },
+      ];
+      setCategories(staticCategories);
     }
     
     fetchCategories();
@@ -118,7 +131,7 @@ export function HeaderDesktop(): React.ReactElement {
 
             {/* Center: Promotional Message */}
             <div className="flex-1 text-center">
-              <span>Rejoignez-nous dès maintenant! c&apos;est gratuit, c&apos;est facile.</span>
+              <span>Your place to buy & sell all things handmade</span>
             </div>
 
             {/* Right: Store Selection */}
@@ -128,29 +141,37 @@ export function HeaderDesktop(): React.ReactElement {
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
               >
                 <Store className="h-4 w-4" />
-                <span>{hasStore ? "Manage my Ofus Shop" : "Sell on Ofus"}</span>
+                <span>{hasStore ? "Manage my Afus Shop" : "Sell on Afus"}</span>
               </Link>
             ) : (
-              <Link 
-                href="/auth/login"
+              <button
+                onClick={() => setAuthModalOpen(true)}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
               >
                 <Store className="h-4 w-4" />
-                <span>Sell on Ofus</span>
-              </Link>
+                <span>Sell on Afus</span>
+              </button>
             )}
           </div>
         </div>
       </div>
 
       {/* Main Navigation Bar - White */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-white">
         <div className="max-w-[100rem] mx-auto px-12">
-          <div className="flex items-center gap-6 h-20">
+          <div className="flex items-center gap-6 h-20 border-b border-border">
             {/* Left: Logo + Search */}
             <div className="flex items-center gap-8 flex-1">
-              <Link href="/app" className="text-2xl font-bold text-[#222222] hover:text-[#222222]/80 transition-colors flex-shrink-0">
-                Ofus
+              <Link href="/" className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
+                <Image
+                  src="/icon.png"
+                  alt="Afus"
+                  width={120}
+                  height={40}
+                  className="h-8 w-auto"
+                  priority
+                />
+                <span className="text-2xl font-bold text-[#222222]">Afus</span>
               </Link>
               
               {/* Search Bar - Light Grey (next to logo) */}
@@ -187,12 +208,12 @@ export function HeaderDesktop(): React.ReactElement {
                   </span>
                 </button>
               ) : (
-                <Link 
-                  href="/auth/login" 
-                  className="text-sm font-medium text-[#222222] px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-primary transition-colors"
+                <button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="text-sm font-medium text-[#222222] px-3 py-2 rounded-xl hover:bg-muted hover:text-primary transition-colors"
                 >
                   Se connecter
-                </Link>
+                </button>
               )}
 
               {/* Saved Items */}
@@ -241,7 +262,7 @@ export function HeaderDesktop(): React.ReactElement {
                   <ChevronDown className="h-3 w-3" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-y-auto">
+              <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-y-auto bg-white">
                 {allCategories.map((category) => (
                   <DropdownMenuItem key={category.id} asChild>
                     <Link
@@ -255,18 +276,31 @@ export function HeaderDesktop(): React.ReactElement {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Vertical Separator */}
+            <div className="h-6 w-px bg-gray-300"></div>
+
             {/* Category Links - Maximum 7 */}
             {categories.map((category, index) => (
               <React.Fragment key={category.id}>
+                {index > 0 && (
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 108 110"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-3.5 w-3.5"
+                    style={{ color: '#f3ece4' }}
+                  >
+                    <path d="M54.1416 0.291992L70.5439 16.6943H92.1592V38.8096L107.913 54.5645L107.991 54.6426L92.1592 70.4746V92.8408H70.5439L54.1416 109.243V109.535L53.9951 109.389L53.8496 109.535V109.243L37.4473 92.8408H15.832V70.4746L0 54.6426L0.078125 54.5645L15.832 38.8096V16.6943H37.4473L53.8496 0.291992V0L53.9951 0.145508L54.1416 0V0.291992Z" />
+                  </svg>
+                )}
                 <Link
                   href={`/categories/${category.slug}`}
                   className="text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors"
                 >
                   {category.name}
                 </Link>
-                {index < categories.length - 1 && (
-                  <div className="w-px h-4 bg-gray-200"></div>
-                )}
               </React.Fragment>
             ))}
 
@@ -286,6 +320,9 @@ export function HeaderDesktop(): React.ReactElement {
       
       {/* Profile Drawer */}
       <ProfileDrawer open={profileDrawerOpen} onOpenChange={setProfileDrawerOpen} />
+      
+      {/* Auth Modal */}
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} initialMode="login" />
     </header>
   );
 }

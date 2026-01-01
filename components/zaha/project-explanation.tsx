@@ -53,7 +53,7 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
       <div className="max-w-[100rem] mx-auto px-12 py-16">
         {/* Title */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900">Qu&apos;est-ce qu&apos;Ofus ?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900">Qu&apos;est-ce qu&apos;Afus ?</h2>
           <Link 
             href="/search" 
             className="text-sm text-neutral-700 underline hover:text-neutral-900 transition-colors"
@@ -69,39 +69,39 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
             {/* Introduction */}
             <div>
               <p className="text-lg text-neutral-800 mb-4">
-                Bienvenue sur Ofus, la marketplace en ligne où vous achetez directement auprès de créateurs passionnés.
+                Bienvenue sur Afus, la marketplace en ligne où vous achetez directement auprès de créateurs passionnés.
               </p>
               <p className="text-lg text-neutral-800 mb-4">
                 Une plateforme qui célèbre l&apos;expression artistique et la créativité
               </p>
               <p className="text-base text-neutral-700 leading-relaxed">
-                Ici, les artisans du monde entier se rassemblent pour partager leurs créations avec plus de 88 millions d&apos;acheteurs passionnés. Produits artisanaux, décoration vintage, accessoires à offrir et vêtements faits main : Ofus est la parfaite destination pour découvrir des articles exceptionnels, soutenir l&apos;achat local et le savoir-faire des vendeurs indépendants.
+                Ici, les artisans du monde entier se rassemblent pour partager leurs créations avec plus de 88 millions d&apos;acheteurs passionnés. Produits artisanaux, décoration vintage, accessoires à offrir et vêtements faits main : Afus est la parfaite destination pour découvrir des articles exceptionnels, soutenir l&apos;achat local et le savoir-faire des vendeurs indépendants.
               </p>
             </div>
 
             {/* Three Sections */}
             <div className="space-y-6">
-              {/* Pourquoi choisir Ofus ? */}
+              {/* Pourquoi choisir Afus ? */}
               <div>
-                <h3 className="text-xl font-bold mb-3 text-neutral-900">Pourquoi choisir Ofus ?</h3>
+                <h3 className="text-xl font-bold mb-3 text-neutral-900">Pourquoi choisir Afus ?</h3>
                 <p className="text-base text-neutral-700 leading-relaxed">
-                  Ofus offre une sélection unique de produits artisanaux et créatifs. Chaque achat soutient directement les créateurs indépendants et leur permet de continuer à partager leur passion avec le monde.
+                  Afus offre une sélection unique de produits artisanaux et créatifs. Chaque achat soutient directement les créateurs indépendants et leur permet de continuer à partager leur passion avec le monde.
                 </p>
               </div>
 
-              {/* Pourquoi faire confiance à Ofus ? */}
+              {/* Pourquoi faire confiance à Afus ? */}
               <div>
-                <h3 className="text-xl font-bold mb-3 text-neutral-900">Pourquoi faire confiance à Ofus ?</h3>
+                <h3 className="text-xl font-bold mb-3 text-neutral-900">Pourquoi faire confiance à Afus ?</h3>
                 <p className="text-base text-neutral-700 leading-relaxed">
-                  Ofus garantit la sécurité de vos transactions et la protection de vos données. Notre plateforme met en place des mesures de sécurité avancées pour assurer une expérience d&apos;achat en toute confiance.
+                  Afus garantit la sécurité de vos transactions et la protection de vos données. Notre plateforme met en place des mesures de sécurité avancées pour assurer une expérience d&apos;achat en toute confiance.
                 </p>
               </div>
 
-              {/* Comment devenir vendeur Ofus ? */}
+              {/* Comment devenir vendeur Afus ? */}
               <div>
-                <h3 className="text-xl font-bold mb-3 text-neutral-900">Comment devenir vendeur Ofus ?</h3>
+                <h3 className="text-xl font-bold mb-3 text-neutral-900">Comment devenir vendeur Afus ?</h3>
                 <p className="text-base text-neutral-700 leading-relaxed">
-                  Bonne nouvelle : notre plateforme est ouverte à tous ! Que vous soyez artisan indépendant, créateur de produits uniques, ou petite entreprise, vous pouvez commencer à vendre sur Ofus dès aujourd&apos;hui.
+                  Bonne nouvelle : notre plateforme est ouverte à tous ! Que vous soyez artisan indépendant, créateur de produits uniques, ou petite entreprise, vous pouvez commencer à vendre sur Afus dès aujourd&apos;hui.
                 </p>
               </div>
             </div>

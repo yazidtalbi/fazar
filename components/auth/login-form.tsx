@@ -6,11 +6,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
-export function LoginForm(): React.ReactElement {
+interface LoginFormProps {
+  onSuccess?: () => void;
+}
+
+export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [stayConnected, setStayConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -32,79 +37,128 @@ export function LoginForm(): React.ReactElement {
       return;
     }
 
-    router.push("/app");
-    router.refresh();
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      router.push("/app");
+      router.refresh();
+    }
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Marhaba</CardTitle>
-        <CardDescription>Enter your details to join the souk.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">EMAIL ADDRESS</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">PASSWORD</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error && (
-            <div className="text-sm text-destructive">{error}</div>
-          )}
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Loading..." : "CONTINUE →"}
-          </Button>
-        </form>
-        <div className="mt-6 space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">OR CONTINUE WITH</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" type="button" className="w-full">
-              G Google
-            </Button>
-            <Button variant="outline" type="button" className="w-full">
-              Apple
-            </Button>
-          </div>
+    <div className="w-full">
+      <h1 className="text-2xl font-bold mb-2 text-neutral-900">Connectez-vous pour continuer</h1>
+      
+      <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm font-medium text-neutral-900">Adresse email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border-2 border-neutral-900 rounded-xl bg-white"
+          />
         </div>
-        <div className="mt-6 text-center text-sm">
-          <p className="text-muted-foreground">
-            Don't have an account?{" "}
-            <a href="/auth/register" className="text-primary underline">
-              Sign Up
-            </a>
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            By continuing, you agree to our{" "}
-            <a href="#" className="text-primary underline">Terms of Service</a> and{" "}
-            <a href="#" className="text-primary underline">Privacy Policy</a>
-          </p>
+        
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm font-medium text-neutral-900">Mot de passe</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border-2 border-neutral-900 rounded-xl bg-white"
+          />
         </div>
-      </CardContent>
-    </Card>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="stayConnected"
+              checked={stayConnected}
+              onChange={(e) => setStayConnected(e.target.checked)}
+              className="w-4 h-4 border-2 border-neutral-900 rounded"
+            />
+            <Label htmlFor="stayConnected" className="text-sm text-neutral-700 cursor-pointer">
+              Rester connecté
+            </Label>
+          </div>
+          <Link href="#" className="text-sm text-neutral-600 hover:text-neutral-900 underline">
+            Mot de passe oublié ?
+          </Link>
+        </div>
+
+        {error && (
+          <div className="text-sm text-red-600">{error}</div>
+        )}
+
+        <Button 
+          type="submit" 
+          className="w-full bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl py-3 font-medium" 
+          disabled={isLoading}
+        >
+          {isLoading ? "Chargement..." : "Se connecter"}
+        </Button>
+      </form>
+
+      <div className="mt-6">
+        <Link href="#" className="text-sm text-neutral-600 hover:text-neutral-900 underline">
+          Vous n&apos;arrivez pas à vous connecter ?
+        </Link>
+      </div>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-4 text-neutral-600">OU</span>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl font-bold">G</span>
+          Continuer avec Google
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl font-bold">f</span>
+          Continuer avec Facebook
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl">🍎</span>
+          Continuer avec Apple
+        </Button>
+      </div>
+
+      <div className="mt-6 text-sm text-neutral-700 space-y-2">
+        <p>
+          En cliquant sur Se connecter, Continuer avec Google, Facebook, ou Apple, vous acceptez de respecter les{" "}
+          <Link href="#" className="underline hover:text-neutral-900">Conditions d&apos;utilisation</Link> et le{" "}
+          <Link href="#" className="underline hover:text-neutral-900">Règlement concernant la confidentialité</Link> d&apos;Afus.
+        </p>
+        <p className="text-xs text-neutral-600">
+          Afus peut vous envoyer des messages ; vous pouvez modifier vos préférences à cet égard dans les paramètres de votre compte. Nous ne publierons jamais sans votre autorisation.
+        </p>
+      </div>
+    </div>
   );
 }
-

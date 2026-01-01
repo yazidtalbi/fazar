@@ -59,8 +59,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       <div className="hidden md:block h-[169px]"></div>
 
       {/* Breadcrumbs - Desktop */}
-      <div className="hidden md:block border-b bg-white">
-        <div className="max-w-7xl mx-auto px-4 py-2">
+      <div className="hidden md:block border-t border-b bg-white">
+        <div className="max-w-[100rem] mx-auto px-12 py-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/app" className="hover:text-foreground">Home</Link>
             <ChevronRight className="h-4 w-4" />

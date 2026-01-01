@@ -59,7 +59,7 @@ export function AddToCartWithQuantity({ productId, className }: AddToCartWithQua
       <Button
         onClick={handleAddToCart}
         disabled={isLoading}
-        className="flex-1"
+        className="flex-1 rounded-full"
         size="lg"
       >
         <ShoppingCart className="h-5 w-5 mr-2" />

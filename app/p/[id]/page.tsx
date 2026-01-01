@@ -11,7 +11,7 @@ import { ProductCollapsibleSection } from "@/components/zaha/product-collapsible
 import { AddToCartWithQuantity } from "@/components/zaha/add-to-cart-with-quantity";
 import { EstimatedReadyDate } from "@/components/zaha/estimated-ready-date";
 import { ProductStickyHeader } from "@/components/zaha/product-sticky-header";
-import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2, Calendar, Package, Truck, Ruler, Weight, Hand, Scissors, Hash } from "lucide-react";
+import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2, Calendar, Package, Truck, Ruler, Weight, Scissors, Hash } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
 import { AddToCartButtonDesktop } from "@/components/zaha/add-to-cart-button-desktop";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
@@ -98,7 +98,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         .eq("status", "active")
         .neq("id", product.id)
         .neq("store_id", product.stores.id) // Exclude products from the same store
-        .limit(8)
+        .limit(12)
     : { data: null };
 
   // Get cover media for more products
@@ -169,8 +169,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     storeSalesCount = orderItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
   }
 
-  // Calculate years on OFUS
-  const yearsOnOfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
+  // Calculate years on AFUS
+  const yearsOnAfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
 
   const coverMedia = media[0]?.media_url || null;
   const category = product.categories as any;
@@ -189,7 +189,34 @@ export default async function ProductPage({ params }: ProductPageProps) {
       
       {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
       <div className="hidden md:block h-[169px]"></div>
-      
+
+      {/* Trust Indicators Bar (Ruban) */}
+      <div className="hidden md:block bg-muted border-t border-b border-border">
+        <div className="max-w-[100rem] mx-auto px-12 py-3">
+          <div className="flex items-center gap-6 text-sm text-[#222222]">
+            <span className="font-medium">Achetez en toute confiance sur AFUS</span>
+            <div className="flex items-center gap-1">
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Protection sur les achats d'AFUS
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Options de paiement sécurisées
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-[#222222] text-[#222222]" />
+              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
+                Avis vérifiés
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Breadcrumbs */}
       <div className="hidden md:block border-b bg-white border-border">
         <div className="max-w-[100rem] mx-auto px-12 py-2">
@@ -205,33 +232,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
             <ChevronRight className="h-4 w-4" />
             <span className="text-foreground line-clamp-1">{product.title}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Trust Indicators Bar (Ruban) */}
-      <div className="hidden md:block bg-muted border-b border-border">
-        <div className="max-w-[100rem] mx-auto px-12 py-3">
-          <div className="flex items-center gap-6 text-sm text-[#222222]">
-            <span className="font-medium">Achetez en toute confiance sur OFUS</span>
-            <div className="flex items-center gap-1">
-              <CheckCircle2 className="h-4 w-4" />
-              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
-                Protection sur les achats d'OFUS
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <CheckCircle2 className="h-4 w-4" />
-              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
-                Options de paiement sécurisées
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-[#222222] text-[#222222]" />
-              <span className="underline decoration-dotted cursor-pointer hover:text-[#222222]/70">
-                Avis vérifiés
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -328,26 +328,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Item Details (Collapsible) */}
-            <div className="border-t pt-4">
+            <div className="pt-4">
               <ProductCollapsibleSection title="Détails de l'article" defaultOpen={true}>
                 <div className="space-y-3 text-sm">
                   <div className="font-semibold mb-2">Principaux détails</div>
-                  <div className="flex items-start gap-3">
-                    <Hand className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <span className="font-semibold">Fabriqué par </span>
-                      <Link href={`/store/${store.slug}`} className="font-semibold hover:underline">{store.name}</Link>
-                    </div>
-                  </div>
-                  {(product as any).materials && (
-                    <div className="flex items-start gap-3">
-                      <Scissors className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="font-semibold">Matériaux: </span>
-                        <span>{(product as any).materials}</span>
-                      </div>
-                    </div>
-                  )}
                   {(product as any).size && (
                     <div className="flex items-start gap-3">
                       <Ruler className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
@@ -366,20 +350,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       </div>
                     </div>
                   )}
-                  <div>
-                    <span className="font-semibold">Condition: </span>
-                    <span>{product.condition || "New"}</span>
-                  </div>
-                  {category && (
-                    <div>
-                      <span className="font-semibold">Category: </span>
-                      <span>{category.name}</span>
-                    </div>
-                  )}
-                  {product.days_to_craft > 0 && (
-                    <div>
-                      <span className="font-semibold">Days to craft: </span>
-                      <span>{product.days_to_craft} days</span>
+                  {(product as any).materials && (
+                    <div className="flex items-start gap-3">
+                      <Scissors className="h-4 w-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-semibold">Matériaux: </span>
+                        <span>{(product as any).materials}</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -582,7 +559,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           <span>{rating > 0 ? rating.toFixed(1) : '0.0'} ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
                         </div>
                         <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
-                        <span>{yearsOnOfus > 0 ? `${yearsOnOfus} ${yearsOnOfus === 1 ? 'year' : 'years'}` : new Date(store.created_at).getFullYear()} on OFUS</span>
+                        <span>{yearsOnAfus > 0 ? `${yearsOnAfus} ${yearsOnAfus === 1 ? 'year' : 'years'}` : new Date(store.created_at).getFullYear()} on AFUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
                         <StoreContactSheet store={store}>
@@ -641,6 +618,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           ))}
                         </div>
                       </div>
+
+                      {/* Other items from this shop */}
+                      {moreProductsWithCover.length > 0 && (
+                        <div className="border-t pt-6 mt-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">Other items from this shop</h3>
+                            <Link href={`/store/${store.slug}`}>
+                              <Button variant="ghost" size="sm">
+                                View shop
+                              </Button>
+                            </Link>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {moreProductsWithCover.slice(0, 4).map((p: any) => (
+                              <ProductCard key={p.id} product={p} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -675,54 +671,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Similar Articles */}
+        {/* You might also like */}
         {similarProductsWithCover && similarProductsWithCover.length > 0 && (
           <div className="mt-12 border-t pt-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">Similar articles</h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-semibold">Vous aimerez peut-être aussi</h2>
+                <span className="text-sm text-muted-foreground">Annonces comprises</span>
+              </div>
               {category && (
                 <Link href={`/categories/${category.slug}`}>
                   <Button variant="ghost" size="sm">
-                    View all
+                    En voir plus
                   </Button>
                 </Link>
               )}
             </div>
-            <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {similarProductsWithCover.slice(0, 5).map((p: any) => (
+            <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {similarProductsWithCover.slice(0, 12).map((p: any) => (
                 <ProductCard key={p.id} product={p} />
               ))}
             </div>
             {/* Mobile: show horizontal scroll */}
             <div className="md:hidden flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-              {similarProductsWithCover.slice(0, 5).map((p: any) => (
-                <div key={p.id} className="flex-shrink-0 w-48">
-                  <ProductCard product={p} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* More from this Artisan */}
-        {moreProductsWithCover.length > 0 && (
-          <div className="mt-12 border-t pt-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">Other items from this shop</h2>
-              <Link href={`/store/${store.slug}`}>
-                <Button variant="ghost" size="sm">
-                  View shop
-                </Button>
-              </Link>
-            </div>
-            <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {moreProductsWithCover.slice(0, 5).map((p: any) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-            {/* Mobile: show horizontal scroll */}
-            <div className="md:hidden flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-              {moreProductsWithCover.slice(0, 5).map((p: any) => (
+              {similarProductsWithCover.slice(0, 12).map((p: any) => (
                 <div key={p.id} className="flex-shrink-0 w-48">
                   <ProductCard product={p} />
                 </div>

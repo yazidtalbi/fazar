@@ -39,8 +39,8 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
-  --font-sans: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Instrument Sans", monospace;
+  --font-family-sans: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Instrument Sans", monospace;
   
   /* Rounded borders - softer than fully rounded */
   --radius: 12px;
@@ -61,14 +61,15 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: inherit;
+  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   letter-spacing: inherit;
 }
 
-/* Apply tracking-tight to all text elements */
+/* Apply Instrument Sans to all text elements */
 *,
 *::before,
 *::after {
+  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   letter-spacing: inherit;
 }
 

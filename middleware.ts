@@ -50,10 +50,12 @@ export async function middleware(request: NextRequest) {
   const authRoutes = ["/auth/login", "/auth/register"];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // Protected routes
+  // Protected routes - allow /app home page for guests, protect other /app routes
   const isAppRoute = pathname.startsWith("/app") || pathname.startsWith("/seller");
+  const isAppHome = pathname === "/app";
+  const isProtectedAppRoute = isAppRoute && !isAppHome;
 
-  if (isAppRoute && !user) {
+  if (isProtectedAppRoute && !user) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 

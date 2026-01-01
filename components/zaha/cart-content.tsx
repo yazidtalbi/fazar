@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Star, Heart, Tag } from "lucide-react";
 import { toast } from "sonner";
+import { useSavedItems } from "@/components/saved-items-provider";
 
 interface CartItem {
   id: string;
@@ -35,6 +36,7 @@ interface CartItem {
 
 export function CartContent(): React.ReactElement {
   const router = useRouter();
+  const { refreshSavedItems } = useSavedItems();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
@@ -104,6 +106,7 @@ export function CartContent(): React.ReactElement {
       }
 
       await loadCart();
+      await refreshSavedItems();
       window.dispatchEvent(new CustomEvent("cartUpdated"));
       toast.success("Item saved for later");
     } catch (error) {

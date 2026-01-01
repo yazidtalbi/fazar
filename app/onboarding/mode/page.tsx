@@ -24,7 +24,7 @@ export default async function ModeSelectionPage() {
             <Button variant="ghost" size="icon">
               <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-bold">OFUS</h1>
+            <h1 className="text-xl font-bold">AFUS</h1>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>
@@ -35,7 +35,7 @@ export default async function ModeSelectionPage() {
       {/* Content */}
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-2">Welcome to Ofus</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome to Afus</h1>
           <p className="text-muted-foreground">Choose your path to begin your journey</p>
         </div>
         <ModeSelection />

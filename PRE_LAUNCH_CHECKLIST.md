@@ -1,14 +1,15 @@
 # Pre-Launch Checklist
 
-This document outlines all remaining tasks and requirements before launching the Ofus marketplace application.
+This document outlines all remaining tasks and requirements before launching the Afus marketplace application.
 
 ## 🔴 Critical (Must Complete Before Launch)
 
 ### Infrastructure & Security
 
 - [ ] **Supabase Storage Bucket Setup**
-  - [ ] Create `product-media` bucket in Supabase
-  - [ ] Configure storage policies:
+  - [x] Migration created (`019_storage_setup.sql`) - Run this in Supabase SQL Editor
+  - [ ] Create `product-media` bucket in Supabase (or run migration)
+  - [ ] Configure storage policies (included in migration)
     - [ ] Public read access for product images/videos
     - [ ] Authenticated write access for sellers
     - [ ] Public read access for review images
@@ -16,10 +17,12 @@ This document outlines all remaining tasks and requirements before launching the
     - [ ] Public read access for store logos/cover images
     - [ ] Authenticated write access for store media
   - [ ] Test file uploads and retrieval
-  - [ ] Set up file size limits (images: 5MB, videos: 50MB)
+  - [x] File size limits configured (images: 10MB, videos: 100MB in code, 5MB for reviews)
   - [ ] Configure CORS if needed
 
 - [ ] **Environment Variables Verification**
+  - [x] Documentation created (`docs/ENVIRONMENT_SETUP.md`)
+  - [x] Verification script created (`scripts/verify-setup.ts`) - Run `npm run verify-setup`
   - [ ] Verify `NEXT_PUBLIC_SUPABASE_URL` is set correctly
   - [ ] Verify `NEXT_PUBLIC_SUPABASE_ANON_KEY` is set correctly
   - [ ] Verify `SUPABASE_SERVICE_ROLE_KEY` is set correctly (server-side only)

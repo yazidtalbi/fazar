@@ -6,12 +6,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
-export function RegisterForm(): React.ReactElement {
+interface RegisterFormProps {
+  onSuccess?: () => void;
+}
+
+export function RegisterForm({ onSuccess }: RegisterFormProps): React.ReactElement {
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState<"buyer" | "seller">("buyer");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -39,126 +43,134 @@ export function RegisterForm(): React.ReactElement {
       return;
     }
 
-    // Create buyer or seller profile
-    if (userType === "buyer") {
-      const { error: profileError } = await supabase
-        .from("buyer_profiles")
-        .insert({ id: authData.user.id });
+    // Create buyer profile by default
+    const { error: profileError } = await supabase
+      .from("buyer_profiles")
+      .insert({ id: authData.user.id });
 
-      if (profileError) {
-        console.error("Failed to create buyer profile:", profileError);
-      }
-    } else {
-      const { error: profileError } = await supabase
-        .from("seller_profiles")
-        .insert({ id: authData.user.id });
-
-      if (profileError) {
-        console.error("Failed to create seller profile:", profileError);
-      }
+    if (profileError) {
+      console.error("Failed to create buyer profile:", profileError);
     }
 
-    router.push("/onboarding/mode");
-    router.refresh();
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      router.push("/onboarding/mode");
+      router.refresh();
+    }
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Marhaba</CardTitle>
-        <CardDescription>Enter your details to join the souk.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label>I WANT TO</Label>
-            <div className="flex gap-2 border border-border p-1 bg-muted">
-              <button
-                type="button"
-                onClick={() => setUserType("buyer")}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  userType === "buyer"
-                    ? "bg-background text-foreground border border-border"
-                    : "text-muted-foreground"
-                }`}
-              >
-                BUYER
-              </button>
-              <button
-                type="button"
-                onClick={() => setUserType("seller")}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  userType === "seller"
-                    ? "bg-background text-foreground border border-border"
-                    : "text-muted-foreground"
-                }`}
-              >
-                SELLER
-              </button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">EMAIL ADDRESS</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">PASSWORD</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-          {error && (
-            <div className="text-sm text-destructive">{error}</div>
-          )}
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Loading..." : "CONTINUE →"}
-          </Button>
-        </form>
-        <div className="mt-6 space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">OR CONTINUE WITH</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" type="button" className="w-full">
-              G Google
-            </Button>
-            <Button variant="outline" type="button" className="w-full">
-              Apple
-            </Button>
-          </div>
+    <div className="w-full">
+      <h1 className="text-2xl font-bold mb-2 text-neutral-900">Créez votre compte</h1>
+      <p className="text-sm text-neutral-600 mb-6">Inscrivez-vous en toute simplicité.</p>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm font-medium text-neutral-900">
+            Adresse email <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border-2 border-neutral-900 rounded-xl bg-white"
+          />
         </div>
-        <div className="mt-6 text-center text-sm">
-          <p className="text-muted-foreground">
-            Have an account?{" "}
-            <a href="/auth/login" className="text-primary underline">
-              Log In
-            </a>
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            By continuing, you agree to our{" "}
-            <a href="#" className="text-primary underline">Terms of Service</a> and{" "}
-            <a href="#" className="text-primary underline">Privacy Policy</a>
-          </p>
+
+        <div className="space-y-2">
+          <Label htmlFor="firstName" className="text-sm font-medium text-neutral-900">
+            Prénom <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="firstName"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+            className="border-2 border-neutral-900 rounded-xl bg-white"
+          />
         </div>
-      </CardContent>
-    </Card>
+        
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm font-medium text-neutral-900">
+            Mot de passe <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            className="border-2 border-neutral-900 rounded-xl bg-white"
+          />
+        </div>
+
+        {error && (
+          <div className="text-sm text-red-600">{error}</div>
+        )}
+
+        <div className="text-sm text-neutral-700 mb-4">
+          En cliquant sur S&apos;inscrire ou Continuer avec Google, Facebook, ou Apple, vous acceptez de respecter les{" "}
+          <Link href="#" className="text-blue-600 underline hover:text-blue-800">Conditions d&apos;utilisation</Link> et le{" "}
+          <Link href="#" className="text-blue-600 underline hover:text-blue-800">Règlement concernant la confidentialité</Link> d&apos;Afus.
+        </div>
+
+        <Button 
+          type="submit" 
+          className="w-full bg-neutral-200 text-neutral-900 hover:bg-neutral-300 rounded-xl py-3 font-medium" 
+          disabled={isLoading}
+        >
+          {isLoading ? "Chargement..." : "S&apos;inscrire"}
+        </Button>
+      </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-4 text-neutral-600">OU</span>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl font-bold text-blue-600">G</span>
+          Continuer avec Google
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl font-bold text-blue-600">f</span>
+          Continuer avec Facebook
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+        >
+          <span className="text-xl">🍎</span>
+          Continuer avec Apple
+        </Button>
+      </div>
+
+      <div className="mt-6 text-xs text-neutral-600">
+        <p>
+          Afus peut vous envoyer des messages ; vous pouvez modifier vos préférences à cet égard dans les paramètres de votre compte. Nous ne publierons jamais sans votre autorisation.
+        </p>
+      </div>
+    </div>
   );
 }
-

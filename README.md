@@ -1,4 +1,4 @@
-# Ofus - Authentic Moroccan Craft Marketplace
+# Afus - Authentic Moroccan Craft Marketplace
 
 A mobile-first Etsy-like marketplace for Morocco with an editorial, heritage-inspired UI.
 

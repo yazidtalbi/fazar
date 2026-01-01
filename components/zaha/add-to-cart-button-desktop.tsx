@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
+import { useSavedItems } from "@/components/saved-items-provider";
 
 interface AddToCartButtonDesktopProps {
   productId: string;
@@ -12,27 +13,14 @@ interface AddToCartButtonDesktopProps {
 
 export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProps): React.ReactElement {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const { savedItems, refreshSavedItems } = useSavedItems();
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
 
-  // Check if product is saved on mount
-  useEffect(() => {
-    async function checkSaved() {
-      try {
-        const response = await fetch("/api/saved");
-        if (response.ok) {
-          const data = await response.json();
-          const savedItems = data.savedItems || [];
-          const saved = savedItems.some((item: any) => item.product_id === productId);
-          setIsSaved(saved);
-        }
-      } catch (error) {
-        console.error("Error checking saved status:", error);
-      }
-    }
-    checkSaved();
-  }, [productId]);
+  // Compute isSaved from savedItems
+  const isSaved = useMemo(() => {
+    return savedItems.some((item: any) => item.product_id === productId);
+  }, [savedItems, productId]);
 
   async function handleAddToCart() {
     setIsLoading(true);
@@ -84,7 +72,8 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
         throw new Error(error.error || "Failed to save product");
       }
 
-      setIsSaved(!isSaved);
+      // Refresh saved items in context to update all components
+      await refreshSavedItems();
       
       if (!isSaved) {
         toast.success("Product added to saved items");
@@ -107,7 +96,7 @@ export function AddToCartButtonDesktop({ productId }: AddToCartButtonDesktopProp
         onClick={handleAddToCart}
         disabled={isLoading}
         size="lg" 
-        className="flex-1 bg-[#371837] hover:bg-[#371837]/90 text-white h-12 text-base font-medium"
+        className="flex-1 bg-[#371837] hover:bg-[#371837]/90 text-white h-12 text-base font-medium rounded-full"
       >
         {isLoading ? "Adding..." : "Add to cart"}
       </Button>

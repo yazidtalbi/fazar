@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { RegisterForm } from "@/components/auth/register-form";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default async function RegisterPage() {
@@ -16,40 +16,39 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center h-14">
-            <Link href="/welcome">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
+      <div className="border-b border-border">
+        <div className="max-w-[100rem] mx-auto px-12">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/app" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <Image
+                src="/icon.png"
+                alt="Afus"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+                priority
+              />
+              <span className="text-2xl font-bold text-[#d73502]">Afus</span>
+            </Link>
+            <Link href="/auth/login">
+              <Button variant="outline" className="border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 px-6 py-2">
+                Se connecter
               </Button>
             </Link>
-            <div className="flex-1 text-center">
-              <h1 className="text-xl font-bold">OFUS</h1>
-            </div>
-            <div className="w-10" /> {/* Spacer */}
           </div>
         </div>
       </div>
 
-      {/* Decorative Image */}
-      <div className="relative h-32 w-full bg-gradient-to-r from-primary/10 to-primary/5">
-      </div>
-
-      {/* Form */}
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-primary" />
-            <h2 className="text-2xl font-bold">Marhaba</h2>
-          </div>
-          <p className="text-sm text-muted-foreground">Enter your details to join the souk.</p>
+      {/* Form - Centered */}
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4">
+        <div className="w-full max-w-md">
+          <RegisterForm />
         </div>
-        <RegisterForm />
       </div>
     </div>
   );
 }
+
 

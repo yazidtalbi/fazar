@@ -127,8 +127,8 @@ export default async function StorePage({ params }: StorePageProps) {
       : 0;
   }
   
-  // Calculate years on OFUS
-  const yearsOnOfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
+  // Calculate years on AFUS
+  const yearsOnAfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
 
   return (
     <div className="min-h-screen bg-white">
@@ -312,9 +312,9 @@ export default async function StorePage({ params }: StorePageProps) {
                   <div className="text-2xl font-bold">{salesCount.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Sur OFUS depuis</div>
+                  <div className="text-sm text-muted-foreground mb-1">Sur AFUS depuis</div>
                   <div className="text-2xl font-bold">
-                    {yearsOnOfus > 0 ? `${yearsOnOfus} ${yearsOnOfus === 1 ? 'an' : 'ans'}` : new Date(store.created_at).getFullYear()}
+                    {yearsOnAfus > 0 ? `${yearsOnAfus} ${yearsOnAfus === 1 ? 'an' : 'ans'}` : new Date(store.created_at).getFullYear()}
                   </div>
                 </div>
               </div>
