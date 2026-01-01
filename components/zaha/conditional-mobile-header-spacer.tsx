@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-export function ConditionalMobileHeaderSpacer(): React.ReactElement {
+export function ConditionalMobileHeaderSpacer(): React.ReactElement | null {
   const pathname = usePathname();
   
   // Hide spacer on these pages on mobile

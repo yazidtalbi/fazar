@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { MobileHeader } from "@/components/zaha/mobile-header";
 
-export function ConditionalMobileHeader(): React.ReactElement {
+export function ConditionalMobileHeader(): React.ReactElement | null {
   const pathname = usePathname();
   
   // Hide header on these pages on mobile
