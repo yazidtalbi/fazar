@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Footer } from "@/components/zaha/footer";
+import { ProfileMobile } from "@/components/zaha/profile-mobile";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -71,8 +72,16 @@ export default async function ProfilePage() {
       {/* Spacer for desktop header */}
       <div className="hidden md:block h-[169px]"></div>
 
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8">
-        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-2 md:py-8">
+        {/* Mobile: Use ProfileMobile component */}
+        <div className="md:hidden">
+          <h1 className="text-2xl font-bold mb-4">My Profile</h1>
+          <ProfileMobile />
+        </div>
+
+        {/* Desktop: Original layout */}
+        <div className="hidden md:block">
+          <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
         <div className="grid md:grid-cols-3 gap-6">
           <Card>
@@ -200,6 +209,7 @@ export default async function ProfilePage() {
               </form>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
 

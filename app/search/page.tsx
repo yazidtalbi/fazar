@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
+import { BottomNav } from "@/components/zaha/bottom-nav";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
@@ -57,29 +58,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       {/* Desktop Header */}
       <HeaderDesktop />
       
-      {/* Mobile Header */}
-      <div className="md:hidden border-b bg-background sticky top-0 z-40">
-        <div className="max-w-[100rem] mx-auto px-12">
-          <div className="flex items-center justify-between h-14">
-            <Link href="/app">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-lg font-semibold">Search</h1>
-            <Link href="/app/cart">
-              <Button variant="ghost" size="icon">
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Desktop Content */}
       <div className="hidden md:block pt-[114px]">
         <div className="max-w-[100rem] mx-auto px-12 py-8">
@@ -97,7 +79,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* Mobile Content */}
       <div className="md:hidden">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-2 py-2">
           <Suspense fallback={<div>Loading...</div>}>
             <SearchClient
               initialProducts={initialProducts}
@@ -109,6 +91,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </Suspense>
         </div>
       </div>
+      
+      {/* Bottom Navbar for Mobile */}
+      <BottomNav />
     </div>
   );
 }

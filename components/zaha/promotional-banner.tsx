@@ -57,18 +57,20 @@ export function PromotionalBanner(): React.ReactElement {
       className="w-full h-full"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
+      opts={{ align: "start", loop: true }}
     >
-      <CarouselContent className="h-full">
+      <CarouselContent className="h-full -ml-0">
         {promotionalSlides.map((slide) => (
-          <CarouselItem key={slide.id} className="h-full">
-            <div className={`${slide.bgColor} h-full rounded-lg flex flex-col justify-center px-8 py-12 text-white`}>
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">{slide.title}</h2>
-                <p className="text-xl">{slide.subtitle}</p>
+          <CarouselItem key={slide.id} className="h-full pl-0 basis-full">
+            <div className={`${slide.bgColor} h-full rounded-lg flex flex-col justify-center px-4 md:px-8 py-8 md:py-12 text-white`}>
+              <div className="space-y-3 md:space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold">{slide.title}</h2>
+                <p className="text-lg md:text-xl">{slide.subtitle}</p>
                 <Link href={slide.buttonLink}>
                   <Button
                     variant="secondary"
-                    className="bg-white text-teal-700 hover:bg-gray-100 rounded-full mt-4"
+                    size="sm"
+                    className="bg-white text-teal-700 hover:bg-gray-100 rounded-full mt-2 md:mt-4 text-sm md:text-base"
                   >
                     {slide.buttonText}
                   </Button>

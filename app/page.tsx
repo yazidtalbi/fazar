@@ -11,9 +11,12 @@ import { ProjectExplanation } from "@/components/zaha/project-explanation";
 import { StoreDiscoverySection } from "@/components/zaha/store-discovery-section";
 import { CarouselNavButton } from "@/components/zaha/carousel-nav-button";
 import { PromotionalBanner } from "@/components/zaha/promotional-banner";
+import { SellerPromoBanner } from "@/components/zaha/seller-promo-banner";
 import { MasonryGrid } from "@/components/zaha/masonry-grid";
-import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { ProductCarousel } from "@/components/zaha/product-carousel";
+import { CityCard } from "@/components/zaha/city-card";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
+import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -24,8 +27,6 @@ export default async function HomePage() {
     redirect("/app");
   }
 
-  // For guests, show the home page content (same as /app but without auth requirement)
-  // Fetch the same data as /app/page.tsx
   // Get promoted products (trending)
   const { data: promotedProducts } = await supabase
     .from("products")
@@ -71,130 +72,163 @@ export default async function HomePage() {
     .order("name")
     .limit(10);
 
-  // Get categories with representative product images for desktop
-  const categoriesWithImages = await Promise.all(
-    ((categories || []).slice(0, 6)).map(async (category) => {
-      const { data: products } = await supabase
-        .from("products")
-        .select(`
-          id,
-          product_media(media_url, media_type, order_index, is_cover)
-        `)
-        .eq("status", "active")
-        .eq("category_id", category.id)
-        .limit(1);
-      
-      const product = products?.[0];
-      const mediaArray = (product?.product_media as any[]) || [];
-      const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
-      
-      return {
-        ...category,
-        imageUrl: coverMedia?.media_url || null,
-      };
-    })
-  );
+  // Get products with personalization options
+  // First get product IDs that have personalizations
+  const { data: personalizedProductIds } = await supabase
+    .from("product_personalizations")
+    .select("product_id")
+    .limit(1000);
 
-  // Get products for "Gifts for the Soul" section (spiritual/relaxing items)
-  const giftsProducts = promotedProducts && promotedProducts.length > 0 
-    ? promotedProducts.slice(0, 4) 
-    : trendingProducts?.slice(0, 4) || [];
+  const productIdsWithPersonalization = personalizedProductIds 
+    ? Array.from(new Set(personalizedProductIds.map((p: any) => p.product_id)))
+    : [];
 
-  // Get products for "Original Moroccan Gifts" carousel
-  const giftBoxProducts = newProducts?.slice(0, 5) || [];
+  // Then fetch those products with their media
+  let customizedProducts: any[] = [];
+  if (productIdsWithPersonalization.length > 0) {
+    const { data: personalizedProductsData } = await supabase
+      .from("products")
+      .select(`
+        *,
+        product_media(media_url, media_type, order_index, is_cover),
+        stores!inner(id, name, slug)
+      `)
+      .eq("status", "active")
+      .in("id", productIdsWithPersonalization)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    
+    customizedProducts = personalizedProductsData || [];
+  }
 
-  // Get products by cities (mock - in real app, filter by store location)
-  const cityProducts = newProducts?.slice(0, 5) || [];
-
-  // Get customized name items (products with personalization)
-  const customizedProducts = newProducts?.slice(0, 5) || [];
-
-  // Get "For her" gifts (products in gift/fashion categories)
-  const forHerProducts = newProducts?.slice(0, 5) || [];
+  // Get products on promotion (with promoted_price)
+  const { data: promotionProducts } = await supabase
+    .from("products")
+    .select(`
+      *,
+      product_media(media_url, media_type, order_index, is_cover),
+      stores!inner(id, name, slug)
+    `)
+    .eq("status", "active")
+    .not("promoted_price", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Desktop Header */}
       <HeaderDesktop />
+      
       {/* Spacer for desktop header */}
       <div className="hidden md:block h-[169px]"></div>
-      
-      {/* Hero Section - Mobile: Original Layout, Desktop: Split Layout */}
-      {/* Mobile Hero */}
-      <div className="relative w-full h-64 md:hidden bg-gradient-to-r from-accent/30 via-muted to-background overflow-hidden rounded-b-3xl">
-        <div className="relative max-w-[100rem] mx-auto px-12 h-full flex items-center">
-          <div className="max-w-md">
-            <h2 className="text-4xl font-bold mb-4">DISCOVER THE SOUL OF MOROCCO</h2>
-            <p className="text-lg mb-6 text-muted-foreground">
-              Hand-woven history in every knot. Explore our vintage collection.
-            </p>
-            <Link href="/search">
-              <Button size="lg">SHOP NOW</Button>
-            </Link>
-          </div>
+
+      {/* Mobile: Promotional Banner Carousel */}
+      <div className="md:hidden -mx-2 -mt-2 mb-0">
+        <div className="h-64">
+          <PromotionalBanner />
         </div>
       </div>
 
-      {/* Desktop Hero - Two Section Layout */}
-      <div className="hidden md:block relative w-full min-h-[500px] bg-background">
-        <div className="max-w-[100rem] mx-auto px-12 py-8">
-          <div className="grid md:grid-cols-3 gap-6 h-[500px]">
-            {/* Left Section - Promotional Carousel (2/3 width) */}
-            <div className="md:col-span-2 h-full">
-              <PromotionalBanner />
-            </div>
-            
-            {/* Right Section - Hand Promotional Banner (1/3 width) */}
-            <div className="h-full">
-              <div className="rounded-3xl overflow-hidden h-full" style={{ background: 'linear-gradient(to bottom, #fef8ec, #f4e9fa)' }}>
-                <div className="relative flex flex-col items-center justify-end h-full p-6">
-                  <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4 text-center">
-                    Download the mobile<br />app now
-                  </p>
-                  <Image
-                    src="/landing/hands.png"
-                    alt="Hand"
-                    width={600}
-                    height={600}
-                    className="object-contain max-w-full max-h-full"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+{/* Desktop Hero - Two Section Layout */}
+<div className="hidden md:block relative w-full min-h-[500px] bg-background">
+  <div className="max-w-[100rem] mx-auto px-12 py-8">
+    <div className="grid md:grid-cols-3 gap-6 items-stretch">
+      {/* Left Section - Seller Promotional Banner (2/3 width) */}
+      <div className="md:col-span-2 h-full">
+        <SellerPromoBanner />
       </div>
+
+{/* Right Section - Hand Promotional Banner */}
+<div className="h-full">
+  <div
+    className="rounded-3xl overflow-hidden h-full"
+    style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
+  >
+    <div className="relative flex flex-col h-full pt-10 px-10">
+      {/* Text */}
+      <p className="text-2xl md:text-3xl font-semibold text-right text-[#673399]">
+        Download the <br /> mobile App now
+      </p>
+
+      {/* Image wrapper takes remaining height */}
+      <div className="relative flex-1 flex items-end justify-end">
+        <Image
+          src="/landing/hands.png"
+          alt="Hand"
+          fill
+          className="object-contain object-bottom"
+          priority
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
 
       {/* Browse by Category Section */}
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-16">
-        <h2 className="text-xl md:text-4xl font-bold mb-4 md:mb-12 text-center">
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-2 md:py-8 md:pb-16">
+        <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-[30px] text-left md:text-center">
           Browse by Category
         </h2>
         
-        {/* Mobile: Horizontal Scroll */}
+        {/* Mobile: Horizontal Scroll with Images (same as desktop) */}
         <div className="md:hidden">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {categories && categories.map((category) => (
-              <Link key={category.id} href={`/categories/${category.slug}`}>
-                <Button variant="outline" className="whitespace-nowrap">
-                  {category.name.toUpperCase()}
-                </Button>
-              </Link>
-            ))}
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
+            {[
+              { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
+              { name: 'Art', slug: 'art', image: '/cat/11.png' },
+              { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
+              { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
+              { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
+              { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
+              { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
+            ].map((cat) => {
+              // Try to find matching category in database, otherwise use provided slug
+              const dbCategory = categories?.find(c => 
+                c.name.toLowerCase() === cat.name.toLowerCase() || 
+                c.slug === cat.slug
+              );
+              const categorySlug = dbCategory?.slug || cat.slug;
+              
+              return (
+                <Link 
+                  key={cat.slug} 
+                  href={`/categories/${categorySlug}`}
+                  className="flex flex-col items-center gap-2 flex-shrink-0"
+                >
+                  <div className="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      width={64}
+                      height={64}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <span className="text-xs font-medium text-foreground text-center whitespace-nowrap">
+                    {cat.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
         {/* Desktop: Horizontal Category Layout - 7 categories in viewport */}
-        <div className="hidden md:flex items-center justify-between w-full gap-2 lg:gap-4 xl:gap-6">
+        <div className="hidden md:flex items-center justify-between w-full max-w-auto xl:max-w-7/8 mx-auto gap-1">
           {/* Fixed list of categories that match available images */}
           {[
-            { name: 'Jewelry', slug: 'jewelry', image: '/cat/jewelry.png' },
-            { name: 'Art', slug: 'art', image: '/cat/11z.png' },
-            { name: 'Beauty', slug: 'beauty', image: '/cat/beauty.png' },
-            { name: 'Clothing', slug: 'clothing', image: '/cat/clothing.png' },
-            { name: 'Bags', slug: 'bags', image: '/cat/bags.png' },
-            { name: 'Home Living', slug: 'home-living', image: '/cat/home.png' },
-            { name: 'Baby', slug: 'baby', image: '/cat/baby.png' },
+            { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
+            { name: 'Art', slug: 'art', image: '/cat/11.png' },
+            { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
+            { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
+            { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
+            { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
+            { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
           ].map((cat) => {
             // Try to find matching category in database, otherwise use provided slug
             const dbCategory = categories?.find(c => 
@@ -227,204 +261,156 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Hand Promotional Banner Section */}
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-16">
-        <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(to bottom, #fef8ec, #f4e9fa)' }}>
-          <div className="relative flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px] p-6">
-            <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4 text-center">
-              Download the mobile<br />app now
-            </p>
-            <Image
-              src="/landing/hands.png"
-              alt="Hand"
-              width={600}
-              height={600}
-              className="object-contain max-w-full max-h-full"
-              priority
-            />
-          </div>
+      {/* City Cards Section */}
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:py-8">
+        <div className="flex items-center justify-between mb-4 md:mb-12">
+          <h2 className="text-xl md:text-4xl font-bold">
+            Discover the wonders from cities
+          </h2>
+          <Link href="/search" className="hidden md:block">
+            <Button variant="ghost" className="text-sm">
+              Voir tout
+            </Button>
+          </Link>
+        </div>
+        {/* Desktop: Grid */}
+        <div className="hidden md:grid md:grid-cols-5 gap-4">
+          <CityCard 
+            cityName="Meknès" 
+            imagePath="/cities/meknes.png"
+            href="/search?city=meknes"
+            backgroundColor="#235C4B"
+            textColor="#FFFFFF"
+          />
+          <CityCard 
+            cityName="Tétouan" 
+            imagePath="/cities/tetouan.png"
+            href="/search?city=tetouan"
+            backgroundColor="#FEF8EC"
+            textColor="#000000"
+          />
+          <CityCard 
+            cityName="Marrakech" 
+            imagePath="/cities/marrakech.png"
+            href="/search?city=marrakech"
+            backgroundColor="#E75A3F"
+            textColor="#FFFFFF"
+          />
+          <CityCard 
+            cityName="Rabat" 
+            imagePath="/cities/rabat.png"
+            href="/search?city=rabat"
+            backgroundColor="#1B2E35"
+            textColor="#FFFFFF"
+          />
+          <CityCard 
+            cityName="Fès" 
+            imagePath="/cities/fes.png"
+            href="/search?city=fes"
+            backgroundColor="#2B1C28"
+            textColor="#FFFFFF"
+          />
+        </div>
+        {/* Mobile: Horizontal Scroll */}
+        <div className="md:hidden flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
+          {[
+            { cityName: "Meknès", imagePath: "/cities/meknes.png", href: "/search?city=meknes", backgroundColor: "#235C4B", textColor: "#FFFFFF" },
+            { cityName: "Tétouan", imagePath: "/cities/tetouan.png", href: "/search?city=tetouan", backgroundColor: "#FEF8EC", textColor: "#000000" },
+            { cityName: "Marrakech", imagePath: "/cities/marrakech.png", href: "/search?city=marrakech", backgroundColor: "#E75A3F", textColor: "#FFFFFF" },
+            { cityName: "Rabat", imagePath: "/cities/rabat.png", href: "/search?city=rabat", backgroundColor: "#1B2E35", textColor: "#FFFFFF" },
+            { cityName: "Fès", imagePath: "/cities/fes.png", href: "/search?city=fes", backgroundColor: "#2B1C28", textColor: "#FFFFFF" },
+          ].map((city) => (
+            <div key={city.cityName} className="flex-shrink-0 w-36">
+              <CityCard 
+                cityName={city.cityName} 
+                imagePath={city.imagePath}
+                href={city.href}
+                backgroundColor={city.backgroundColor}
+                textColor={city.textColor}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Mobile: Trending Now Section */}
-      {trendingProducts && trendingProducts.length > 0 && (
-        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
+      {/* Mobile: Promoted Items First */}
+      {promotedProducts && promotedProducts.length > 0 && (
+        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold uppercase">TRENDING NOW</h2>
+            <h2 className="text-xl font-bold">Promoted Items</h2>
             <Link href="/search?sort=recommended">
-              <Button variant="ghost" className="text-primary">
-                VIEW ALL
+              <Button variant="ghost" className="text-primary text-sm">
+                View All
               </Button>
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {trendingProducts.slice(0, 4).map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Mobile: New Arrivals Section with Masonry Grid */}
-      {newProducts && newProducts.length > 0 && (
-        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold uppercase">NEW ARRIVALS</h2>
-            <Button variant="ghost" size="icon">
-              <Filter className="h-5 w-5" />
-            </Button>
-          </div>
           <MasonryGrid columns={{ mobile: 2 }}>
-            {newProducts.slice(0, 8).map((product: any) => (
+            {promotedProducts.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </MasonryGrid>
         </div>
       )}
 
-      {/* Desktop: Todays Best Deals For You! Section */}
-      {promotedProducts && promotedProducts.length > 0 && (
-        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-4xl font-bold text-[#222222]">Todays Best Deals For You!</h2>
-            <Link href="/search?sort=recommended">
-              <span className="text-sm text-primary hover:underline cursor-pointer">View All &gt;</span>
-            </Link>
-          </div>
-          <div className="grid grid-cols-5 gap-4">
-            {promotedProducts.slice(0, 5).map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Desktop: Discount Section (60% Off Or More) */}
-      {trendingProducts && trendingProducts.length > 0 && (
-        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-4xl font-bold text-[#222222]">60% Off Or More On Winter-Wear</h2>
-            <Link href="/search?category=winter">
-              <span className="text-sm text-primary hover:underline cursor-pointer">View All &gt;</span>
-            </Link>
-          </div>
-          <div className="grid grid-cols-5 gap-4">
-            {trendingProducts.slice(0, 5).map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Desktop: Gifts for the Soul Section - Split Layout */}
-      {giftsProducts.length > 0 && (
-        <div className="hidden md:block bg-muted py-16">
-          <div className="max-w-[100rem] mx-auto px-12">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              {/* Left Side - Text Content */}
-              <div className="space-y-6">
-                <p className="text-sm uppercase tracking-wider text-muted-foreground">Discover More</p>
-                <h2 className="text-5xl font-bold">Gifts for the Soul</h2>
-                <p className="text-lg text-muted-foreground">
-                  Curated selections of spiritual and relaxing items, from Oud incense to hand-painted calligraphy.
-                </p>
-                <Link href="/search">
-                  <Button variant="ghost" className="text-sm uppercase">
-                    View More
-                  </Button>
-                </Link>
-              </div>
-              {/* Right Side - Image */}
-              <div className="relative w-full h-[400px] bg-background border">
-                {/* Placeholder for gifts image */}
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                  Gifts Image
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Desktop: Category Rails - Gift Categories */}
-      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-[#222222]">
-          Des cadeaux aussi extraordinaires que leur destinataire
-        </h2>
-        <div className="relative">
-          <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-            {[
-              { title: "Cadeaux bien-être", image: "🧘", products: giftsProducts },
-              { title: "Cadeaux douillets", image: "🛏️", products: giftBoxProducts },
-              { title: "Cadeaux pour crémaillère", image: "🏠", products: cityProducts },
-              { title: "Cadeaux pour bébés", image: "👶", products: customizedProducts },
-              { title: "Cadeaux pour lui", image: "🎁", products: forHerProducts },
-            ].map((category, idx) => (
-              <Link key={idx} href={`/search?category=${category.title}`} className="flex-shrink-0 w-80 group">
-                <Card className="overflow-hidden hover:border-primary/30 transition-colors">
-                  <div className="relative aspect-[4/3] w-full bg-muted">
-                    {category.products[0] ? (
-                      (() => {
-                        const mediaArray = Array.isArray(category.products[0].product_media) 
-                          ? category.products[0].product_media 
-                          : [];
-                        const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
-                        return coverMedia?.media_url ? (
-                          <Image
-                            src={coverMedia.media_url}
-                            alt={category.title}
-                            fill
-                            className="object-cover"
-                            sizes="320px"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-gray-100 to-gray-200">
-                            {category.image}
-                          </div>
-                        );
-                      })()
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-gray-100 to-gray-200">
-                        {category.image}
-                      </div>
-                    )}
-                    {/* Search overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-4">
-                      <div className="flex items-center gap-2 text-sm font-medium text-[#222222]">
-                        <Search className="h-4 w-4" />
-                        <span>{category.title}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
-          <CarouselNavButton />
-        </div>
-      </div>
-
-      {/* Desktop: Cities Rail */}
-      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-[#222222]">Par ville</h2>
-          <Link href="/search?sort=newest">
-            <Button variant="ghost" className="text-sm">
-              Voir tout
+      {/* Mobile: New Arrivals Section with Masonry Grid */}
+      {newProducts && newProducts.length > 0 && (
+        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">New Arrivals</h2>
+            <Button variant="ghost" size="icon">
+              <Filter className="h-5 w-5" />
             </Button>
-          </Link>
+          </div>
+          <MasonryGrid columns={{ mobile: 2 }}>
+            {newProducts.map((product: any) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </MasonryGrid>
         </div>
-        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-          {cityProducts.map((product: any) => (
-            <div key={product.id} className="flex-shrink-0 w-64">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
-      {/* Desktop: Customized Name Items Rail */}
-      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
+
+      {/* Desktop: Promoted Articles Section */}
+      {promotedProducts && promotedProducts.length > 0 && (
+        <ProductCarousel
+          title="Articles en vedette"
+          products={promotedProducts}
+          viewAllHref="/search?sort=recommended"
+        />
+      )}
+
+      {/* Desktop: Newest Rail */}
+      {newProducts && newProducts.length > 0 && (
+        <ProductCarousel
+          title="Nouveautés"
+          products={newProducts}
+          viewAllHref="/search?sort=newest"
+        />
+      )}
+
+      {/* Desktop: Promotion Items Section - Hidden for now */}
+      {/* {promotionProducts && promotionProducts.length > 0 && (
+        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-[#222222]">Promotion</h2>
+            <Link href="/search?category=sale">
+              <Button variant="ghost" className="text-sm">
+                Voir tout
+              </Button>
+            </Link>
+          </div>
+          <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+            {promotionProducts.slice(0, 10).map((product: any) => (
+              <div key={product.id} className="flex-shrink-0 w-64">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )} */}
+
+      {/* Desktop: Customized Name Items Rail - Hidden for now */}
+      {/* <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-[#222222]">Articles personnalisés</h2>
           <Link href="/search?category=personalized">
@@ -440,45 +426,8 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      {/* Desktop: Newest Rail */}
-      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-[#222222]">Nouveautés</h2>
-          <Link href="/search?sort=newest">
-            <Button variant="ghost" className="text-sm">
-              Voir tout
-            </Button>
-          </Link>
-        </div>
-        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-          {newProducts?.slice(0, 10).map((product: any) => (
-            <div key={product.id} className="flex-shrink-0 w-64">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop: For Her Gifts Rail */}
-      <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-[#222222]">Cadeaux pour elle</h2>
-          <Link href="/search?category=for-her">
-            <Button variant="ghost" className="text-sm">
-              Voir tout
-            </Button>
-          </Link>
-        </div>
-        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-          {forHerProducts.map((product: any) => (
-            <div key={product.id} className="flex-shrink-0 w-64">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Desktop: Store Discovery Section */}
       <div className="hidden md:block">

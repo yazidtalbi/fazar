@@ -25,8 +25,10 @@ export default async function CartPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 md:px-6 md:py-8 max-w-7xl">
-        <CartContent />
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-0 md:py-8">
+        <div className="pt-2 md:pt-0">
+          <CartContent />
+        </div>
       </div>
     </div>
   );

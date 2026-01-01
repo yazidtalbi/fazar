@@ -18,8 +18,11 @@ export function ProductStickyHeader({ title, imageUrl, productId }: ProductStick
 
   useEffect(() => {
     function handleScroll() {
-      // Show sticky header when user scrolls past the hero image (approximately 400px)
-      setIsVisible(window.scrollY > 400);
+      // Show sticky header when user scrolls past the 3rd image
+      // Assuming each image is approximately viewport height (100vh), show at ~2.5-3 images
+      // For mobile, this is typically around 600-800px depending on device
+      const scrollThreshold = window.innerHeight * 2.5;
+      setIsVisible(window.scrollY > scrollThreshold);
     }
 
     window.addEventListener("scroll", handleScroll);

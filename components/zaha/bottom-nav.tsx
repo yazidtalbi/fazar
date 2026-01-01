@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Grid3x3, Plus, Heart, User } from "lucide-react";
+import { Home, Search, Heart, ShoppingBag, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function BottomNav(): React.ReactElement {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/app", label: "HOME", icon: Home },
-    { href: "/search", label: "SHOP", icon: Grid3x3 },
-    { href: "/seller/products/new", label: "SELL", icon: Plus, highlight: true },
-    { href: "/app/saved", label: "SAVED", icon: Heart },
-    { href: "/app/profile", label: "PROFILE", icon: User },
+    { href: "/app", label: "Home", icon: Home },
+    { href: "/search", label: "Shop", icon: Search },
+    { href: "/app/saved", label: "Saved", icon: Heart },
+    { href: "/app/orders", label: "Orders", icon: Package },
+    { href: "/app/cart", label: "Cart", icon: ShoppingBag },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t bg-background z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background z-50 md:hidden">
       <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -32,14 +32,8 @@ export function BottomNav(): React.ReactElement {
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
-              {item.highlight ? (
-                <div className="w-10 h-10 bg-primary flex items-center justify-center">
-                  <Icon className="h-5 w-5 text-primary-foreground" />
-                </div>
-              ) : (
-                <Icon className="h-5 w-5" />
-              )}
-              <span className={cn("font-medium", item.highlight && "text-primary")}>{item.label}</span>
+              <Icon className="h-5 w-5" />
+              <span className="font-medium">{item.label}</span>
             </Link>
           );
         })}

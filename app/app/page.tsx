@@ -108,19 +108,10 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section - Mobile: Original Layout, Desktop: Split Layout */}
-      {/* Mobile Hero */}
-      <div className="relative w-full h-64 md:hidden bg-gradient-to-r from-accent/30 via-muted to-background overflow-hidden rounded-b-3xl">
-        <div className="relative max-w-[100rem] mx-auto px-12 h-full flex items-center">
-          <div className="max-w-md">
-            <h2 className="text-4xl font-bold mb-4">DISCOVER THE SOUL OF MOROCCO</h2>
-            <p className="text-lg mb-6 text-muted-foreground">
-              Hand-woven history in every knot. Explore our vintage collection.
-            </p>
-            <Link href="/search">
-              <Button size="lg">SHOP NOW</Button>
-            </Link>
-          </div>
+      {/* Mobile: Promotional Banner Carousel */}
+      <div className="md:hidden -mx-2 -mt-2 mb-0">
+        <div className="h-64">
+          <PromotionalBanner />
         </div>
       </div>
 
@@ -165,21 +156,51 @@ export default async function HomePage() {
 
 
       {/* Browse by Category Section */}
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8 md:pb-16">
-        <h2 className="text-3xl font-bold mb-[30px] text-center">
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-2 md:py-8 md:pb-16">
+        <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-[30px] text-left md:text-center">
           Browse by Category
         </h2>
         
-        {/* Mobile: Horizontal Scroll */}
+        {/* Mobile: Horizontal Scroll with Images (same as desktop) */}
         <div className="md:hidden">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {categories && categories.map((category) => (
-              <Link key={category.id} href={`/categories/${category.slug}`}>
-                <Button variant="outline" className="whitespace-nowrap">
-                  {category.name.toUpperCase()}
-                </Button>
-              </Link>
-            ))}
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
+            {[
+              { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
+              { name: 'Art', slug: 'art', image: '/cat/11.png' },
+              { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
+              { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
+              { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
+              { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
+              { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
+            ].map((cat) => {
+              // Try to find matching category in database, otherwise use provided slug
+              const dbCategory = categories?.find(c => 
+                c.name.toLowerCase() === cat.name.toLowerCase() || 
+                c.slug === cat.slug
+              );
+              const categorySlug = dbCategory?.slug || cat.slug;
+              
+              return (
+                <Link 
+                  key={cat.slug} 
+                  href={`/categories/${categorySlug}`}
+                  className="flex flex-col items-center gap-2 flex-shrink-0"
+                >
+                  <div className="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      width={64}
+                      height={64}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <span className="text-xs font-medium text-foreground text-center whitespace-nowrap">
+                    {cat.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -227,18 +248,19 @@ export default async function HomePage() {
       </div>
 
       {/* City Cards Section */}
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8">
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:py-8">
         <div className="flex items-center justify-between mb-4 md:mb-12">
           <h2 className="text-xl md:text-4xl font-bold">
             Discover the wonders from cities
           </h2>
-          <Link href="/search">
+          <Link href="/search" className="hidden md:block">
             <Button variant="ghost" className="text-sm">
               Voir tout
             </Button>
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {/* Desktop: Grid */}
+        <div className="hidden md:grid md:grid-cols-5 gap-4">
           <CityCard 
             cityName="Meknès" 
             imagePath="/cities/meknes.png"
@@ -275,38 +297,58 @@ export default async function HomePage() {
             textColor="#FFFFFF"
           />
         </div>
+        {/* Mobile: Horizontal Scroll */}
+        <div className="md:hidden flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
+          {[
+            { cityName: "Meknès", imagePath: "/cities/meknes.png", href: "/search?city=meknes", backgroundColor: "#235C4B", textColor: "#FFFFFF" },
+            { cityName: "Tétouan", imagePath: "/cities/tetouan.png", href: "/search?city=tetouan", backgroundColor: "#FEF8EC", textColor: "#000000" },
+            { cityName: "Marrakech", imagePath: "/cities/marrakech.png", href: "/search?city=marrakech", backgroundColor: "#E75A3F", textColor: "#FFFFFF" },
+            { cityName: "Rabat", imagePath: "/cities/rabat.png", href: "/search?city=rabat", backgroundColor: "#1B2E35", textColor: "#FFFFFF" },
+            { cityName: "Fès", imagePath: "/cities/fes.png", href: "/search?city=fes", backgroundColor: "#2B1C28", textColor: "#FFFFFF" },
+          ].map((city) => (
+            <div key={city.cityName} className="flex-shrink-0 w-36">
+              <CityCard 
+                cityName={city.cityName} 
+                imagePath={city.imagePath}
+                href={city.href}
+                backgroundColor={city.backgroundColor}
+                textColor={city.textColor}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Mobile: Trending Now Section */}
-      {trendingProducts && trendingProducts.length > 0 && (
-        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
+      {/* Mobile: Promoted Items First */}
+      {promotedProducts && promotedProducts.length > 0 && (
+        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold uppercase">TRENDING NOW</h2>
+            <h2 className="text-xl font-bold">Promoted Items</h2>
             <Link href="/search?sort=recommended">
-              <Button variant="ghost" className="text-primary">
-                VIEW ALL
+              <Button variant="ghost" className="text-primary text-sm">
+                View All
               </Button>
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {trendingProducts.slice(0, 4).map((product: any) => (
+          <MasonryGrid columns={{ mobile: 2 }}>
+            {promotedProducts.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </MasonryGrid>
         </div>
       )}
 
       {/* Mobile: New Arrivals Section with Masonry Grid */}
       {newProducts && newProducts.length > 0 && (
-        <div className="max-w-[100rem] mx-auto px-12 py-6 md:hidden">
+        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold uppercase">NEW ARRIVALS</h2>
+            <h2 className="text-xl font-bold">New Arrivals</h2>
             <Button variant="ghost" size="icon">
               <Filter className="h-5 w-5" />
             </Button>
           </div>
           <MasonryGrid columns={{ mobile: 2 }}>
-            {newProducts.slice(0, 8).map((product: any) => (
+            {newProducts.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </MasonryGrid>

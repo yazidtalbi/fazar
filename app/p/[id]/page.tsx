@@ -196,7 +196,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const originalPrice = product.price ? Number(product.price) * 1.8 : null;
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       {/* Desktop Header */}
       <HeaderDesktop />
       
@@ -253,7 +253,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Main Content - Desktop Side-by-Side Layout */}
-      <div className="max-w-[100rem] mx-auto px-12 py-6 md:py-8 bg-white md:bg-white">
+      <div className="max-w-[100rem] mx-auto px-0 md:px-12 py-6 md:py-8 bg-white md:bg-white">
         <div className="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 mb-12">
           {/* Left: Product Images */}
           <div className="col-span-8">
@@ -449,8 +449,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Mobile Layout */}
-        <div className="md:hidden space-y-6">
-          <ProductDetailCarousel media={media} />
+        <div className="md:hidden space-y-6 px-2">
+          {/* Image - No padding */}
+          <div className="-mx-2">
+            <ProductDetailCarousel media={media} />
+          </div>
           
           <div className="space-y-4">
             <h1 className="text-2xl font-bold">{product.title}</h1>
@@ -471,6 +474,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <span className="text-sm text-muted-foreground">({productReviewCount} {productReviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
 
+            {/* Add to Cart Button */}
+            <div className="pt-2">
+              <AddToCartButtonDesktop productId={product.id} />
+            </div>
+
+            {/* Store Info */}
             <Card className="border">
               <CardContent className="p-4">
                 <Link href={`/store/${store.slug}`} className="flex items-center gap-3">
@@ -499,6 +508,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <MapPin className="h-3 w-3" />
                       <span className="truncate">Marrakech, Morocco</span>
                     </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                      <Star className="h-3 w-3 fill-primary text-primary" />
+                      <span>{storeRating > 0 ? storeRating.toFixed(1) : '0.0'} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
+                      <span>•</span>
+                      <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
+                    </div>
                   </div>
                   <ArrowRight className="h-5 w-5 text-primary flex-shrink-0" />
                 </Link>
@@ -525,6 +540,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
               </div>
             </ProductCollapsibleSection>
+
+            {/* Reviews Section */}
+            <div className="border-t pt-6">
+              <ProductReviewSection productId={product.id} />
+              <ProductReviewsList productId={product.id} />
+            </div>
+
+            {/* Similar Items */}
+            {similarProductsWithCover && similarProductsWithCover.length > 0 && (
+              <div className="border-t pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">You might also like</h2>
+                  {category && (
+                    <Link href={`/categories/${category.slug}`}>
+                      <Button variant="ghost" size="sm">
+                        View More
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2 scrollbar-hide">
+                  {similarProductsWithCover.slice(0, 12).map((p: any) => (
+                    <div key={p.id} className="flex-shrink-0 w-48">
+                      <ProductCard product={p} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -777,12 +821,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
-      {/* Sticky Footer: Quantity Selector + Add to Basket (Mobile Only) */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t z-50 p-4 md:hidden">
-        <div className="container mx-auto">
-          <AddToCartWithQuantity productId={product.id} />
-        </div>
-      </div>
 
       {/* Desktop Footer */}
       <div className="hidden md:block mt-16">

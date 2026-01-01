@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import type { Database } from "@/lib/database.types";
 import { format } from "date-fns";
 import { addDays } from "date-fns";
@@ -55,14 +55,41 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
   
   // Compute isSaved from savedItems
   const isSaved = useMemo(() => {
     return savedItems.some((item: any) => item.product_id === product.id);
   }, [savedItems, product.id]);
   
-  const mediaArray = Array.isArray(product.product_media) ? product.product_media : [];
-  const sortedMedia = [...mediaArray].sort((a, b) => a.order_index - b.order_index);
+  // Handle product_media - it might be an array or an object
+  let mediaArray: Array<{
+    media_url: string;
+    media_type: "image" | "video";
+    is_cover: boolean;
+    order_index: number;
+  }> = [];
+  
+  if (Array.isArray(product.product_media)) {
+    mediaArray = product.product_media.filter((m: any) => m && m.media_url);
+  } else if (product.product_media && typeof product.product_media === 'object') {
+    // Handle case where it might be a single object or nested structure
+    const media = product.product_media as any;
+    if (media.media_url) {
+      mediaArray = [media];
+    } else if (Array.isArray(media)) {
+      mediaArray = media.filter((m: any) => m && m.media_url);
+    }
+  }
+  
+  // Debug: log if no media found
+  if (mediaArray.length === 0 && process.env.NODE_ENV === 'development') {
+    console.log('No media found for product:', product.id, product.title, 'product_media:', product.product_media);
+  }
+  
+  const sortedMedia = [...mediaArray].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const coverMedia = sortedMedia.find((m) => m.is_cover) || sortedMedia[0];
   const secondMedia = sortedMedia.length > 1 ? sortedMedia[1] : null;
   
@@ -96,6 +123,36 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
     }
     checkUser();
   }, []);
+
+  useEffect(() => {
+    async function fetchProductStats() {
+      const supabase = createClient();
+      
+      // Fetch reviews
+      const { data: reviews } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("product_id", product.id);
+      
+      if (reviews && reviews.length > 0) {
+        setReviewCount(reviews.length);
+        const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+        setRating(avgRating);
+      }
+      
+      // Fetch order count
+      const { data: orderItems } = await supabase
+        .from("order_items")
+        .select("quantity")
+        .eq("product_id", product.id);
+      
+      if (orderItems) {
+        const totalOrders = orderItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        setOrderCount(totalOrders);
+      }
+    }
+    fetchProductStats();
+  }, [product.id]);
 
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
@@ -196,42 +253,74 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
 
   return (
     <div className="group relative w-full">
-      <Link href={`/p/${product.id}`}>
-        <Card className="overflow-hidden transition-all duration-300 border-0 bg-transparent w-full">
+      <Card className="overflow-hidden transition-all duration-300 border-0 bg-transparent w-full">
+        <Link href={`/p/${product.id}`}>
           {/* Desktop: Hover image, Mobile: Carousel */}
           <div className="relative aspect-square w-full bg-muted overflow-hidden rounded-2xl">
-            {/* Mobile: Carousel */}
-            <div className="md:hidden w-full h-full">
+            {/* Mobile: Carousel for multiple images */}
+            <div className="md:hidden w-full h-full relative">
               {sortedMedia.length > 0 ? (
-                <Carousel className="w-full h-full">
-                  <CarouselContent className="h-full">
-                    {sortedMedia.map((item, index) => (
-                      <CarouselItem key={index} className="h-full">
-                        <div className="relative w-full h-full">
-                          {item.media_type === "video" ? (
-                            <video
-                              src={item.media_url}
-                              className="w-full h-full object-cover rounded-2xl"
-                              controls
-                              playsInline
-                            />
-                          ) : (
-                            <Image
-                              src={item.media_url}
-                              alt={`${product.title} ${index + 1}`}
-                              fill
-                              className="object-cover rounded-2xl"
-                              sizes="(max-width: 768px) 50vw"
-                              priority={index === 0}
-                            />
-                          )}
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                </Carousel>
+                sortedMedia.length === 1 ? (
+                  // Single image
+                  sortedMedia[0].media_type === "video" ? (
+                    <video
+                      src={sortedMedia[0].media_url}
+                      className="w-full h-full object-cover rounded-2xl"
+                      controls
+                      playsInline
+                    />
+                  ) : sortedMedia[0].media_url ? (
+                    <Image
+                      src={sortedMedia[0].media_url}
+                      alt={product.title}
+                      fill
+                      className="object-cover rounded-2xl"
+                      sizes="(max-width: 768px) 50vw"
+                      priority
+                      unoptimized={sortedMedia[0].media_url.includes('supabase.co')}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
+                      No image
+                    </div>
+                  )
+                ) : (
+                  // Multiple images - use carousel
+                  <Carousel className="w-full h-full" opts={{ align: "start", loop: false, skipSnaps: false }}>
+                    <CarouselContent className="h-full -ml-0">
+                      {sortedMedia.map((item, index) => (
+                        <CarouselItem key={`${product.id}-${index}`} className="h-full pl-0 basis-full">
+                          <div className="relative w-full h-full">
+                            {item.media_type === "video" ? (
+                              <video
+                                src={item.media_url}
+                                className="w-full h-full object-cover rounded-2xl"
+                                controls
+                                playsInline
+                              />
+                            ) : item.media_url ? (
+                              <Image
+                                src={item.media_url}
+                                alt={`${product.title} ${index + 1}`}
+                                fill
+                                className="object-cover rounded-2xl"
+                                sizes="(max-width: 768px) 50vw"
+                                priority={index === 0}
+                                unoptimized={item.media_url.includes('supabase.co')}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
+                                No image
+                              </div>
+                            )}
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                  </Carousel>
+                )
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
                   No image
                 </div>
               )}
@@ -252,7 +341,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                     sizes="(max-width: 1200px) 33vw, 25vw"
                   />
                   {/* Hover Image (Second image if available) */}
-                  {secondMedia && (
+                  {secondMedia && secondMedia.media_url && (
                     <Image
                       src={secondMedia.media_url}
                       alt={`${product.title} hover`}
@@ -268,21 +357,27 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                 </div>
               )}
             </div>
-            {/* Heart Icon - Top Right (Only for authenticated users) */}
-            {user && (
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full p-2 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                aria-label={isSaved ? "Remove from saved" : "Save product"}
-              >
-                <Heart 
-                  className={`h-5 w-5 transition-colors ${
-                    isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
-                  }`} 
-                />
-              </button>
-            )}
+            {/* Heart Icon - Top Right (Always visible on mobile, hover on desktop) */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (user) {
+                  handleSave(e);
+                } else {
+                  toast.error("Please log in to save items");
+                }
+              }}
+              disabled={isSaving}
+              className="absolute top-3 right-3 z-20 bg-white/90 hover:bg-white rounded-full p-2 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              aria-label={isSaved ? "Remove from saved" : "Save product"}
+            >
+              <Heart 
+                className={`h-5 w-5 transition-colors ${
+                  isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
+                }`} 
+              />
+            </button>
             {/* Add to Cart Button - Bottom Center (Desktop only on hover) */}
             <button
               onClick={handleAddToCart}
@@ -314,11 +409,13 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
               </div>
             )}
           </div>
-          <CardContent className="pt-4  px-0 pb-4">
-            <h3 className="font-medium text-sm line-clamp-2 text-[#222222]  mb-0">
+        </Link>
+        <CardContent className="pt-4 px-0 pb-2">
+          <Link href={`/p/${product.id}`}>
+            <h3 className="font-medium text-sm line-clamp-2 text-[#222222] mb-1">
               {product.title}
             </h3>
-            <div className="flex items-baseline gap-2 ">
+            <div className="flex items-baseline gap-2 mb-2">
               {originalPriceFormatted ? (
                 <>
                   <span className="font-bold text-green-600 text-base">
@@ -334,9 +431,27 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                 </span>
               )}
             </div>
-          </CardContent>
-        </Card>
-      </Link>
+          </Link>
+        </CardContent>
+      </Card>
+      {/* Reviews and Orders Info - Outside card, under price */}
+      {(reviewCount > 0 || orderCount > 0) && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1 px-0">
+          {reviewCount > 0 && (
+            <>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-primary text-primary" />
+                <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+                <span className="text-sm">({reviewCount})</span>
+              </div>
+              {orderCount > 0 && <span>•</span>}
+            </>
+          )}
+          {orderCount > 0 && (
+            <span className="text-sm">{orderCount} {orderCount === 1 ? 'order' : 'orders'}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

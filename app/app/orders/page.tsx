@@ -24,8 +24,8 @@ export default async function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[100rem] mx-auto px-12 py-6">
-        <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+      <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-0 md:py-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-4 md:mt-0">My Orders</h1>
 
         <RecentOrders limit={20} showReviewButton={true} />
       </div>

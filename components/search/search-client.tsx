@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/zaha/product-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, History, ArrowUpRight, X } from "lucide-react";
+import { Search, Filter, History, ArrowUpRight, X, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { SearchFiltersSheet } from "./search-filters-sheet";
 
 interface Category {
@@ -83,7 +84,12 @@ export function SearchClient({
   return (
     <div className="space-y-6">
       {/* Mobile Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="md:hidden flex gap-2">
+      <form onSubmit={handleSearchSubmit} className="md:hidden flex gap-2 items-center">
+        <Link href="/app" className="flex-shrink-0">
+          <Button variant="ghost" size="icon" type="button">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </Link>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input

@@ -13,15 +13,12 @@ export function CityCard({ cityName, imagePath, href = "#", backgroundColor, tex
   return (
     <Link href={href} className="block group">
       <div 
-        className="relative h-80 w-full overflow-hidden rounded-lg"
+        className="relative h-36 md:h-80 w-full overflow-hidden rounded-lg"
         style={{ backgroundColor }}
       >
         {/* Title */}
-        <div className="px-6 pt-6 text-left" style={{ color: textColor }}>
-          <div className="text-xl md:text-2xl font-semibold leading-tight">
-            Ville de
-          </div>
-          <div className="text-xl md:text-2xl font-semibold leading-tight">
+        <div className="px-3 md:px-6 pt-3 md:pt-6 text-left" style={{ color: textColor }}>
+          <div className="text-base md:text-2xl font-semibold leading-tight">
             {cityName}
           </div>
         </div>
