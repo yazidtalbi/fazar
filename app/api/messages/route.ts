@@ -18,15 +18,12 @@ export async function GET(request: Request) {
     // Get messages for a specific conversation
     const { data: messages, error } = await supabase
       .from("messages")
-      .select(`
-        *,
-        sender:auth.users!messages_sender_id_fkey(id, email),
-        receiver:auth.users!messages_receiver_id_fkey(id, email)
-      `)
+      .select("*")
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true });
 
     if (error) {
+      console.error("Error fetching messages:", error);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 

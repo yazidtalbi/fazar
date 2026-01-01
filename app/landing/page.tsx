@@ -443,12 +443,12 @@ export default function MarketingPage() {
                   transformOrigin: "center top",
                 }}
               >
-                <span className="select-none text-[22vw] sm:text-[20vw] mt-0 sm:-mt-0   font-bold leading-none text-[#E5C0F4]   ">
-                  afus.ma
+                <span className="vazirmatn-font select-none text-[22vw] sm:text-[18vw] mt-0 sm:mt-10 font-bold leading-none text-[#E5C0F4]">
+                   أفــوس
                 </span>
               </div>
 
-              {/* Hero content */}
+              {/* afus.ma */}
               <div
                 className="relative z-10 flex h-full items-center"
                 style={{
@@ -553,7 +553,7 @@ export default function MarketingPage() {
                           <Download className="h-4 w-4" />
                           <span>Install the App now</span>
                         </button>
-                        <div className="hidden sm:inline-flex items-center gap-4 rounded-xl   bg-white px-2 py-3 sm:px-2 sm:py-2 sm:pr-10">
+                        <div className="hidden sm:inline-flex items-center gap-4 rounded-md   bg-white px-2 py-3 sm:px-2 sm:py-2 sm:pr-10">
                           {/* QR block */}
                           <div className="flex items-center justify-center rounded-lg bg-white overflow-hidden">
                             <div className="relative h-16 w-16 sm:h-20 sm:w-20">

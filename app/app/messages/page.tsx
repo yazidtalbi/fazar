@@ -20,8 +20,8 @@ export default async function MessagesPage() {
       {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
       <div className="hidden md:block h-[169px]"></div>
       
-      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
-        <h1 className="text-2xl font-bold mb-6">Messages</h1>
+      <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+        <h1 className="text-2xl font-bold mb-4">Messages</h1>
         <MessagesClient />
       </div>
 

@@ -5,7 +5,7 @@ import { Facebook, Linkedin, Twitter } from "lucide-react";
 
 export function Footer(): React.ReactElement {
   return (
-    <footer className="text-white" style={{ backgroundColor: '#1D0D2C' }}>
+    <footer className="text-white rounded-t-3xl" style={{ backgroundColor: '#1D0D2C' }}>
       <div className="max-w-[100rem] mx-auto px-12 py-16">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:gap-y-8 md:gap-x-20 mb-12">
           {/* Left Column - Branding */}

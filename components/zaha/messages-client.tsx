@@ -45,6 +45,14 @@ export function MessagesClient(): React.ReactElement {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    async function getCurrentUser() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUserId(user.id);
+      }
+    }
+    getCurrentUser();
     fetchConversations();
   }, []);
 
@@ -106,6 +114,9 @@ export function MessagesClient(): React.ReactElement {
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to fetch messages:", errorData);
       }
     } catch (error) {
       console.error("Failed to fetch messages:", error);
@@ -163,7 +174,7 @@ export function MessagesClient(): React.ReactElement {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 h-[calc(100vh-200px)]">
+    <div className="flex flex-col md:flex-row gap-4" style={{ height: '600px' }}>
       {/* Conversations List */}
       <div className="w-full md:w-80 border rounded-lg bg-white flex flex-col">
         <div className="p-4 border-b">
@@ -240,32 +251,59 @@ export function MessagesClient(): React.ReactElement {
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => {
-                const isSent = message.sender_id === currentUserId;
-                return (
-                  <div
-                    key={message.id}
-                    className={`flex ${isSent ? "justify-end" : "justify-start"}`}
-                  >
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                  <p className="text-sm">No messages yet. Start the conversation!</p>
+                </div>
+              ) : (
+                messages.map((message, index) => {
+                  if (!currentUserId) {
+                    // Wait for currentUserId to be set
+                    return null;
+                  }
+                  
+                  const isSent = message.sender_id === currentUserId;
+                  const prevMessage = index > 0 ? messages[index - 1] : null;
+                  const showSenderInfo = !prevMessage || prevMessage.sender_id !== message.sender_id;
+                  
+                  return (
                     <div
-                      className={`max-w-[70%] rounded-lg p-3 ${
-                        isSent
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-gray-100 text-gray-900"
-                      }`}
+                      key={message.id}
+                      className={`flex flex-col ${isSent ? "items-end" : "items-start"} ${showSenderInfo ? "mt-4" : "mt-1"}`}
                     >
-                      <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
-                      <p
-                        className={`text-xs mt-1 ${
-                          isSent ? "text-primary-foreground/70" : "text-gray-500"
+                      {showSenderInfo && !isSent && (
+                        <div className="flex items-center gap-2 mb-1 px-1">
+                          <User className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs text-gray-500 font-medium">
+                            {selectedConversation.otherParticipant?.store?.name || `User ${selectedConversation.otherParticipant?.id.slice(0, 8)}`}
+                          </span>
+                        </div>
+                      )}
+                      {showSenderInfo && isSent && (
+                        <div className="flex items-center gap-2 mb-1 px-1 mr-1">
+                          <span className="text-xs text-primary font-medium">You</span>
+                        </div>
+                      )}
+                      <div
+                        className={`max-w-[70%] rounded-lg p-3 ${
+                          isSent
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-gray-100 text-gray-900"
                         }`}
                       >
-                        {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
-                      </p>
+                        <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                        <p
+                          className={`text-xs mt-1 ${
+                            isSent ? "text-primary-foreground/70" : "text-gray-500"
+                          }`}
+                        >
+                          {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
               <div ref={messagesEndRef} />
             </div>
 

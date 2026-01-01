@@ -73,6 +73,11 @@ body {
   letter-spacing: inherit;
 }
 
+/* Override for Vazirmatn font */
+.vazirmatn-font {
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
 /* Explicitly set font and letter-spacing for form elements that might not inherit properly */
 input,
 textarea,

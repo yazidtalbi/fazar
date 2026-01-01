@@ -20,6 +20,8 @@ import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
 import { ProductVariations } from "@/components/zaha/product-variations";
 import { ProductReviewSection } from "@/components/zaha/product-review-section";
 import { ProductReviewsList } from "@/components/zaha/product-reviews-list";
+import { FollowShopButton } from "@/components/zaha/follow-shop-button";
+import { MessageStoreButton } from "@/components/zaha/message-store-button";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -38,6 +40,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
         id,
         name,
         slug,
+        logo_url,
+        seller_id,
         created_at,
         seller_profiles(
           id,
@@ -139,19 +143,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
     order_index: number;
   }>;
 
-  // Fetch real reviews data
-  const { data: reviewsData } = await supabase
+  // Fetch real reviews data for this product
+  const { data: productReviewsData } = await supabase
     .from("reviews")
     .select("rating")
     .eq("product_id", product.id);
 
-  const reviews = reviewsData || [];
-  const reviewCount = reviews.length;
-  const rating = reviewCount > 0
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+  const productReviews = productReviewsData || [];
+  const productReviewCount = productReviews.length;
+  const productRating = productReviewCount > 0
+    ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviewCount
     : 0;
 
-  // Fetch real sales count for the store
+  // Fetch real sales count for the store and get store product IDs
   const { data: storeProducts } = await supabase
     .from("products")
     .select("id")
@@ -159,6 +163,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .eq("status", "active");
 
   const storeProductIds = storeProducts?.map(p => p.id) || [];
+
+  // Fetch store rating (from all products in the store)
+  const { data: storeReviewsData } = await supabase
+    .from("reviews")
+    .select("rating")
+    .in("product_id", storeProductIds.length > 0 ? storeProductIds : ['00000000-0000-0000-0000-000000000000']);
+
+  const storeReviews = storeReviewsData || [];
+  const storeReviewCount = storeReviews.length;
+  const storeRating = storeReviewCount > 0
+    ? storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviewCount
+    : 0;
   let storeSalesCount = 0;
   if (storeProductIds.length > 0) {
     const { data: orderItems } = await supabase
@@ -278,11 +294,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 ${i < Math.floor(rating) ? "fill-primary text-primary" : i < rating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${i < Math.floor(productRating) ? "fill-primary text-primary" : i < productRating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">({rating > 0 ? rating.toFixed(1) : '0.0'})</span>
+              <span className="text-sm text-muted-foreground">({productRating > 0 ? productRating.toFixed(1) : '0.0'})</span>
             </div>
 
             {/* Keywords */}
@@ -448,11 +464,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-5 w-5 ${i < Math.floor(rating) ? "fill-primary text-primary" : i < rating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
+                    className={`h-5 w-5 ${i < Math.floor(productRating) ? "fill-primary text-primary" : i < productRating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
+              <span className="text-sm text-muted-foreground">({productReviewCount} {productReviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
 
             <Card className="border">
@@ -555,23 +571,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       </div>
                       <div className="flex items-center gap-4 text-sm mb-4">
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span>{rating > 0 ? rating.toFixed(1) : '0.0'} ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</span>
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${i < Math.floor(storeRating) ? "fill-primary text-primary" : i < storeRating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
+                            />
+                          ))}
+                          <span>{storeRating > 0 ? storeRating.toFixed(1) : '0.0'} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
                         </div>
                         <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
                         <span>{yearsOnAfus > 0 ? `${yearsOnAfus} ${yearsOnAfus === 1 ? 'year' : 'years'}` : new Date(store.created_at).getFullYear()} on AFUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
-                        <StoreContactSheet store={store}>
-                          <Button variant="outline" size="sm" className="flex items-center gap-2">
-                            <MessageCircle className="h-4 w-4" />
-                            Message seller
-                          </Button>
-                        </StoreContactSheet>
-                        <Button variant="outline" size="sm" className="flex items-center gap-2">
-                          <Heart className="h-4 w-4" />
-                          Follow shop
-                        </Button>
+                        <MessageStoreButton 
+                          storeId={store.id} 
+                          sellerId={store.seller_id}
+                          storeName={store.name}
+                          size="sm"
+                        />
+                        <FollowShopButton storeId={store.id} />
                       </div>
                       
                       {/* Performance Indicators */}
@@ -591,7 +609,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       {/* Shop Reviews Section */}
                       <div className="border-t pt-6">
                         <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-lg font-semibold">All reviews for this shop ({reviewCount > 1000 ? (reviewCount / 1000).toFixed(1) + 'K' : reviewCount})</h3>
+                          <h3 className="text-lg font-semibold">All reviews for this shop ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</h3>
                           <Link href={`/store/${store.slug}`}>
                             <Button variant="ghost" size="sm">Show all</Button>
                           </Link>
