@@ -54,12 +54,12 @@ const ROW_3 = [
 
 const FAQ_ITEMS = [
   {
-    question: "How do I install the Zaha app?",
+    question: "How do I install the Afus app?",
     answer:
-      "Scan the QR code on this page or open zaha.ma on your phone and tap “Install app”. Zaha works as a lightweight app straight from your browser.",
+      "Scan the QR code on this page or open Afus.ma on your phone and tap “Install app”. Afus works as a lightweight app straight from your browser.",
   },
   {
-    question: "Is Zaha only for professional sellers?",
+    question: "Is Afus only for professional sellers?",
     answer:
       "No. Whether you’re an established brand or just starting with a few handmade pieces, you can open a shop and start selling.",
   },
@@ -434,7 +434,7 @@ export default function MarketingPage() {
             >
               {/* NAVBAR */}
 
-              {/* Huge zaha.MA */}
+              {/* Huge Afus.MA */}
               <div
                 className="pointer-events-none absolute inset-x-0 top-4 sm:top-18 flex justify-center"
                 style={{
@@ -479,7 +479,7 @@ export default function MarketingPage() {
                     >
                       <Image
                         src="/landing/handspremium2.png"
-                        alt="zaha app in hand"
+                        alt="Afus app in hand"
                         fill
                         className="object-contain object-bottom md:object-contain"
                         priority
@@ -559,7 +559,7 @@ export default function MarketingPage() {
                             <div className="relative h-16 w-16 sm:h-20 sm:w-20">
                               <Image
                                 src="/landing/qr.jpg"
-                                alt="Scan to install the Zaha app"
+                                alt="Scan to install the Afus app"
                                 fill
                                 className="object-contain"
                                 priority={false}
@@ -572,7 +572,7 @@ export default function MarketingPage() {
                             <p className="text-[11px] sm:text-lg font-semibold text-[#2a1335] leading-6">
                               Scan to <br />
                               launch the <br />
-                              Zaha app
+                              Afus app
                             </p>
                           </div>
                         </div>
@@ -646,7 +646,7 @@ export default function MarketingPage() {
                       >
                         <span>Welcome</span>
                         <br className="hidden sm:block" />
-                        <span className="sm:ml-0 ml-1">to zaha.ma</span>
+                        <span className="sm:ml-0 ml-1">to Afus.ma</span>
                       </motion.p>
                     </div>
 
@@ -959,7 +959,7 @@ export default function MarketingPage() {
                                   <div className="relative h-16 w-16 sm:h-16 sm:w-16">
                                     <Image
                                       src="/landing/qr.jpg"
-                                      alt="Scan to install the Zaha app"
+                                      alt="Scan to install the Afus app"
                                       fill
                                       className="object-contain"
                                       priority={false}
@@ -971,7 +971,7 @@ export default function MarketingPage() {
                                 <div className="text-left">
                                   <p className="text-lg sm:text-lg font-semibold text-[#2a1335] leading-6">
                                     Scan to <br />
-                                    launch the Zaha app
+                                    launch the Afus app
                                   </p>
                                 </div>
                               </div>
@@ -1005,7 +1005,7 @@ export default function MarketingPage() {
                         </span>
 
                         <p className="text-xs sm:text-sm font-normal text-gray-500">
-                          © 2026 zaha.ma
+                          © 2026 Afus.ma
                         </p>
                       </div>
 
