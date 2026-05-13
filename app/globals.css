@@ -154,3 +154,19 @@ input[type="submit"] {
   --animate-sheet-in: slide-in-from-right 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   --animate-sheet-out: slide-out-to-right 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+.arabic-frame {
+  border-radius: 4px;
+  mask-image: 
+    radial-gradient(circle at 0 0, transparent 16px, black 17px),
+    radial-gradient(circle at 100% 0, transparent 16px, black 17px),
+    radial-gradient(circle at 0 100%, transparent 16px, black 17px),
+    radial-gradient(circle at 100% 100%, transparent 16px, black 17px);
+  mask-composite: intersect;
+  -webkit-mask-image: 
+    radial-gradient(circle at 0 0, transparent 16px, black 17px),
+    radial-gradient(circle at 100% 0, transparent 16px, black 17px),
+    radial-gradient(circle at 0 100%, transparent 16px, black 17px),
+    radial-gradient(circle at 100% 100%, transparent 16px, black 17px);
+  -webkit-mask-composite: source-in;
+}

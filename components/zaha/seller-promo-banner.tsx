@@ -16,24 +16,24 @@ import * as React from "react";
 
 const slides = [
   {
-    title: "Dive into the world of handmade",
-    description: "Turn your craft into income. Create your shop, add your products, and start selling to buyers across Morocco.",
+    title: "The world of handmade",
+    description: "Launch your digital storefront in minutes. Empower your craft and connect with a growing community of conscious shoppers across Morocco.",
     buttonText: "Become a seller now",
     image: "/seller.png",
     bgColor: "bg-[#1b0f2b]",
     textColor: "text-[#F3E2F5]"
   },
   {
-    title: "Turn your passion into profit",
-    description: "Reach thousands of customers and manage your orders with ease using our dedicated seller dashboard.",
+    title: "Passion into profit",
+    description: "From workshop to doorstep. Share your Moroccan heritage with the world and scale your business with our dedicated artisan dashboard.",
     buttonText: "Open your shop",
     image: "/seller.png",
     bgColor: "bg-[#2d1b4d]",
     textColor: "text-[#E8D5E8]"
   },
   {
-    title: "Share your craft with the world",
-    description: "Every purchase directly supports a Moroccan maker. Discover unique, one-of-a-kind treasures today.",
+    title: "Share your craft",
+    description: "Crafted by you, discovered by many. Start your professional selling journey today and reach buyers from Tangier to Lagouira.",
     buttonText: "Discover more",
     image: "/seller.png",
     bgColor: "bg-[#1a1a1a]",
@@ -80,15 +80,15 @@ export function SellerPromoBanner(): React.ReactElement {
           <CarouselContent className="h-full">
             {slides.map((slide, index) => (
               <CarouselItem key={index} className="h-full will-change-transform transform-gpu">
-                <div className={`relative rounded-[32px] ${slide.bgColor} px-10 py-12 sm:px-14 sm:py-16 lg:px-10 lg:py-10 h-[476px] flex items-center overflow-hidden will-change-transform transform-gpu`}>
+                <div className={`relative ${slide.bgColor} px-[3.75rem] py-12 sm:px-14 sm:py-16 lg:px-[3.75rem] lg:py-10 h-[476px] flex items-center overflow-hidden will-change-transform transform-gpu arabic-frame`}>
                   <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16 w-full">
                     {/* Left */}
-                    <div className="max-w-xl">
+                    <div className="max-w-xl pt-16 pb-16 md:pt-20 md:pb-20">
                       <h2 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
                         {slide.title}
                       </h2>
 
-                      <p className={`mt-8 max-w-md text-base leading-relaxed sm:text-lg ${slide.textColor}`}>
+                      <p className={`mt-8 max-w-md text-base leading-snug sm:text-lg ${slide.textColor}`}>
                         {slide.description}
                       </p>
 

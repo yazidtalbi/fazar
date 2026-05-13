@@ -257,7 +257,6 @@ export function HeaderDesktop(): React.ReactElement {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 text-sm font-medium text-[#222222] hover:text-primary whitespace-nowrap transition-colors pr-6 px-3 py-1.5 rounded-xl bg-white">
-                  <Grid3x3 className="h-4 w-4" />
                   <span className="text-sm font-medium">All Categories</span>
                   <ChevronDown className="h-3 w-3" />
                 </button>

@@ -78,15 +78,15 @@ export default async function HomePage() {
       </div>
 
       {/* Right Section - Hand Promotional Banner */}
-      <div className="h-full">
+      <Link href="/landing" className="h-full block group">
         <div
-          className="rounded-[32px] overflow-hidden h-full"
+          className="overflow-hidden h-full transition-all duration-500 group-hover:scale-[0.99] group-active:scale-[0.97] arabic-frame"
           style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
         >
           <div className="relative flex flex-col h-full pt-10 px-10">
             {/* Text */}
             <p className="text-2xl md:text-3xl font-semibold text-right text-[#673399]">
-              Download the <br /> mobile App now
+              The mobile app <br /> is coming soon
             </p>
 
             {/* Image wrapper takes remaining height */}
@@ -95,7 +95,7 @@ export default async function HomePage() {
                 src="/landing/hands.png"
                 alt="Hand"
                 fill
-                className="object-contain object-bottom"
+                className="object-contain object-bottom transition-transform duration-700 group-hover:scale-110"
                 priority
                 sizes="(max-w-768px) 100vw, 33vw"
                 quality={90}
@@ -103,7 +103,7 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     </div>
   </div>
 </div>
@@ -119,13 +119,13 @@ export default async function HomePage() {
         <div className="md:hidden">
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
             {[
-              { name: 'Rugs', slug: 'rugs-kilims', image: '/cat/22.png' },
-              { name: 'Ceramics', slug: 'ceramics', image: '/cat/11.png' },
-              { name: 'Leather', slug: 'leather', image: '/cat/33.png' },
-              { name: 'Metalwork', slug: 'brass-metalwork', image: '/cat/44.png' },
-              { name: 'Textiles', slug: 'textiles', image: '/cat/55.png' },
-              { name: 'Home', slug: 'home-decor', image: '/cat/77.png' },
               { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
+              { name: 'Art', slug: 'art', image: '/cat/22.png' },
+              { name: 'Beauty', slug: 'beauty', image: '/cat/11.png' },
+              { name: 'Clothing', slug: 'clothing', image: '/cat/55.png' },
+              { name: 'Bags', slug: 'bags', image: '/cat/33.png' },
+              { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
+              { name: 'Baby', slug: 'baby', image: '/cat/44.png' },
             ].map((cat) => {
               // Try to find matching category in database, otherwise use provided slug
               const dbCategory = categories?.find(c => 
@@ -149,7 +149,7 @@ export default async function HomePage() {
                       className="object-contain w-full h-full"
                     />
                   </div>
-                  <span className="text-xs font-medium text-foreground text-center whitespace-nowrap">
+                  <span className="text-xs font-medium text-neutral-900 text-center whitespace-nowrap">
                     {cat.name}
                   </span>
                 </Link>
@@ -161,13 +161,13 @@ export default async function HomePage() {
         {/* Desktop: Horizontal Category Layout - 7 categories in viewport */}
         <div className="hidden md:flex items-center justify-between w-full max-w-auto xl:max-w-7/8 mx-auto gap-1">
           {[
-            { name: 'Rugs', slug: 'rugs-kilims', image: '/cat/22.png' },
-            { name: 'Ceramics', slug: 'ceramics', image: '/cat/11.png' },
-            { name: 'Leather', slug: 'leather', image: '/cat/33.png' },
-            { name: 'Metalwork', slug: 'brass-metalwork', image: '/cat/44.png' },
-            { name: 'Textiles', slug: 'textiles', image: '/cat/55.png' },
-            { name: 'Home', slug: 'home-decor', image: '/cat/77.png' },
             { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
+            { name: 'Art', slug: 'art', image: '/cat/22.png' },
+            { name: 'Beauty', slug: 'beauty', image: '/cat/11.png' },
+            { name: 'Clothing', slug: 'clothing', image: '/cat/55.png' },
+            { name: 'Bags', slug: 'bags', image: '/cat/33.png' },
+            { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
+            { name: 'Baby', slug: 'baby', image: '/cat/44.png' },
           ].map((cat) => {
             // Try to find matching category in database, otherwise use provided slug
             const dbCategory = categories?.find(c => 
@@ -191,7 +191,7 @@ export default async function HomePage() {
                     className="object-contain w-full h-full"
                   />
                 </div>
-                <span className="text-xs md:text-sm font-medium text-foreground text-center whitespace-nowrap">
+                <span className="text-xs md:text-sm font-medium text-neutral-900 text-center whitespace-nowrap">
                   {cat.name}
                 </span>
               </Link>

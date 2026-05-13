@@ -256,7 +256,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
       <Card className="overflow-hidden transition-all duration-300 border-0 bg-transparent w-full">
         <Link href={`/p/${product.id}`}>
           {/* Desktop: Hover image, Mobile: Carousel */}
-          <div className="relative aspect-square w-full bg-muted overflow-hidden rounded-2xl">
+          <div className="relative aspect-square w-full bg-muted overflow-hidden arabic-frame will-change-transform transform-gpu">
             {/* Mobile: Carousel for multiple images */}
             <div className="md:hidden w-full h-full relative">
               {sortedMedia.length > 0 ? (
@@ -265,7 +265,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                   sortedMedia[0].media_type === "video" ? (
                     <video
                       src={sortedMedia[0].media_url}
-                      className="w-full h-full object-cover rounded-2xl"
+                      className="w-full h-full object-cover"
                       controls
                       playsInline
                     />
@@ -274,13 +274,13 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                       src={sortedMedia[0].media_url}
                       alt={product.title}
                       fill
-                      className="object-cover rounded-2xl"
+                      className="object-cover"
                       sizes="(max-width: 768px) 50vw"
                       priority
                       unoptimized={sortedMedia[0].media_url.includes('supabase.co')}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted">
                       No image
                     </div>
                   )
@@ -294,7 +294,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                             {item.media_type === "video" ? (
                               <video
                                 src={item.media_url}
-                                className="w-full h-full object-cover rounded-2xl"
+                                className="w-full h-full object-cover"
                                 controls
                                 playsInline
                               />
@@ -303,13 +303,13 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                                 src={item.media_url}
                                 alt={`${product.title} ${index + 1}`}
                                 fill
-                                className="object-cover rounded-2xl"
+                                className="object-cover"
                                 sizes="(max-width: 768px) 50vw"
                                 priority={index === 0}
                                 unoptimized={item.media_url.includes('supabase.co')}
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted">
                                 No image
                               </div>
                             )}
@@ -320,7 +320,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                   </Carousel>
                 )
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted rounded-2xl">
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs bg-muted">
                   No image
                 </div>
               )}
@@ -335,7 +335,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                     src={coverMedia.media_url}
                     alt={product.title}
                     fill
-                    className={`object-cover rounded-2xl transition-opacity duration-300 ${
+                    className={`object-cover transition-opacity duration-300 ${
                       secondMedia ? "group-hover/image:opacity-0" : ""
                     }`}
                     sizes="(max-width: 1200px) 33vw, 25vw"
@@ -346,7 +346,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                       src={secondMedia.media_url}
                       alt={`${product.title} hover`}
                       fill
-                      className="object-cover rounded-2xl opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                      className="object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
                       sizes="(max-width: 1200px) 33vw, 25vw"
                     />
                   )}
