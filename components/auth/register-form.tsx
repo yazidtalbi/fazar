@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { Mail, User, Lock, Chrome, Facebook, Apple } from "lucide-react";
+import { Loader } from "@/components/ui/loader";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -56,121 +58,121 @@ export function RegisterForm({ onSuccess }: RegisterFormProps): React.ReactEleme
       onSuccess();
     } else {
       router.push("/onboarding/mode");
-      router.refresh();
     }
   }
 
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold mb-2 text-neutral-900">Créez votre compte</h1>
-      <p className="text-sm text-neutral-600 mb-6">Inscrivez-vous en toute simplicité.</p>
-      
+    <div className="w-full space-y-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-neutral-900">
-            Adresse email <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="border-2 border-neutral-900 rounded-xl bg-white"
-          />
+          <Label htmlFor="firstName" className="text-sm font-medium text-neutral-700">First Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="Your name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white transition-all h-11 rounded-xl"
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="firstName" className="text-sm font-medium text-neutral-900">
-            Prénom <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="firstName"
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-            className="border-2 border-neutral-900 rounded-xl bg-white"
-          />
+          <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white transition-all h-11 rounded-xl"
+            />
+          </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-neutral-900">
-            Mot de passe <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            className="border-2 border-neutral-900 rounded-xl bg-white"
-          />
+          <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="Min. 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white transition-all h-11 rounded-xl"
+            />
+          </div>
         </div>
 
         {error && (
-          <div className="text-sm text-red-600">{error}</div>
+          <div className="p-3 rounded-lg bg-red-50 text-xs text-red-600 border border-red-100">
+            {error}
+          </div>
         )}
-
-        <div className="text-sm text-neutral-700 mb-4">
-          En cliquant sur S&apos;inscrire ou Continuer avec Google, Facebook, ou Apple, vous acceptez de respecter les{" "}
-          <Link href="#" className="text-blue-600 underline hover:text-blue-800">Conditions d&apos;utilisation</Link> et le{" "}
-          <Link href="#" className="text-blue-600 underline hover:text-blue-800">Règlement concernant la confidentialité</Link> d&apos;Afus.
-        </div>
 
         <Button 
           type="submit" 
-          className="w-full bg-neutral-200 text-neutral-900 hover:bg-neutral-300 rounded-xl py-3 font-medium" 
+          className="w-full h-11 bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl font-semibold shadow-lg shadow-neutral-200 transition-all active:scale-[0.98]" 
           disabled={isLoading}
         >
-          {isLoading ? "Chargement..." : "S&apos;inscrire"}
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <Loader size={18} className="text-white" />
+              <span>Creating account...</span>
+            </div>
+          ) : "Create account"}
         </Button>
       </form>
 
-      <div className="relative my-6">
+      <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
+          <div className="w-full border-t border-neutral-100"></div>
         </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="bg-white px-4 text-neutral-600">OU</span>
+        <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
+          <span className="bg-white px-4 text-neutral-400">or join with</span>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-3 gap-3">
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl font-bold text-blue-600">G</span>
-          Continuer avec Google
+          <Chrome className="h-5 w-5" />
         </Button>
         
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl font-bold text-blue-600">f</span>
-          Continuer avec Facebook
+          <Facebook className="h-5 w-5 text-[#1877F2]" />
         </Button>
         
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl">🍎</span>
-          Continuer avec Apple
+          <Apple className="h-5 w-5" />
         </Button>
       </div>
 
-      <div className="mt-6 text-xs text-neutral-600">
-        <p>
-          Afus peut vous envoyer des messages ; vous pouvez modifier vos préférences à cet égard dans les paramètres de votre compte. Nous ne publierons jamais sans votre autorisation.
-        </p>
-      </div>
+      <p className="text-[11px] text-center text-neutral-500 leading-relaxed">
+        By joining, you agree to Afus&apos;s{" "}
+        <Link href="#" className="underline hover:text-neutral-900">Terms of Service</Link> and{" "}
+        <Link href="#" className="underline hover:text-neutral-900">Privacy Policy</Link>.
+      </p>
     </div>
   );
 }

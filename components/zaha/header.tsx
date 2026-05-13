@@ -13,7 +13,7 @@ export async function Header(): Promise<React.ReactElement> {
     <header className="border-b bg-background sticky top-0 z-40">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/app" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold">AFUS</span>
             <span className="text-xs text-muted-foreground hidden sm:inline">
               ARTISAN MARKETPLACE
@@ -21,7 +21,7 @@ export async function Header(): Promise<React.ReactElement> {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6">
-            <Link href="/app" className="text-sm hover:text-primary transition-colors">
+            <Link href="/" className="text-sm hover:text-primary transition-colors">
               Home
             </Link>
             <Link href="/search" className="text-sm hover:text-primary transition-colors">
@@ -29,7 +29,7 @@ export async function Header(): Promise<React.ReactElement> {
             </Link>
             {user ? (
               <>
-                <Link href="/app/cart">
+                <Link href="/cart">
                   <Button variant="ghost" size="sm">
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     Cart
@@ -40,7 +40,7 @@ export async function Header(): Promise<React.ReactElement> {
                     Seller Dashboard
                   </Button>
                 </Link>
-                <Link href="/app/profile">
+                <Link href="/profile">
                   <Button variant="outline" size="sm">
                     Profile
                   </Button>
@@ -72,7 +72,7 @@ export async function Header(): Promise<React.ReactElement> {
                   <Search className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/app/cart">
+              <Link href="/cart">
                 <Button variant="ghost" size="icon" className="relative">
                   <ShoppingCart className="h-5 w-5" />
                 </Button>

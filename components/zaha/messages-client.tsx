@@ -237,7 +237,7 @@ export function MessagesClient(): React.ReactElement {
                 variant="ghost"
                 size="icon"
                 className="md:hidden"
-                onClick={() => router.push("/app/messages")}
+                onClick={() => router.push("/messages")}
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>

@@ -29,13 +29,13 @@ export function WelcomeClient(): React.ReactElement | null {
 
     if (!mobile) {
       // Not mobile - redirect to app immediately
-      router.replace("/app");
+      router.replace("/");
       return;
     }
 
     if (hasSeenWelcome) {
       // Already seen - redirect to app immediately
-      router.replace("/app");
+      router.replace("/");
       return;
     }
 
@@ -48,7 +48,7 @@ export function WelcomeClient(): React.ReactElement | null {
     if (typeof window !== "undefined") {
       localStorage.setItem("afus_welcome_seen", "true");
     }
-    router.push("/app");
+    router.push("/");
   };
 
   // Don't render until we've checked (or if redirecting)

@@ -9,11 +9,21 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { 
+  User, 
+  ShoppingBag, 
+  Store, 
+  LogOut, 
+  LayoutDashboard, 
+  ShieldCheck,
+  ChevronRight,
+  Mail,
+  Clock
+} from "lucide-react";
+import { Loader } from "@/components/ui/loader";
 
 interface ProfileDrawerProps {
   open: boolean;
@@ -24,7 +34,7 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
   const [user, setUser] = useState<any>(null);
   const [buyerProfile, setBuyerProfile] = useState<any>(null);
   const [sellerProfile, setSellerProfile] = useState<any>(null);
-  const [store, setStore] = useState<any>(null);
+  const [store, setStore] = useState<{ slug: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -42,7 +52,6 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
 
       setUser(user);
 
-      // Fetch buyer profile
       const { data: buyer } = await supabase
         .from("buyer_profiles")
         .select("*")
@@ -51,7 +60,6 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
 
       setBuyerProfile(buyer);
 
-      // Fetch seller profile
       const { data: seller } = await supabase
         .from("seller_profiles")
         .select("*")
@@ -60,7 +68,6 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
 
       setSellerProfile(seller);
 
-      // Fetch store if seller profile exists
       if (seller) {
         const { data: storeData } = await supabase
           .from("stores")
@@ -88,111 +95,121 @@ export function ProfileDrawer({ open, onOpenChange }: ProfileDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto p-6">
-        <SheetHeader>
-          <SheetTitle>Profile</SheetTitle>
-          <SheetDescription>Your account information and settings</SheetDescription>
-        </SheetHeader>
-
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto p-0 border-none shadow-2xl">
         {loading ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-muted-foreground">Loading...</div>
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <Loader variant="premium" />
           </div>
         ) : (
-          <div className="mt-6 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Email</div>
-                  <div className="text-lg">{user?.email}</div>
+          <div className="flex flex-col h-full bg-white">
+            <div className="px-8 pt-12 pb-8 bg-neutral-50 border-b border-neutral-100">
+              <SheetHeader className="text-left space-y-4">
+                <div className="h-16 w-16 rounded-3xl bg-white shadow-xl shadow-neutral-200 border border-neutral-100 flex items-center justify-center mb-2">
+                  <User className="h-8 w-8 text-neutral-900" />
                 </div>
-                <Separator />
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">User ID</div>
-                  <div className="text-sm font-mono break-all">{user?.id}</div>
+                  <SheetTitle className="text-3xl font-bold tracking-tight text-neutral-900">Account</SheetTitle>
+                  <SheetDescription className="text-neutral-500 text-base mt-1">
+                    Manage your profile and store settings.
+                  </SheetDescription>
                 </div>
-              </CardContent>
-            </Card>
+              </SheetHeader>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Profiles</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="text-sm font-medium mb-2">Buyer Profile</div>
-                  {buyerProfile ? (
-                    <div className="text-sm text-muted-foreground">
-                      Active since {new Date(buyerProfile.created_at).toLocaleDateString()}
-                    </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground">Not set up</div>
-                  )}
+              <div className="mt-8 flex items-center gap-3 p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm">
+                <div className="h-10 w-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500">
+                  <Mail className="h-5 w-5" />
                 </div>
-                <Separator />
-                <div>
-                  <div className="text-sm font-medium mb-2">Seller Profile</div>
-                  {sellerProfile ? (
-                    <div className="space-y-2">
-                      <div className="text-sm text-muted-foreground">
-                        {sellerProfile.is_verified && (
-                          <span className="inline-block mr-2 px-2 py-1 text-xs border border-primary text-primary">
-                            Verified
-                          </span>
-                        )}
-                        Active since {new Date(sellerProfile.created_at).toLocaleDateString()}
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-400 leading-none mb-1">Email Address</span>
+                  <span className="text-sm font-semibold text-neutral-900 truncate">{user?.email}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 px-8 py-8 space-y-10">
+              <div className="space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">Activity</h3>
+                <div className="grid gap-2">
+                  <Link href="/orders" onClick={() => onOpenChange(false)} className="group block">
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-neutral-50 border border-transparent group-hover:bg-neutral-100 group-hover:border-neutral-200 transition-all duration-200">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-neutral-600 group-hover:text-neutral-900 transition-colors">
+                          <ShoppingBag className="h-5 w-5" />
+                        </div>
+                        <span className="font-bold text-neutral-900">My Orders</span>
                       </div>
-                      {store && (
-                        <Link 
-                          href={`/store/${store.slug}`} 
-                          className="text-sm text-primary hover:underline"
-                          onClick={() => onOpenChange(false)}
-                        >
-                          View Store →
-                        </Link>
-                      )}
+                      <ChevronRight className="h-5 w-5 text-neutral-300 group-hover:text-neutral-900 group-hover:translate-x-1 transition-all" />
                     </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground">Not set up</div>
+                  </Link>
+
+                  <Link href="/cart" onClick={() => onOpenChange(false)} className="group block">
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-neutral-50 border border-transparent group-hover:bg-neutral-100 group-hover:border-neutral-200 transition-all duration-200">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-neutral-600 group-hover:text-neutral-900 transition-colors">
+                          <ShoppingBag className="h-5 w-5" />
+                        </div>
+                        <span className="font-bold text-neutral-900">Shopping Cart</span>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-neutral-300 group-hover:text-neutral-900 group-hover:translate-x-1 transition-all" />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">Merchant Tools</h3>
+                  {sellerProfile?.is_verified && (
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 border border-green-100">
+                      <ShieldCheck className="h-3 w-3 text-green-600" />
+                      <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">Verified Seller</span>
+                    </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+                <div className="grid gap-2">
+                  <Link href="/seller" onClick={() => onOpenChange(false)} className="group block">
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/10 group-hover:bg-primary/10 transition-all duration-200">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-primary">
+                          <LayoutDashboard className="h-5 w-5" />
+                        </div>
+                        <span className="font-bold text-neutral-900">Seller Dashboard</span>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-primary group-hover:translate-x-1 transition-all" />
+                    </div>
+                  </Link>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Link href="/seller" onClick={() => onOpenChange(false)}>
-                  <Button variant="outline" className="w-full justify-start">
-                    Seller Dashboard
-                  </Button>
-                </Link>
-                <Link href="/app/orders" onClick={() => onOpenChange(false)}>
-                  <Button variant="outline" className="w-full justify-start">
-                    My Orders
-                  </Button>
-                </Link>
-                <Link href="/app/cart" onClick={() => onOpenChange(false)}>
-                  <Button variant="outline" className="w-full justify-start">
-                    Shopping Cart
-                  </Button>
-                </Link>
-                <Separator />
+                  {store && (
+                    <Link href={`/store/${store.slug}`} onClick={() => onOpenChange(false)} className="group block">
+                      <div className="flex items-center justify-between p-4 rounded-2xl bg-neutral-50 border border-transparent group-hover:bg-neutral-100 group-hover:border-neutral-200 transition-all duration-200">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-neutral-600 group-hover:text-neutral-900 transition-colors">
+                            <Store className="h-5 w-5" />
+                          </div>
+                          <span className="font-bold text-neutral-900">View Public Store</span>
+                        </div>
+                        <ChevronRight className="h-5 w-5 text-neutral-300 group-hover:text-neutral-900 group-hover:translate-x-1 transition-all" />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-6 space-y-4">
+                <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-neutral-400 px-2">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>Member since {new Date(buyerProfile?.created_at || user?.created_at).toLocaleDateString()}</span>
+                </div>
                 <Button 
-                  type="button" 
-                  variant="destructive" 
-                  className="w-full"
                   onClick={handleSignOut}
+                  variant="ghost"
+                  className="w-full h-14 rounded-2xl text-red-600 hover:text-red-700 hover:bg-red-50 font-bold transition-all flex items-center justify-center gap-2 group"
                 >
+                  <LogOut className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                   Sign Out
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
       </SheetContent>

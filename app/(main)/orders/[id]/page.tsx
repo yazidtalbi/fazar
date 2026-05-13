@@ -114,7 +114,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="mb-6">
-          <Link href="/app/orders" className="text-sm text-primary hover:underline mb-4 inline-block">
+          <Link href="/orders" className="text-sm text-primary hover:underline mb-4 inline-block">
             ← Back to Orders
           </Link>
           <h1 className="text-3xl font-bold">Order {order.order_number}</h1>

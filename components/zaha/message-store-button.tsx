@@ -44,7 +44,7 @@ export function MessageStoreButton({
     } catch (error: any) {
       console.error("Error creating conversation:", error);
       // Still navigate to messages page - user can start conversation there
-      router.push("/app/messages");
+      router.push("/messages");
     } finally {
       setIsLoading(false);
     }

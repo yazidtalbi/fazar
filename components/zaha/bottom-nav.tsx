@@ -9,19 +9,19 @@ export function BottomNav(): React.ReactElement {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/app", label: "Home", icon: Home },
-    { href: "/search", label: "Shop", icon: Search },
-    { href: "/app/saved", label: "Saved", icon: Heart },
-    { href: "/app/orders", label: "Orders", icon: Package },
-    { href: "/app/cart", label: "Cart", icon: ShoppingBag },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/search", label: "Search", icon: Search },
+    { href: "/saved", label: "Saved", icon: Heart },
+    { href: "/orders", label: "Orders", icon: Package },
+    { href: "/cart", label: "Cart", icon: ShoppingBag },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background z-50 md:hidden">
-      <div className="grid grid-cols-5 h-16">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/80 backdrop-blur-md border-t border-neutral-100 px-2 pb-safe">
+      <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/app" && pathname.startsWith(item.href));
+          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           
           return (
             <Link

@@ -6,7 +6,7 @@
   --foreground: #2d2d2d;
   --card: #ffffff;
   --card-foreground: #2d2d2d;
-  --border: #e5e5e5;
+  --border: #f0f0f0;
   --input: #faf8f5;
   --primary: #8b6f8b;
   --primary-foreground: #ffffff;
@@ -39,52 +39,58 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
-  --font-family-sans: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-family-mono: "Instrument Sans", monospace;
+  --font-family-sans: var(--font-instrument), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: var(--font-instrument), monospace;
   
   /* Rounded borders - softer than fully rounded */
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-3xl: 48px;
 }
 
 * {
   border-color: var(--border);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html {
-  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.025em;
+  font-family: var(--font-family-sans);
+  letter-spacing: -0.015em;
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-sans);
   letter-spacing: inherit;
+  overflow-x: hidden;
 }
 
 /* Apply Instrument Sans to all text elements */
 *,
 *::before,
 *::after {
-  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: var(--font-family-sans) !important;
   letter-spacing: inherit;
 }
 
 /* Override for Vazirmatn font */
 .vazirmatn-font {
-  font-family: "Vazirmatn", sans-serif !important;
+  font-family: var(--font-vazirmatn), sans-serif !important;
 }
 
-/* Explicitly set font and letter-spacing for form elements that might not inherit properly */
+/* Explicitly set font and letter-spacing for form elements */
 input,
 textarea,
 select,
 button {
-  font-family: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.025em;
+  font-family: var(--font-family-sans);
+  letter-spacing: -0.015em;
 }
 
 /* Rounded buttons - softer rounded corners */
@@ -93,7 +99,24 @@ button,
 .btn,
 input[type="button"],
 input[type="submit"] {
-  border-radius: 12px !important;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
 }
 
 /* Hide scrollbar */
@@ -106,52 +129,28 @@ input[type="submit"] {
   display: none;
 }
 
-/* Scoop corner shape for buttons */
-.btn-scoop {
-  corner-shape: scoop;
-  border-radius: 8px !important;
-}
-
 /* Animation utilities for shadcn Sheet/Drawer */
 @keyframes slide-in-from-right {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 @keyframes slide-out-to-right {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @theme inline {
-  --animate-in: slide-in-from-right 0.5s ease-out;
-  --animate-out: slide-out-to-right 0.3s ease-in;
-  --animate-fade-in: fade-in 0.5s ease-out;
-  --animate-fade-out: fade-out 0.3s ease-in;
+  --animate-sheet-in: slide-in-from-right 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  --animate-sheet-out: slide-out-to-right 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }

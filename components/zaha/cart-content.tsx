@@ -125,7 +125,7 @@ export function CartContent(): React.ReactElement {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground mb-4">Your cart is empty</p>
-        <Link href="/app">
+        <Link href="/">
           <Button>Continue Shopping</Button>
         </Link>
       </div>
@@ -295,7 +295,7 @@ export function CartContent(): React.ReactElement {
               </div>
             </div>
 
-            <Link href="/app/checkout" className="block mb-4">
+            <Link href="/checkout" className="block mb-4">
               <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                 Finaliser la commande
               </Button>

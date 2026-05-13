@@ -233,7 +233,7 @@ export function CheckoutForm(): React.ReactElement {
               {isSubmitting ? "Processing..." : "PLACE ORDER"}
             </Button>
 
-            <Link href="/app/cart" className="block text-center text-sm text-primary hover:underline">
+            <Link href="/cart" className="block text-center text-sm text-primary hover:underline">
               ← Back to cart
             </Link>
           </CardContent>

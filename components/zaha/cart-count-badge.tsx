@@ -58,7 +58,7 @@ export function CartCountBadge(): React.ReactElement {
   }, []);
 
   // Determine which cart page to link to
-  const cartLink = cartCount > 0 && pathname?.startsWith("/app") === false ? "/cart" : "/app/cart";
+  const cartLink = "/cart";
 
   return (
     <Link 
@@ -77,4 +77,3 @@ export function CartCountBadge(): React.ReactElement {
     </Link>
   );
 }
-

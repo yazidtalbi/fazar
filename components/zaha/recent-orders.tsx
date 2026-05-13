@@ -116,7 +116,7 @@ export function RecentOrders({ limit = 10, status, showReviewButton = false }: R
         <CardContent className="p-12 text-center">
           <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground mb-2">No recent orders</p>
-          <Link href="/app">
+          <Link href="/">
             <Button>Start Shopping</Button>
           </Link>
         </CardContent>

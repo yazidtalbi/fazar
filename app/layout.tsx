@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
+import { Instrument_Sans, Vazirmatn } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 import { Toaster } from "@/components/ui/toaster";
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-instrument",
+});
+
+const vazirmatn = Vazirmatn({
+  subsets: ["arabic"],
+  display: "swap",
+  variable: "--font-vazirmatn",
+});
 
 export const metadata: Metadata = {
   title: "Afus - Authentic Moroccan Craft",
@@ -19,14 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={`${instrumentSans.variable} ${vazirmatn.variable}`}>
       <body className="font-sans antialiased">
         <NuqsAdapterProvider>{children}</NuqsAdapterProvider>
         <Toaster />

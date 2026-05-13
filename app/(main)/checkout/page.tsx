@@ -20,7 +20,7 @@ export default async function CheckoutPage() {
     .single();
 
   if (!buyerProfile) {
-    redirect("/app");
+    redirect("/");
   }
 
   const { count } = await supabase
@@ -29,7 +29,7 @@ export default async function CheckoutPage() {
     .eq("buyer_id", user.id);
 
   if (!count || count === 0) {
-    redirect("/app/cart");
+    redirect("/cart");
   }
 
   return (

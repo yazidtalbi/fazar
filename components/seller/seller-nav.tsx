@@ -67,7 +67,7 @@ export function SellerNav(): React.ReactElement {
             </Link>
             <p className="text-xs text-muted-foreground mt-1">Seller Dashboard</p>
             <Link 
-              href="/app" 
+              href="/" 
               className="flex items-center gap-2 mt-3 text-sm text-muted-foreground hover:text-[#222222] transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />

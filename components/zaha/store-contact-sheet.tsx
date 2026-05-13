@@ -10,10 +10,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Phone, MessageCircle, Instagram, Facebook, Mail } from "lucide-react";
+import { Phone, MessageCircle, Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Database } from "@/lib/database.types";
+import { cn } from "@/lib/utils";
 
 type Store = Database["public"]["Tables"]["stores"]["Row"];
 
@@ -37,6 +37,7 @@ export function StoreContactSheet({
       value: store.phone,
       href: `tel:${store.phone.replace(/\s+/g, "")}`,
       icon: Phone,
+      color: "bg-blue-50 text-blue-600",
     });
   }
 
@@ -48,6 +49,7 @@ export function StoreContactSheet({
       value: store.whatsapp,
       href: `https://wa.me/${whatsappNumber}`,
       icon: MessageCircle,
+      color: "bg-green-50 text-green-600",
     });
   }
 
@@ -58,6 +60,7 @@ export function StoreContactSheet({
       value: store.instagram,
       href: `https://instagram.com/${store.instagram.replace(/^@/, "")}`,
       icon: Instagram,
+      color: "bg-pink-50 text-pink-600",
     });
   }
 
@@ -68,6 +71,7 @@ export function StoreContactSheet({
       value: store.facebook,
       href: store.facebook.startsWith("http") ? store.facebook : `https://facebook.com/${store.facebook}`,
       icon: Facebook,
+      color: "bg-indigo-50 text-indigo-600",
     });
   }
 
@@ -78,14 +82,16 @@ export function StoreContactSheet({
       value: store.email,
       href: `mailto:${store.email}`,
       icon: Mail,
+      color: "bg-neutral-100 text-neutral-600",
     });
   }
 
   if (triggerAsButton && store.phone) {
-    // If phone exists and triggerAsButton, render as direct link
     return (
       <Link href={`tel:${store.phone.replace(/\s+/g, "")}`}>
-        <Button>Contact</Button>
+        <Button className="h-11 px-6 bg-neutral-900 text-white rounded-xl font-semibold hover:bg-neutral-800 transition-all active:scale-[0.98]">
+          Contact Store
+        </Button>
       </Link>
     );
   }
@@ -93,35 +99,51 @@ export function StoreContactSheet({
   return (
     <Sheet>
       <SheetTrigger asChild={!triggerAsButton}>
-        {triggerAsButton ? <Button>{children}</Button> : children}
+        {triggerAsButton ? <Button className="h-11 px-6 bg-neutral-900 text-white rounded-xl font-semibold hover:bg-neutral-800 transition-all active:scale-[0.98]">{children}</Button> : children}
       </SheetTrigger>
-      <SheetContent side="bottom" className="h-auto max-h-[80vh]">
-        <SheetHeader>
-          <SheetTitle>Contact {store.name}</SheetTitle>
-          <SheetDescription>Choose a contact method</SheetDescription>
+      <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-[32px] px-8 pt-8 pb-10 border-none shadow-2xl">
+        <SheetHeader className="space-y-4 mb-8">
+          <SheetTitle className="text-2xl font-bold tracking-tight text-neutral-900">Contact {store.name}</SheetTitle>
+          <SheetDescription className="text-neutral-500 text-base">
+            Connect directly with the maker to ask questions or discuss your order.
+          </SheetDescription>
         </SheetHeader>
-        <div className="mt-6 space-y-2">
+
+        <div className="space-y-3">
           {contactMethods.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No contact methods available</p>
+            <div className="p-8 text-center bg-neutral-50 rounded-2xl border border-dashed border-neutral-200">
+              <p className="text-sm text-neutral-500 font-medium">No contact methods available for this store.</p>
+            </div>
           ) : (
-            contactMethods.map((method, index) => {
+            contactMethods.map((method) => {
               const Icon = method.icon;
               return (
-                <div key={method.type}>
-                  <Link href={method.href} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Icon className="mr-2 h-4 w-4" />
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">{method.label}</span>
-                        <span className="text-xs text-muted-foreground">{method.value}</span>
+                <Link key={method.type} href={method.href} target="_blank" rel="noopener noreferrer" className="block group">
+                  <div className="flex items-center justify-between w-full p-4 rounded-[20px] bg-neutral-50 border border-transparent group-hover:bg-neutral-100 group-hover:border-neutral-200 transition-all duration-200">
+                    <div className="flex items-center gap-4">
+                      <div className={cn("h-12 w-12 rounded-[16px] flex items-center justify-center transition-transform group-hover:scale-110", method.color)}>
+                        <Icon className="h-6 w-6" />
                       </div>
-                    </Button>
-                  </Link>
-                  {index < contactMethods.length - 1 && <Separator className="my-2" />}
-                </div>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-neutral-900">{method.label}</span>
+                        <span className="text-xs text-neutral-500 font-medium">{method.value}</span>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-5 w-5 text-neutral-300 group-hover:text-neutral-900 group-hover:translate-x-1 transition-all" />
+                  </div>
+                </Link>
               );
             })
           )}
+        </div>
+
+        <div className="mt-10">
+          <Button 
+            className="w-full h-14 bg-neutral-900 text-white hover:bg-neutral-800 rounded-[18px] text-lg font-bold shadow-xl shadow-neutral-200 transition-all active:scale-[0.98]" 
+            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))}
+          >
+            Close
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

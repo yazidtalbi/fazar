@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -14,68 +15,34 @@ import { SellerPromoBanner } from "@/components/zaha/seller-promo-banner";
 import { MasonryGrid } from "@/components/zaha/masonry-grid";
 import { ProductCarousel } from "@/components/zaha/product-carousel";
 import { CityCard } from "@/components/zaha/city-card";
+import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
   const supabase = await createClient();
 
-  // Get promoted products (trending)
-  const { data: promotedProducts } = await supabase
-    .from("products")
-    .select(`
-      *,
-      product_media(media_url, media_type, order_index, is_cover),
-      stores!inner(id, name, slug)
-    `)
-    .eq("status", "active")
-    .eq("is_promoted", true)
-    .order("created_at", { ascending: false })
-    .limit(10);
-
-  // Get trending products
-  const { data: trendingProducts } = await supabase
-    .from("products")
-    .select(`
-      *,
-      product_media(media_url, media_type, order_index, is_cover),
-      stores!inner(id, name, slug)
-    `)
-    .eq("status", "active")
-    .eq("is_trending", true)
-    .order("created_at", { ascending: false })
-    .limit(10);
-
-  // Get recent products (new arrivals)
-  const { data: newProducts } = await supabase
-    .from("products")
-    .select(`
-      *,
-      product_media(media_url, media_type, order_index, is_cover),
-      stores!inner(id, name, slug)
-    `)
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(20);
-
-  // Get categories
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name, slug")
-    .order("name")
-    .limit(10);
-
-  // Get products with personalization options
-  // First get product IDs that have personalizations
-  const { data: personalizedProductIds } = await supabase
-    .from("product_personalizations")
-    .select("product_id")
-    .limit(1000);
+  // Fetch all data in parallel for better performance and to avoid the 'white page' delay
+  const [
+    { data: promotedProducts },
+    { data: trendingProducts },
+    { data: newProducts },
+    { data: categories },
+    { data: personalizedProductIds },
+    { data: promotionProducts }
+  ] = await Promise.all([
+    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_promoted", true).order("created_at", { ascending: false }).limit(10),
+    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_trending", true).order("created_at", { ascending: false }).limit(10),
+    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").order("created_at", { ascending: false }).limit(20),
+    supabase.from("categories").select("id, name, slug").order("name").limit(10),
+    supabase.from("product_personalizations").select("product_id").limit(1000),
+    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").not("promoted_price", "is", null).order("created_at", { ascending: false }).limit(10)
+  ]);
 
   const productIdsWithPersonalization = personalizedProductIds 
     ? Array.from(new Set(personalizedProductIds.map((p: any) => p.product_id)))
     : [];
 
-  // Then fetch those products with their media
+  // Fetch customized products if needed
   let customizedProducts: any[] = [];
   if (productIdsWithPersonalization.length > 0) {
     const { data: personalizedProductsData } = await supabase
@@ -86,28 +53,14 @@ export default async function HomePage() {
         stores!inner(id, name, slug)
       `)
       .eq("status", "active")
-      .in("id", productIdsWithPersonalization)
-      .order("created_at", { ascending: false })
-      .limit(10);
+      .in("id", productIdsWithPersonalization.slice(0, 10))
+      .order("created_at", { ascending: false });
     
     customizedProducts = personalizedProductsData || [];
   }
 
-  // Get products on promotion (with promoted_price)
-  const { data: promotionProducts } = await supabase
-    .from("products")
-    .select(`
-      *,
-      product_media(media_url, media_type, order_index, is_cover),
-      stores!inner(id, name, slug)
-    `)
-    .eq("status", "active")
-    .not("promoted_price", "is", null)
-    .order("created_at", { ascending: false })
-    .limit(10);
-
   return (
-    <div className="min-h-screen bg-background">
+    <>
       {/* Mobile: Promotional Banner Carousel */}
       <div className="md:hidden -mx-2 -mt-2 mb-0">
         <div className="h-64">
@@ -116,40 +69,41 @@ export default async function HomePage() {
       </div>
 
 {/* Desktop Hero - Two Section Layout */}
-<div className="hidden md:block relative w-full min-h-[500px] bg-background">
-  <div className="max-w-[100rem] mx-auto px-12 py-8">
-    <div className="grid md:grid-cols-3 gap-6 items-stretch">
+<div className="hidden md:block relative w-full h-[500px] bg-background">
+  <div className="max-w-[100rem] mx-auto px-12 py-4 h-full">
+    <div className="grid md:grid-cols-3 gap-6 items-stretch h-full">
       {/* Left Section - Seller Promotional Banner (2/3 width) */}
       <div className="md:col-span-2 h-full">
         <SellerPromoBanner />
       </div>
 
-{/* Right Section - Hand Promotional Banner */}
-<div className="h-full">
-  <div
-    className="rounded-3xl overflow-hidden h-full"
-    style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
-  >
-    <div className="relative flex flex-col h-full pt-10 px-10">
-      {/* Text */}
-      <p className="text-2xl md:text-3xl font-semibold text-right text-[#673399]">
-        Download the <br /> mobile App now
-      </p>
+      {/* Right Section - Hand Promotional Banner */}
+      <div className="h-full">
+        <div
+          className="rounded-[32px] overflow-hidden h-full"
+          style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
+        >
+          <div className="relative flex flex-col h-full pt-10 px-10">
+            {/* Text */}
+            <p className="text-2xl md:text-3xl font-semibold text-right text-[#673399]">
+              Download the <br /> mobile App now
+            </p>
 
-      {/* Image wrapper takes remaining height */}
-      <div className="relative flex-1 flex items-end justify-end">
-        <Image
-          src="/landing/hands.png"
-          alt="Hand"
-          fill
-          className="object-contain object-bottom"
-          priority
-        />
+            {/* Image wrapper takes remaining height */}
+            <div className="relative flex-1 flex items-end justify-end">
+              <Image
+                src="/landing/hands.png"
+                alt="Hand"
+                fill
+                className="object-contain object-bottom"
+                priority
+                sizes="(max-w-768px) 100vw, 33vw"
+                quality={90}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
     </div>
   </div>
 </div>
@@ -165,13 +119,13 @@ export default async function HomePage() {
         <div className="md:hidden">
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
             {[
-              { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
-              { name: 'Art', slug: 'art', image: '/cat/11.png' },
-              { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
-              { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
-              { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
-              { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
-              { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
+              { name: 'Rugs', slug: 'rugs-kilims', image: '/cat/22.png' },
+              { name: 'Ceramics', slug: 'ceramics', image: '/cat/11.png' },
+              { name: 'Leather', slug: 'leather', image: '/cat/33.png' },
+              { name: 'Metalwork', slug: 'brass-metalwork', image: '/cat/44.png' },
+              { name: 'Textiles', slug: 'textiles', image: '/cat/55.png' },
+              { name: 'Home', slug: 'home-decor', image: '/cat/77.png' },
+              { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
             ].map((cat) => {
               // Try to find matching category in database, otherwise use provided slug
               const dbCategory = categories?.find(c => 
@@ -206,15 +160,14 @@ export default async function HomePage() {
 
         {/* Desktop: Horizontal Category Layout - 7 categories in viewport */}
         <div className="hidden md:flex items-center justify-between w-full max-w-auto xl:max-w-7/8 mx-auto gap-1">
-          {/* Fixed list of categories that match available images */}
           {[
-            { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
-            { name: 'Art', slug: 'art', image: '/cat/11.png' },
-            { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
-            { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
-            { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
-            { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
-            { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
+            { name: 'Rugs', slug: 'rugs-kilims', image: '/cat/22.png' },
+            { name: 'Ceramics', slug: 'ceramics', image: '/cat/11.png' },
+            { name: 'Leather', slug: 'leather', image: '/cat/33.png' },
+            { name: 'Metalwork', slug: 'brass-metalwork', image: '/cat/44.png' },
+            { name: 'Textiles', slug: 'textiles', image: '/cat/55.png' },
+            { name: 'Home', slug: 'home-decor', image: '/cat/77.png' },
+            { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
           ].map((cat) => {
             // Try to find matching category in database, otherwise use provided slug
             const dbCategory = categories?.find(c => 
@@ -373,62 +326,6 @@ export default async function HomePage() {
           viewAllHref="/search?sort=newest"
         />
       )}
-
-      {/* Desktop: Promotion Items Section - Hidden for now */}
-      {/* {promotionProducts && promotionProducts.length > 0 && (
-        <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-[#222222]">Promotion</h2>
-            <Link href="/search?category=sale">
-              <Button variant="ghost" className="text-sm">
-                Voir tout
-              </Button>
-            </Link>
-          </div>
-          <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-            {promotionProducts.slice(0, 10).map((product: any) => (
-              <div key={product.id} className="flex-shrink-0 w-64">
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )} */}
-
-      {/* Desktop: Customized Name Items Rail - Hidden for now */}
-      {/* <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-[#222222]">Articles personnalisés</h2>
-          <Link href="/search?category=personalized">
-            <Button variant="ghost" className="text-sm">
-              Voir tout
-            </Button>
-          </Link>
-        </div>
-        <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-          {customizedProducts.map((product: any) => (
-            <div key={product.id} className="flex-shrink-0 w-64">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-
-      {/* Desktop: Store Discovery Section */}
-      <div className="hidden md:block">
-        <StoreDiscoverySection />
-      </div>
-
-      {/* Desktop: Project Explanation Section */}
-      <div className="hidden md:block">
-        <ProjectExplanation />
-      </div>
-
-      {/* Desktop: Footer */}
-      <div className="hidden md:block">
-        <Footer />
-      </div>
-    </div>
+    </>
   );
 }

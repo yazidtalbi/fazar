@@ -1,50 +1,139 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import * as React from "react";
+
+const slides = [
+  {
+    title: "Dive into the world of handmade",
+    description: "Turn your craft into income. Create your shop, add your products, and start selling to buyers across Morocco.",
+    buttonText: "Become a seller now",
+    image: "/seller.png",
+    bgColor: "bg-[#1b0f2b]",
+    textColor: "text-[#F3E2F5]"
+  },
+  {
+    title: "Turn your passion into profit",
+    description: "Reach thousands of customers and manage your orders with ease using our dedicated seller dashboard.",
+    buttonText: "Open your shop",
+    image: "/seller.png",
+    bgColor: "bg-[#2d1b4d]",
+    textColor: "text-[#E8D5E8]"
+  },
+  {
+    title: "Share your craft with the world",
+    description: "Every purchase directly supports a Moroccan maker. Discover unique, one-of-a-kind treasures today.",
+    buttonText: "Discover more",
+    image: "/seller.png",
+    bgColor: "bg-[#1a1a1a]",
+    textColor: "text-white/80"
+  }
+];
 
 export function SellerPromoBanner(): React.ReactElement {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
-    <section className="w-full">
-      <div className="mx-auto w-full max-w-6xl px-4">
-        {/* Card */}
-        <div className="rounded-xl bg-gradient-to-b from-[#1b0f2b] to-[#12071f] px-10 py-12 sm:px-14 sm:py-16 lg:px-10 lg:py-10 ">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Left */}
-            <div className="max-w-xl">
-              <h2 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
-              Dive into the world of handmade
-            
-              </h2>
+    <section className="w-full h-full">
+      <div className="mx-auto w-full h-full max-w-7xl px-4">
+        <Carousel
+          setApi={setApi}
+          plugins={[plugin.current]}
+          className="w-full h-full flex flex-col"
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
+          opts={{
+            align: "start",
+            loop: true,
+            duration: 15,
+            skipSnaps: false,
+          }}
+        >
+          <CarouselContent className="h-full">
+            {slides.map((slide, index) => (
+              <CarouselItem key={index} className="h-full will-change-transform transform-gpu">
+                <div className={`relative rounded-[32px] ${slide.bgColor} px-10 py-12 sm:px-14 sm:py-16 lg:px-10 lg:py-10 h-[476px] flex items-center overflow-hidden will-change-transform transform-gpu`}>
+                  <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16 w-full">
+                    {/* Left */}
+                    <div className="max-w-xl">
+                      <h2 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
+                        {slide.title}
+                      </h2>
 
-              <p className="mt-8 max-w-md text-base leading-relaxed  sm:text-lg text-[#F3E2F5]">
-                Turn your craft into income. Create your shop, add your products,
-                and start selling to buyers across Morocco .
-              </p>
+                      <p className={`mt-8 max-w-md text-base leading-relaxed sm:text-lg ${slide.textColor}`}>
+                        {slide.description}
+                      </p>
 
-              <div className="mt-10">
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center !rounded-full bg-white px-8 py-3 text-sm font-bold text-[#160a23]  transition hover:opacity-95 active:opacity-90 sm:text-base"
-                >
-                  Become a seller now
-                </button>
-              </div>
-            </div>
+                      <div className="mt-10">
+                        <button
+                          type="button"
+                          className="inline-flex items-center justify-center !rounded-full bg-white px-8 py-3 text-sm font-bold text-[#160a23] transition hover:opacity-95 active:opacity-90 sm:text-base"
+                        >
+                          {slide.buttonText}
+                        </button>
+                      </div>
+                    </div>
 
-            {/* Right (image placeholder) */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="  aspect-square "  />
-    
-                  <img
-                    src="/seller.png"
-                    alt=""
-                    className="h-72 mx-auto"
-                  />
-            
-            </div>
+                    {/* Right */}
+                    <div className="flex justify-center lg:justify-end">
+                      <div className="relative h-72 w-72 mx-auto">
+                        <Image
+                          src={slide.image}
+                          alt="Seller"
+                          fill
+                          className="object-contain"
+                          priority={index === 0 || index === 1}
+                          sizes="(max-w-768px) 100vw, 50vw"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Fixed Progress Lines at the bottom of the container */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 w-32 z-20">
+            {Array.from({ length: count }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                  i === current ? "bg-white" : "bg-white/20"
+                }`}
+              />
+            ))}
           </div>
-        </div>
+        </Carousel>
       </div>
     </section>
   );
 }
-

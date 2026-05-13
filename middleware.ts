@@ -38,29 +38,27 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public routes
-  const publicRoutes = ["/", "/search", "/p", "/store"];
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
-
-  // Allow search page for everyone
-  if (pathname.startsWith("/search")) {
-    return response;
-  }
+  const publicRoutes = ["/", "/search", "/p", "/store", "/categories", "/collections"];
+  const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"));
 
   // Auth routes
   const authRoutes = ["/auth/login", "/auth/register"];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // Protected routes - allow /app home page for guests, protect other /app routes
-  const isAppRoute = pathname.startsWith("/app") || pathname.startsWith("/seller");
-  const isAppHome = pathname === "/app";
-  const isProtectedAppRoute = isAppRoute && !isAppHome;
+  // Protected routes
+  const protectedRoutes = ["/saved", "/messages", "/profile", "/cart", "/orders", "/seller", "/onboarding"];
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  if (isProtectedAppRoute && !user) {
+  if (isProtectedRoute && !user) {
+    // Special case: /cart is partially public (guest cart)
+    if (pathname === "/cart") {
+      return response;
+    }
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL("/app", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return response;

@@ -194,7 +194,7 @@ export function NotificationsDropdown(): React.ReactElement {
           <>
             <Separator />
             <div className="p-2">
-              <Link href="/app/notifications">
+              <Link href="/notifications">
                 <Button variant="outline" className="w-full text-sm">
                   View all notifications
                 </Button>

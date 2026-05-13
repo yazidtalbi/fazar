@@ -67,7 +67,7 @@ export function Footer(): React.ReactElement {
                 </Link>
               </li>
               <li>
-                <Link href="/app/cart" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/cart" className="text-white/80 hover:text-white transition-colors">
                   Mon panier
                 </Link>
               </li>
@@ -77,12 +77,12 @@ export function Footer(): React.ReactElement {
                 </Link>
               </li>
               <li>
-                <Link href="/app/orders" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/orders" className="text-white/80 hover:text-white transition-colors">
                   Mes commandes
                 </Link>
               </li>
               <li>
-                <Link href="/app/saved" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/saved" className="text-white/80 hover:text-white transition-colors">
                   Mes favoris
                 </Link>
               </li>
@@ -126,12 +126,12 @@ export function Footer(): React.ReactElement {
                 </Link>
               </li>
               <li>
-                <Link href="/app/messages" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/messages" className="text-white/80 hover:text-white transition-colors">
                   Nous contacter
                 </Link>
               </li>
               <li>
-                <Link href="/app/profile" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/profile" className="text-white/80 hover:text-white transition-colors">
                   Mon compte
                 </Link>
               </li>

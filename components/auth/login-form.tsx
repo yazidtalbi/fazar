@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { Mail, Lock, Chrome, Facebook, Apple } from "lucide-react";
+import { Loader } from "@/components/ui/loader";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -15,7 +17,6 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [stayConnected, setStayConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -40,125 +41,110 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
     if (onSuccess) {
       onSuccess();
     } else {
-      router.push("/app");
-      router.refresh();
+      router.push("/");
     }
   }
 
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold mb-2 text-neutral-900">Connectez-vous pour continuer</h1>
-      
-      <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+    <div className="w-full space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-neutral-900">Adresse email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="border-2 border-neutral-900 rounded-xl bg-white"
-          />
+          <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white transition-all h-11 rounded-xl"
+            />
+          </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-neutral-900">Mot de passe</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="border-2 border-neutral-900 rounded-xl bg-white"
-          />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="stayConnected"
-              checked={stayConnected}
-              onChange={(e) => setStayConnected(e.target.checked)}
-              className="w-4 h-4 border-2 border-neutral-900 rounded"
-            />
-            <Label htmlFor="stayConnected" className="text-sm text-neutral-700 cursor-pointer">
-              Rester connecté
-            </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>
+            <Link href="#" className="text-xs text-primary hover:underline font-medium">
+              Forgot password?
+            </Link>
           </div>
-          <Link href="#" className="text-sm text-neutral-600 hover:text-neutral-900 underline">
-            Mot de passe oublié ?
-          </Link>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white transition-all h-11 rounded-xl"
+            />
+          </div>
         </div>
 
         {error && (
-          <div className="text-sm text-red-600">{error}</div>
+          <div className="p-3 rounded-lg bg-red-50 text-xs text-red-600 border border-red-100">
+            {error}
+          </div>
         )}
 
         <Button 
           type="submit" 
-          className="w-full bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl py-3 font-medium" 
+          className="w-full h-11 bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl font-semibold shadow-lg shadow-neutral-200 transition-all active:scale-[0.98]" 
           disabled={isLoading}
         >
-          {isLoading ? "Chargement..." : "Se connecter"}
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <Loader size={18} className="text-white" />
+              <span>Signing in...</span>
+            </div>
+          ) : "Sign in"}
         </Button>
       </form>
 
-      <div className="mt-6">
-        <Link href="#" className="text-sm text-neutral-600 hover:text-neutral-900 underline">
-          Vous n&apos;arrivez pas à vous connecter ?
-        </Link>
-      </div>
-
-      <div className="relative my-6">
+      <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
+          <div className="w-full border-t border-neutral-100"></div>
         </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="bg-white px-4 text-neutral-600">OU</span>
+        <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
+          <span className="bg-white px-4 text-neutral-400">or continue with</span>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-3 gap-3">
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl font-bold">G</span>
-          Continuer avec Google
+          <Chrome className="h-5 w-5" />
         </Button>
         
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl font-bold">f</span>
-          Continuer avec Facebook
+          <Facebook className="h-5 w-5 text-[#1877F2]" />
         </Button>
         
         <Button 
           type="button" 
           variant="outline" 
-          className="w-full border-2 border-neutral-900 rounded-xl bg-white text-neutral-900 hover:bg-neutral-50 py-3 font-medium flex items-center justify-center gap-2"
+          className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
-          <span className="text-xl">🍎</span>
-          Continuer avec Apple
+          <Apple className="h-5 w-5" />
         </Button>
       </div>
 
-      <div className="mt-6 text-sm text-neutral-700 space-y-2">
-        <p>
-          En cliquant sur Se connecter, Continuer avec Google, Facebook, ou Apple, vous acceptez de respecter les{" "}
-          <Link href="#" className="underline hover:text-neutral-900">Conditions d&apos;utilisation</Link> et le{" "}
-          <Link href="#" className="underline hover:text-neutral-900">Règlement concernant la confidentialité</Link> d&apos;Afus.
-        </p>
-        <p className="text-xs text-neutral-600">
-          Afus peut vous envoyer des messages ; vous pouvez modifier vos préférences à cet égard dans les paramètres de votre compte. Nous ne publierons jamais sans votre autorisation.
-        </p>
-      </div>
+      <p className="text-[11px] text-center text-neutral-500 leading-relaxed">
+        By continuing, you agree to Afus&apos;s{" "}
+        <Link href="#" className="underline hover:text-neutral-900">Terms of Service</Link> and{" "}
+        <Link href="#" className="underline hover:text-neutral-900">Privacy Policy</Link>.
+      </p>
     </div>
   );
 }

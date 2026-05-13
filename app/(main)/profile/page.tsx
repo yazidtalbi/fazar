@@ -178,17 +178,17 @@ export default async function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-              <Link href="/app/orders">
+              <Link href="/orders">
                 <Button variant="outline" className="w-full justify-start">
                   My Orders
                 </Button>
               </Link>
-              <Link href="/app/cart">
+              <Link href="/cart">
                 <Button variant="outline" className="w-full justify-start">
                   Shopping Cart
                 </Button>
               </Link>
-                <Link href="/app/saved">
+                <Link href="/saved">
                   <Button variant="outline" className="w-full justify-start">
                     Saved Items
                   </Button>

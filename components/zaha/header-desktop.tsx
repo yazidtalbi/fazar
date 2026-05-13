@@ -79,15 +79,15 @@ export function HeaderDesktop(): React.ReactElement {
         setAllCategories(data);
       }
       
-      // Use static list of categories matching home page (don't fetch each time)
+      // Use static list of categories matching home page
       const staticCategories = [
+        { id: 'rugs-kilims', name: 'Rugs & Kilims', slug: 'rugs-kilims' },
+        { id: 'ceramics', name: 'Ceramics', slug: 'ceramics' },
+        { id: 'leather', name: 'Leather', slug: 'leather' },
+        { id: 'brass-metalwork', name: 'Brass & Metalwork', slug: 'brass-metalwork' },
+        { id: 'textiles', name: 'Textiles', slug: 'textiles' },
+        { id: 'home-decor', name: 'Home Decor', slug: 'home-decor' },
         { id: 'jewelry', name: 'Jewelry', slug: 'jewelry' },
-        { id: 'art', name: 'Art', slug: 'art' },
-        { id: 'beauty', name: 'Beauty', slug: 'beauty' },
-        { id: 'clothing', name: 'Clothing', slug: 'clothing' },
-        { id: 'bags', name: 'Bags', slug: 'bags' },
-        { id: 'home-living', name: 'Home Living', slug: 'home-living' },
-        { id: 'baby', name: 'Baby', slug: 'baby' },
       ];
       setCategories(staticCategories);
     }
@@ -218,7 +218,7 @@ export function HeaderDesktop(): React.ReactElement {
 
               {/* Saved Items */}
               <Link 
-                href="/app/saved" 
+                href="/saved" 
                 className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors"
                 aria-label="Saved items"
               >

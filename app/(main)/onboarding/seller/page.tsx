@@ -42,7 +42,7 @@ export default async function SellerOnboardingPage() {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto py-12">
         <div className="mb-8">
-          <Link href="/app" className="inline-block mb-4">
+          <Link href="/" className="inline-block mb-4">
             <Button variant="ghost" size="sm" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back

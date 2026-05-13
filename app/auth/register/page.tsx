@@ -12,7 +12,7 @@ export default async function RegisterPage() {
   } = await supabase.auth.getUser();
 
   if (user) {
-    redirect("/app");
+    redirect("/");
   }
 
   return (
@@ -21,7 +21,7 @@ export default async function RegisterPage() {
       <div className="border-b border-border">
         <div className="max-w-[100rem] mx-auto px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/app" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <Image
                 src="/icon.png"
                 alt="Afus"

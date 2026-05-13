@@ -38,7 +38,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     }
 
     if (params.category) {
-      query = query.eq("category_id", params.category);
+      if (params.category === "sale") {
+        query = query.not("promoted_price", "is", null);
+      } else {
+        query = query.eq("category_id", params.category);
+      }
     }
 
     // Sort
@@ -58,12 +62,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      {/* Desktop Header */}
-      <HeaderDesktop />
-      
+    <>
       {/* Desktop Content */}
-      <div className="hidden md:block pt-[114px]">
+      <div className="hidden md:block">
         <div className="max-w-[100rem] mx-auto px-12 py-8">
           <Suspense fallback={<div>Loading...</div>}>
             <SearchClient
@@ -91,10 +92,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </Suspense>
         </div>
       </div>
-      
-      {/* Bottom Navbar for Mobile */}
-      <BottomNav />
-    </div>
+    </>
   );
 }
 

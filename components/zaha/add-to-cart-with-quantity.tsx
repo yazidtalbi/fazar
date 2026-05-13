@@ -40,7 +40,7 @@ export function AddToCartWithQuantity({ productId, className }: AddToCartWithQua
       // Dispatch custom event to update cart count
       window.dispatchEvent(new CustomEvent("cartUpdated"));
       // Redirect to cart page
-      router.push("/app/cart");
+      router.push("/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
       toast.error("Failed to add item to cart");

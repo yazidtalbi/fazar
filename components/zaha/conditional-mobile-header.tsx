@@ -8,9 +8,12 @@ export function ConditionalMobileHeader(): React.ReactElement | null {
   
   // Hide header on these pages on mobile
   const hideHeaderOnMobile = [
-    "/app/saved",
-    "/app/orders",
-    "/app/cart",
+    "/saved",
+    "/orders",
+    "/cart",
+    "/categories",
+    "/p",
+    "/search",
   ].some(path => pathname === path || pathname.startsWith(path + "/"));
 
   if (hideHeaderOnMobile) {

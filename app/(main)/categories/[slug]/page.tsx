@@ -51,18 +51,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const { data: products } = await query.limit(50);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Desktop Header */}
-      <HeaderDesktop />
-      
-      {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
-      <div className="hidden md:block h-[169px]"></div>
-
+    <div className="bg-white">
       {/* Breadcrumbs - Desktop */}
       <div className="hidden md:block border-t border-b bg-white">
         <div className="max-w-[100rem] mx-auto px-12 py-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/app" className="hover:text-foreground">Home</Link>
+            <Link href="/" className="hover:text-foreground">Home</Link>
             <ChevronRight className="h-4 w-4" />
             <span className="text-foreground">{category.name}</span>
           </div>
@@ -73,7 +67,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       <div className="md:hidden border-b bg-background sticky top-0 z-30">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-4 h-14">
-            <Link href="/app">
+            <Link href="/">
               <Button variant="ghost" size="icon">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
@@ -84,7 +78,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                 <p className="text-sm text-primary italic">{category.description}</p>
               )}
             </div>
-            <Link href="/app/cart">
+            <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
               </Button>
@@ -135,11 +129,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             <p className="text-muted-foreground">No products found in this category</p>
           </div>
         )}
-      </div>
-
-      {/* Desktop Footer */}
-      <div className="hidden md:block">
-        <Footer />
       </div>
     </div>
   );

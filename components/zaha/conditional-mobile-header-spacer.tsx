@@ -7,9 +7,9 @@ export function ConditionalMobileHeaderSpacer(): React.ReactElement | null {
   
   // Hide spacer on these pages on mobile
   const hideSpacerOnMobile = [
-    "/app/saved",
-    "/app/orders",
-    "/app/cart",
+    "/saved",
+    "/orders",
+    "/cart",
   ].some(path => pathname === path || pathname.startsWith(path + "/"));
 
   if (hideSpacerOnMobile) {

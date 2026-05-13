@@ -196,15 +196,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const originalPrice = product.price ? Number(product.price) * 1.8 : null;
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      {/* Desktop Header */}
-      <HeaderDesktop />
-      
+    <div className="bg-background pb-16 md:pb-0">
       {/* Sticky Header (Mobile) */}
       <ProductStickyHeader title={product.title} imageUrl={coverMedia} productId={product.id} />
-      
-      {/* Spacer for desktop header (40px top bar + 80px main nav + 1px border + 48px secondary nav = 169px) */}
-      <div className="hidden md:block h-[169px]"></div>
 
       {/* Trust Indicators Bar (Ruban) */}
       <div className="hidden md:block bg-muted border-t border-b border-border">
@@ -237,7 +231,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="hidden md:block border-b bg-white border-border">
         <div className="max-w-[100rem] mx-auto px-12 py-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/app" className="hover:text-foreground">Home</Link>
+            <Link href="/" className="hover:text-foreground">Home</Link>
             {category && (
               <>
                 <ChevronRight className="h-4 w-4" />
@@ -822,10 +816,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
 
-      {/* Desktop Footer */}
-      <div className="hidden md:block mt-16">
-        <Footer />
-      </div>
     </div>
   );
 }

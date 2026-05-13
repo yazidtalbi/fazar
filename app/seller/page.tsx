@@ -53,7 +53,7 @@ export default async function SellerDashboardPage() {
               <h1 className="text-3xl font-bold">Seller Dashboard</h1>
               <p className="text-muted-foreground">Salam, {user.email}</p>
             </div>
-            <Link href="/app">
+            <Link href="/">
               <Button variant="outline" className="flex items-center gap-2">
                 <Home className="h-4 w-4" />
                 <span className="hidden md:inline">Back to App</span>

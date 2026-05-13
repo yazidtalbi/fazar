@@ -85,7 +85,7 @@ export function SearchClient({
     <div className="space-y-6">
       {/* Mobile Search Bar */}
       <form onSubmit={handleSearchSubmit} className="md:hidden flex gap-2 items-center">
-        <Link href="/app" className="flex-shrink-0">
+        <Link href="/" className="flex-shrink-0">
           <Button variant="ghost" size="icon" type="button">
             <ArrowLeft className="h-5 w-5" />
           </Button>

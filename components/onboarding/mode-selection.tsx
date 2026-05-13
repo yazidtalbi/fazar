@@ -10,7 +10,7 @@ export function ModeSelection(): React.ReactElement {
 
   function handleSelectMode(mode: "buyer" | "seller") {
     if (mode === "buyer") {
-      router.push("/app");
+      router.push("/");
     } else {
       router.push("/onboarding/seller");
     }

@@ -242,7 +242,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
       // Dispatch custom event to update cart count
       window.dispatchEvent(new CustomEvent("cartUpdated"));
       // Redirect to cart page
-      router.push("/app/cart");
+      router.push("/cart");
     } catch (error: any) {
       console.error("Error adding to cart:", error);
       toast.error(error.message || "Failed to add item to cart");

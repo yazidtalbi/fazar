@@ -23,7 +23,11 @@ export async function GET(request: Request) {
   }
 
   if (category) {
-    query = query.eq("category_id", category);
+    if (category === "sale") {
+      query = query.not("promoted_price", "is", null);
+    } else {
+      query = query.eq("category_id", category);
+    }
   }
 
   // Sort
