@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Zap, Wallet, Calendar } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
+import { cn } from "@/lib/utils";
 
 interface PromoteProductDialogProps {
   open: boolean;
