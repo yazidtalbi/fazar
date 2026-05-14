@@ -11,6 +11,7 @@ import { FollowButton } from "@/components/zaha/follow-button";
 import { MessageStoreButton } from "@/components/zaha/message-store-button";
 import { ArrowLeft, Search, Share2, MapPin, ShoppingCart, Star, MessageCircle, Heart, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
+import { capitalize } from "@/lib/utils";
 import { StoreProductsClient } from "@/components/zaha/store-products-client";
 import { StoreCollectionsSidebar } from "@/components/zaha/store-collections-sidebar";
 import { StoreContactSheet } from "@/components/zaha/store-contact-sheet";
@@ -128,7 +129,10 @@ export default async function StorePage({ params }: StorePageProps) {
   }
   
   // Calculate years on AFUS
-  const yearsOnAfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
+  const joinedDate = new Date(store.created_at).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
 
   return (
     <div className="min-h-screen bg-white">
@@ -156,27 +160,32 @@ export default async function StorePage({ params }: StorePageProps) {
         {/* Store Header Section - Desktop */}
         <div className="hidden md:block mb-8">
           <div className="flex items-start gap-6 mb-6">
-            {/* Store Logo */}
-            <div className="relative w-24 h-24 rounded-full bg-muted overflow-hidden flex-shrink-0 border-2 border-white">
-              {store.logo_url ? (
-                <Image
-                  src={store.logo_url}
-                  alt={store.name}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-muted-foreground">
-                  {store.name.charAt(0).toUpperCase()}
-                </div>
-              )}
+            <div className="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
+              {/* Background with Arabic Frame */}
+              <div className="absolute inset-0 bg-[#f0f7ff] arabic-frame" />
+              
+              {/* Circular Avatar on Top */}
+              <div className="relative w-[76px] h-[76px] rounded-full bg-white overflow-hidden flex-shrink-0 border-2 border-white z-10 shadow-sm">
+                {store.logo_url ? (
+                  <Image
+                    src={store.logo_url}
+                    alt={store.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xl font-bold text-muted-foreground bg-muted">
+                    {store.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Store Info */}
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold">{store.name}</h1>
+                  <h1 className="text-3xl font-bold ">{store.name}</h1>
                   {sellerProfile?.is_verified && (
                     <Badge variant="outline" className="text-xs">Verified</Badge>
                   )}
@@ -196,17 +205,21 @@ export default async function StorePage({ params }: StorePageProps) {
               </div>
               
               <div className="flex items-center gap-4 mb-4">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-primary text-primary" />
-                  <span className="text-sm font-medium">{rating > 0 ? rating.toFixed(1) : '0.0'}</span>
-                  <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
-                </div>
-                <span className="text-sm text-muted-foreground">•</span>
-                <span className="text-sm text-muted-foreground">{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
-                <span className="text-sm text-muted-foreground">•</span>
+                {reviewCount > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-primary text-primary" />
+                    <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+                    <span className="text-sm text-muted-foreground">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
+                  </div>
+                )}
+                {reviewCount > 0 && salesCount > 0 && <span className="text-sm text-muted-foreground">•</span>}
+                {salesCount > 0 && (
+                  <span className="text-sm text-muted-foreground">{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
+                )}
+                {(reviewCount > 0 || salesCount > 0) && <span className="text-sm text-muted-foreground">•</span>}
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  <span>{(store as any).city || "Morocco"}</span>
+                  <span>{capitalize((store as any).city || "Morocco")}</span>
                 </div>
               </div>
             </div>
@@ -223,24 +236,30 @@ export default async function StorePage({ params }: StorePageProps) {
         {/* Mobile Store Header */}
         <div className="md:hidden mb-6">
           <div className="flex items-start gap-4 mb-4">
-            <div className="relative w-16 h-16 rounded-full bg-muted overflow-hidden flex-shrink-0">
-              {store.logo_url ? (
-                <Image
-                  src={store.logo_url}
-                  alt={store.name}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xl font-bold text-muted-foreground">
-                  {store.name.charAt(0).toUpperCase()}
-                </div>
-              )}
+            <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
+              {/* Background with Arabic Frame */}
+              <div className="absolute inset-0 bg-[#f0f7ff] arabic-frame" />
+              
+              {/* Circular Avatar on Top */}
+              <div className="relative w-[50px] h-[50px] rounded-full bg-white overflow-hidden flex-shrink-0 border border-white z-10 shadow-sm">
+                {store.logo_url ? (
+                  <Image
+                    src={store.logo_url}
+                    alt={store.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-base font-bold text-muted-foreground bg-muted">
+                    {store.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold">{store.name}</h1>
+                  <h1 className="text-xl font-bold ">{store.name}</h1>
                   {sellerProfile?.is_verified && (
                     <Badge variant="outline" className="text-xs">Verified</Badge>
                   )}
@@ -255,14 +274,22 @@ export default async function StorePage({ params }: StorePageProps) {
                 </div>
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
-                <Star className="h-3 w-3 fill-primary text-primary" />
-                <span>{rating > 0 ? rating.toFixed(1) : '0.0'}</span>
-                <span>•</span>
-                <span>{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
-                <span>•</span>
+                {reviewCount > 0 && (
+                  <>
+                    <Star className="h-3 w-3 fill-primary text-primary" />
+                    <span>{rating.toFixed(1)}</span>
+                    <span>•</span>
+                  </>
+                )}
+                {salesCount > 0 && (
+                  <>
+                    <span>{salesCount.toLocaleString()} {salesCount === 1 ? 'sale' : 'sales'}</span>
+                    <span>•</span>
+                  </>
+                )}
                 <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3" />
-                  <span>{(store as any).city || "Morocco"}</span>
+                  <span>{capitalize((store as any).city || "Morocco")}</span>
                 </div>
               </div>
             </div>
@@ -314,7 +341,7 @@ export default async function StorePage({ params }: StorePageProps) {
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Sur AFUS depuis</div>
                   <div className="text-2xl font-bold">
-                    {yearsOnAfus > 0 ? `${yearsOnAfus} ${yearsOnAfus === 1 ? 'an' : 'ans'}` : new Date(store.created_at).getFullYear()}
+                    {joinedDate}
                   </div>
                 </div>
               </div>
@@ -345,7 +372,7 @@ export default async function StorePage({ params }: StorePageProps) {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold mb-1">{store.name}</div>
+                  <div className="font-semibold mb-1 ">{store.name}</div>
                     <div className="text-sm text-muted-foreground mb-2">Propriétaire, Designer, Fabricant</div>
                     <p className="text-sm text-gray-700">
                       Soutenez toutes sortes de personnalisation! Si vous avez des besoins de personnalisation, s&apos;il vous plaît contactez-moi!

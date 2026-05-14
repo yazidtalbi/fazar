@@ -18,7 +18,7 @@ export function Footer(): React.ReactElement {
                 height={40}
                 className="h-6 w-auto"
               />
-              <span className="text-xl font-bold">Afus</span>
+              <span className="text-xl font-bold font-roslindale">Afus</span>
             </div>
 
             {/* Description */}
@@ -42,7 +42,7 @@ export function Footer(): React.ReactElement {
 
           {/* Afus Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4">Afus</h3>
+            <h3 className="font-bold mb-4 font-roslindale">Afus</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">
@@ -59,7 +59,7 @@ export function Footer(): React.ReactElement {
 
           {/* For shopping Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4">Pour les achats</h3>
+            <h3 className="font-bold mb-4 font-roslindale">Pour les achats</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">
@@ -91,7 +91,7 @@ export function Footer(): React.ReactElement {
 
           {/* For business Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4">Pour les vendeurs</h3>
+            <h3 className="font-bold mb-4 font-roslindale">Pour les vendeurs</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/onboarding/seller" className="text-white/80 hover:text-white transition-colors">
@@ -118,7 +118,7 @@ export function Footer(): React.ReactElement {
 
           {/* Support Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4">Support</h3>
+            <h3 className="font-bold mb-4 font-roslindale">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">

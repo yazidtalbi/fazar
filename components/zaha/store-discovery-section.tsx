@@ -98,92 +98,17 @@ export async function StoreDiscoverySection(): Promise<React.ReactElement> {
     })
   );
 
-  // Sort by product count and don't limit
-  const sortedPopularStores = popularStores
-    .sort((a, b) => b.productCount - a.productCount);
-
-  // Get new stores (recently created)
-  const newStores = storesWithStats
-    .map((store: any) => ({
-      ...store,
-      firstProductImage: (() => {
-        const activeProducts = (store.products || []).filter((p: any) => p.status === "active");
-        const firstProduct = activeProducts[0];
-        const mediaArray = firstProduct?.product_media || [];
-        const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
-        return coverMedia?.media_url || null;
-      })(),
-      monthsOnAfus: Math.floor((Date.now() - new Date(store.created_at).getTime()) / (1000 * 60 * 60 * 24 * 30)),
-    }))
+  // Sort by latest created date
+  const sortedLatestStores = popularStores
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 12);
-
-  // Get stores by city
-  const cityStores = storesWithStats
-    .filter((store: any) => store.city === selectedCity)
-    .slice(0, 20);
 
   return (
     <section className="hidden md:block bg-white py-12">
       <div className="max-w-[100rem] mx-auto px-12">
-        {/* Popular Local Shops */}
-        {sortedPopularStores.length > 0 && (
-          <PopularStoresCarousel stores={sortedPopularStores} />
-        )}
-
-        {/* All Local Shops */}
-        {cityStores.length > 0 && (
-          <div>
-            <h3 className="text-2xl font-bold mb-2 text-neutral-900">
-              Toutes les boutiques locales
-            </h3>
-            <p className="text-base text-neutral-600 mb-6">
-              Vous cherchez un article en particulier ? Indiquez votre requête puis filtrez les résultats par « Pays d&apos;expédition ».{" "}
-              <Link href="/search" className="underline hover:text-primary">
-                En savoir plus
-              </Link>
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              {cityStores.slice(0, 12).map((store: any) => (
-                <Link
-                  key={store.id}
-                  href={`/store/${store.slug}`}
-                >
-                  <Card className="overflow-hidden hover:border-primary/30 transition-colors border border-border rounded-2xl p-4">
-                    <div className="flex items-center gap-4">
-                      {store.logo_url ? (
-                        <div className="relative w-16 h-16 rounded-full bg-muted overflow-hidden flex-shrink-0 border-2 border-white">
-                          <Image
-                            src={store.logo_url}
-                            alt={store.name}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-sm font-semibold flex-shrink-0">
-                          {store.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-base mb-1 truncate">{store.name}</h4>
-                        <div className="flex items-center gap-1 mb-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">{store.rating > 0 ? store.rating.toFixed(1) : '0.0'}</span>
-                          <span className="text-sm text-muted-foreground">({store.reviewCount})</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground truncate">Maison et déco</p>
-                      </div>
-                        <div className="flex-shrink-0 text-muted-foreground">
-                          <Heart className="h-5 w-5" />
-                        </div>
-                    </div>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
+        {/* Latest Local Shops */}
+        {sortedLatestStores.length > 0 && (
+          <PopularStoresCarousel stores={sortedLatestStores} />
         )}
       </div>
     </section>

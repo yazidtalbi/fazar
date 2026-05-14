@@ -12,7 +12,7 @@ interface CityCardProps {
 export function CityCard({ cityName, imagePath, href = "#", backgroundColor, textColor }: CityCardProps): React.ReactElement {
   return (
     <Link href={href} className="block group">
-      <div 
+      <div
         className="relative h-36 md:h-80 w-full overflow-hidden arabic-frame will-change-transform transform-gpu"
         style={{ backgroundColor }}
       >
@@ -26,7 +26,7 @@ export function CityCard({ cityName, imagePath, href = "#", backgroundColor, tex
         {/* Image */}
         <div
           className="absolute object-cover"
-          style={{ left: "25.8%", top: "31.1%", width: "74%", height: "68.8%" }}
+          style={{ left: "25.8%", top: "27.1%", width: "74%", height: "73.8%" }}
         >
           <Image
             src={imagePath}

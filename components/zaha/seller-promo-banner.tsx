@@ -84,7 +84,7 @@ export function SellerPromoBanner(): React.ReactElement {
                   <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16 w-full">
                     {/* Left */}
                     <div className="max-w-xl pt-16 pb-16 md:pt-20 md:pb-20">
-                      <h2 className="text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
+                      <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl font-roslindale">
                         {slide.title}
                       </h2>
 
@@ -126,9 +126,8 @@ export function SellerPromoBanner(): React.ReactElement {
             {Array.from({ length: count }).map((_, i) => (
               <div
                 key={i}
-                className={`h-1 flex-1 rounded-full transition-all duration-500 ${
-                  i === current ? "bg-white" : "bg-white/20"
-                }`}
+                className={`h-1 flex-1 rounded-full transition-all duration-500 ${i === current ? "bg-white" : "bg-white/20"
+                  }`}
               />
             ))}
           </div>

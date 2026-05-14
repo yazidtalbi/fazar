@@ -325,7 +325,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name">Store Name</Label>
+                <Label htmlFor="name">Store name</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -355,7 +355,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
               </div>
 
               <div className="space-y-4">
-                <h3 className="font-semibold">Contact Information</h3>
+                <h3 className="font-semibold">Contact information</h3>
                 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
@@ -427,7 +427,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Store Logo</CardTitle>
+              <CardTitle>Store logo</CardTitle>
               <CardDescription>Upload your store logo (recommended: square, 500x500px)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -463,7 +463,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
 
           <Card>
             <CardHeader>
-              <CardTitle>Store Cover Image</CardTitle>
+              <CardTitle>Store cover image</CardTitle>
               <CardDescription>Upload a cover image for your store (recommended: 1920x400px)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -513,9 +513,9 @@ export function StoreCustomization({ store, products, collections: initialCollec
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="border rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold">Create New Collection</h3>
+              <h3 className="font-semibold">Create new collection</h3>
               <div className="space-y-2">
-                <Label htmlFor="collection-name">Collection Name</Label>
+                <Label htmlFor="collection-name">Collection name</Label>
                 <Input
                   id="collection-name"
                   value={newCollectionName}
@@ -542,7 +542,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
             <Separator />
 
             <div className="space-y-6">
-              <h3 className="font-semibold">Your Collections</h3>
+              <h3 className="font-semibold">Your collections</h3>
               {collections.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No collections yet. Create one above.</p>
               ) : (
@@ -612,7 +612,7 @@ export function StoreCustomization({ store, products, collections: initialCollec
       <TabsContent value="featured">
         <Card>
           <CardHeader>
-            <CardTitle>Featured Items</CardTitle>
+            <CardTitle>Featured items</CardTitle>
             <CardDescription>Pin products to show at the top of your store</CardDescription>
           </CardHeader>
           <CardContent>

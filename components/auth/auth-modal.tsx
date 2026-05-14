@@ -21,7 +21,8 @@ export function AuthModal({ open, onOpenChange, initialMode = "login" }: AuthMod
 
   const handleSuccess = () => {
     onOpenChange(false);
-    router.push("/");
+    // Use window.location.href for a hard refresh which is more reliable for auth state changes
+    window.location.href = "/";
   };
 
   return (

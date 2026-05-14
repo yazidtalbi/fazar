@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { BottomNav } from "@/components/zaha/bottom-nav";
+import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
@@ -34,7 +35,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       .eq("status", "active");
 
     if (params.q) {
-      query = query.ilike("title", `%${params.q}%`);
+      query = query.or(`title.ilike.%${params.q}%,description.ilike.%${params.q}%`);
     }
 
     if (params.category) {
@@ -67,13 +68,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="hidden md:block">
         <div className="max-w-[100rem] mx-auto px-12 py-8">
           <Suspense fallback={<div>Loading...</div>}>
-            <SearchClient
-              initialProducts={initialProducts}
-              categories={categories || []}
-              initialQuery={params.q || ""}
-              initialCategory={params.category || ""}
-              initialSort={params.sort || "recommended"}
-            />
+            <NuqsAdapterProvider>
+              <SearchClient
+                initialProducts={initialProducts}
+                categories={categories || []}
+                initialQuery={params.q || ""}
+                initialCategory={params.category || ""}
+                initialSort={params.sort || "recommended"}
+              />
+            </NuqsAdapterProvider>
           </Suspense>
         </div>
       </div>
@@ -82,13 +85,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="md:hidden">
         <div className="container mx-auto px-2 py-2">
           <Suspense fallback={<div>Loading...</div>}>
-            <SearchClient
-              initialProducts={initialProducts}
-              categories={categories || []}
-              initialQuery={params.q || ""}
-              initialCategory={params.category || ""}
-              initialSort={params.sort || "recommended"}
-            />
+            <NuqsAdapterProvider>
+              <SearchClient
+                initialProducts={initialProducts}
+                categories={categories || []}
+                initialQuery={params.q || ""}
+                initialCategory={params.category || ""}
+                initialSort={params.sort || "recommended"}
+              />
+            </NuqsAdapterProvider>
           </Suspense>
         </div>
       </div>

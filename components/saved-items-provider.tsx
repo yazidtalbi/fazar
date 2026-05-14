@@ -15,25 +15,33 @@ export function SavedItemsProvider({ children }: { children: ReactNode }) {
   const [savedItems, setSavedItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [lastFetched, setLastFetched] = useState(0);
 
-  const fetchSavedItems = useCallback(async () => {
+  const fetchSavedItems = useCallback(async (force = false) => {
+    // Only fetch if forced or if it's been more than 30 seconds since last fetch
+    const now = Date.now();
+    if (!force && now - lastFetched < 30000) {
+      return;
+    }
+
     try {
       const response = await fetch("/api/saved");
       if (response.ok) {
         const data = await response.json();
         setSavedItems(data.savedItems || []);
+        setLastFetched(now);
       }
     } catch (error) {
       console.error("Error fetching saved items:", error);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [lastFetched]);
 
   const refreshSavedItems = useCallback(async () => {
     if (user) {
       setIsLoading(true);
-      await fetchSavedItems();
+      await fetchSavedItems(true);
     }
   }, [user, fetchSavedItems]);
 

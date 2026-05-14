@@ -356,7 +356,10 @@ export default function MarketingPage() {
           }}
         >
           {/* Logo / wordmark */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
+          <Link
+            href="/"
+            className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
+          >
             <Image
               src="/icon.png"
               alt="Afus"
@@ -390,7 +393,10 @@ export default function MarketingPage() {
           </div>
 
           {/* CTA */}
-          <Link href="/app" className="inline-flex items-center gap-1.5 rounded-full bg-[#23102f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#2d183b] transition-colors">
+          <Link
+            href="/app"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#23102f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#2d183b] transition-colors"
+          >
             <span>Open the app</span>
           </Link>
         </div>
@@ -444,7 +450,7 @@ export default function MarketingPage() {
                 }}
               >
                 <span className="vazirmatn-font select-none text-[22vw] sm:text-[18vw] mt-0 sm:mt-10 font-bold leading-none text-[#E5C0F4]">
-                   أفــوس
+                  أفــوس
                 </span>
               </div>
 
@@ -585,210 +591,240 @@ export default function MarketingPage() {
 
             {/* ================= WHITE SECTION ================= */}
             <section className="content relative z-10 " ref={contentRef}>
-              <div className="mx-auto flex w-full container flex-col gap-1 px-4 sm:pb-10 sm:px-6 lg:px-4">
-                {/* Manifesto card */}
-                <RevealOnScroll>
-                  <div className="mx-auto w-full max-w-4xl rounded-3xl bg-white pt-10 pb-2 sm:pb-4  sm:pt-12 arabic-corners  border border-[#f3e3d9]">
-                    <div className="mb-10 flex justify-center sm:mb-12">
-                      <motion.span
-                        className="mt-10 inline-flex items-center rounded-full border border-neutral-200 px-4 py-1.5 text-sm sm:px-5 sm:text-bas e font-normal tracking-tight text-neutral-700"
-                        initial={{ opacity: 0, y: 14 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "0px 0px -60px" }}
-                        transition={{ duration: 0.6, ease: EASE }}
-                      >
-                        Our Manifesto
-                      </motion.span>
-                    </div>
+              <div className="mx-auto container px-4 py-8">
+                <div className="arabic-frame bg-[#f3e3d9] p-[1px]">
+                  <div className="arabic-frame bg-white pt-16 pb-12">
+                    <div className="flex flex-col gap-1 px-4 sm:pb-10 sm:px-6 lg:px-4">
+                      {/* Manifesto card */}
+                      <RevealOnScroll>
+                        <div className="mx-auto w-full max-w-4xl bg-white pt-10 pb-2 sm:pb-4 sm:pt-12">
+                          <div className="mb-10 flex justify-center sm:mb-12">
+                            <motion.span
+                              className="mt-10 inline-flex items-center rounded-full border border-neutral-200 px-4 py-1.5 text-sm sm:px-5 sm:text-bas e font-normal tracking-tight text-neutral-700"
+                              initial={{ opacity: 0, y: 14 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, margin: "0px 0px -60px" }}
+                              transition={{ duration: 0.6, ease: EASE }}
+                            >
+                              Our Manifesto
+                            </motion.span>
+                          </div>
 
-                    <div className="mx-auto max-w-xl px-7 sm:px-0  ">
-                      <motion.p
-                        className="text-center text-lg sm:text-2xl font-medium leading-relaxed"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "0px 0px -60px" }}
-                        transition={{ duration: 1.2, ease: EASE, delay: 0.25 }}
-                      >
-                        In a time when everything is mass-produced, when speed
-                        replaces care, when creators are hidden behind
-                        algorithms and noise, our handmade heritage is fading.
-                      </motion.p>
+                          <div className="mx-auto max-w-xl px-7 sm:px-0  ">
+                            <motion.p
+                              className="text-center text-lg sm:text-2xl font-medium leading-relaxed"
+                              initial={{ opacity: 0, y: 20 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, margin: "0px 0px -60px" }}
+                              transition={{
+                                duration: 1.2,
+                                ease: EASE,
+                                delay: 0.25,
+                              }}
+                            >
+                              In a time when everything is mass-produced, when
+                              speed replaces care, when creators are hidden
+                              behind algorithms and noise, our handmade heritage
+                              is fading.
+                            </motion.p>
 
-                      <motion.p
-                        className="mt-6 sm:mt-8 text-center text-lg sm:text-2xl font-medium leading-relaxed tracking-tight"
-                        initial={{ opacity: 0, y: 22 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "0px 0px -60px" }}
-                        transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
-                      >
-                        We exist to connect makers with those who value their
-                        craft. This is the home where creations are honored,
-                        stories are preserved, and every purchase carries
-                        weight.
-                      </motion.p>
+                            <motion.p
+                              className="mt-6 sm:mt-8 text-center text-lg sm:text-2xl font-medium leading-relaxed tracking-tight"
+                              initial={{ opacity: 0, y: 22 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, margin: "0px 0px -60px" }}
+                              transition={{
+                                duration: 1.2,
+                                ease: EASE,
+                                delay: 0.3,
+                              }}
+                            >
+                              We exist to connect makers with those who value
+                              their craft. This is the home where creations are
+                              honored, stories are preserved, and every purchase
+                              carries weight.
+                            </motion.p>
 
-                      <motion.p
-                        className="mt-6 sm:mt-8 text-center text-lg sm:text-2xl font-medium leading-relaxed tracking-tight"
-                        initial={{ opacity: 0, y: 22 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "0px 0px -60px" }}
-                        transition={{ duration: 1.2, ease: EASE, delay: 0.34 }}
-                      >
-                        What should never have been lost is now yours again.
-                      </motion.p>
+                            <motion.p
+                              className="mt-6 sm:mt-8 text-center text-lg sm:text-2xl font-medium leading-relaxed tracking-tight"
+                              initial={{ opacity: 0, y: 22 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, margin: "0px 0px -60px" }}
+                              transition={{
+                                duration: 1.2,
+                                ease: EASE,
+                                delay: 0.34,
+                              }}
+                            >
+                              What should never have been lost is now yours
+                              again.
+                            </motion.p>
 
-                      <motion.p
-                        className="mt-10 sm:mt-12 text-center text-xl sm:text-2xl font-medium text-neutral-900"
-                        initial={{ opacity: 0, y: 22 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "0px 0px -60px" }}
-                        transition={{ duration: 1.2, ease: EASE, delay: 0.68 }}
-                      >
-                        <span>Welcome</span>
-                        <br className="hidden sm:block" />
-                        <span className="sm:ml-0 ml-1">to Afus.ma</span>
-                      </motion.p>
-                    </div>
+                            <motion.p
+                              className="mt-10 sm:mt-12 text-center text-xl sm:text-2xl font-medium text-neutral-900"
+                              initial={{ opacity: 0, y: 22 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, margin: "0px 0px -60px" }}
+                              transition={{
+                                duration: 1.2,
+                                ease: EASE,
+                                delay: 0.68,
+                              }}
+                            >
+                              <span>Welcome</span>
+                              <br className="hidden sm:block" />
+                              <span className="sm:ml-0 ml-1">to Afus.ma</span>
+                            </motion.p>
+                          </div>
 
-                    {/* Creator avatars row */}
-                    <motion.div
-                      className="my-24 flex flex-col items-center justify-center gap-8 px-4 sm:my-32 sm:flex-row sm:gap-12 md:gap-14"
-                      initial={{ opacity: 0, y: 26 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "0px 0px -80px" }}
-                      transition={{ duration: 0.75, ease: EASE, delay: 0.08 }}
-                    >
-                      <div className="relative h-40 w-40 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
-                        <Image
-                          src="/landing/aa.png"
-                          alt="Creator 1"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div className="relative  h-40 w-40 overflow-hidden rounded-full sm:h-30 sm:w-30">
-                        <Image
-                          src="/landing/bb.png"
-                          alt="Creator 2"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div className="relative  h-40 w-40 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
-                        <Image
-                          src="/landing/3.png"
-                          alt="Creator 3"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </motion.div>
-
-                    <div className="px-4 text-center sm:px-0">
-                      <h2 className="mx-auto mb-14 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900">
-                        Features Crafted for Everyday Ease
-                      </h2>
-                    </div>
-
-                    {/* 4 feature cards */}
-                    <div className="grid gap-4 px-4 pb-4 sm:px-10 md:grid-cols-2 md:gap-8">
-                      {[
-                        {
-                          title: "Discover unique finds",
-                          desc: "Explore handmade products from real Moroccan makers.",
-                          image: "/landing/a.png",
-                          placeholder: "Home Feed Image",
-                        },
-                        {
-                          title: "Customized shop pages",
-                          desc: "Establish a real brand presence with a personalized page.",
-                          image: "/landing/b.png",
-                          placeholder: "Shop Page Image",
-                        },
-                        {
-                          title: "Dashboard for real sellers",
-                          desc: "Track sales, orders, and performance instantly.",
-                          image: "/landing/dashboard.png",
-                          placeholder: "Product Page Image",
-                        },
-                        {
-                          title: "Built to convert",
-                          desc: "Smart layouts and clear details that guide shoppers to buy.",
-                          image: "/landing/d.png",
-                          placeholder: "Contact Sheet Image",
-                        },
-                      ].map((item, i) => {
-                        const titleColor = i % 2 === 0 ? "#be7846" : "#ae74e4";
-
-                        return (
+                          {/* Creator avatars row */}
                           <motion.div
-                            key={i}
-                            className="rounded-xl text-left border-2 border-neutral-100"
+                            className="my-24 flex flex-col items-center justify-center gap-8 px-4 sm:my-32 sm:flex-row sm:gap-12 md:gap-14"
                             initial={{ opacity: 0, y: 26 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "0px 0px -80px" }}
                             transition={{
-                              duration: 0.7,
+                              duration: 0.75,
                               ease: EASE,
-                              delay: 0.05 * i,
+                              delay: 0.08,
                             }}
                           >
-                            {/* TEXT BLOCK */}
-                            <h3
-                              className="mt-1 text-xl sm:text-2xl font-semibold px-8 pt-8"
-                              style={{ color: titleColor }}
-                            >
-                              {item.title}
-                            </h3>
+                            <div className="relative h-40 w-40 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
+                              <Image
+                                src="/landing/aa.png"
+                                alt="Creator 1"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
 
-                            <p className="max-w-xs mt-2 text-md sm:text-lg font-normal   text-neutral-500 leading-6 sm:leading-7 px-8">
-                              {item.desc}
-                            </p>
+                            <div className="relative  h-40 w-40 overflow-hidden rounded-full sm:h-30 sm:w-30">
+                              <Image
+                                src="/landing/bb.png"
+                                alt="Creator 2"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
 
-                            {/* IMAGE BLOCK */}
-                            <div className="overflow-hidden rounded-t-xl">
-                              {item.image ? (
-                                <div className="pb-0">
-                                  <Image
-                                    src={item.image}
-                                    alt={item.title}
-                                    width={800}
-                                    height={600}
-                                    className="w-full mx-auto h-auto object-contain rounded-xl"
-                                  />
-                                </div>
-                              ) : (
-                                <div className="aspect-[4/3] w-full bg-neutral-100 flex items-center justify-center text-neutral-400 text-xs">
-                                  {item.placeholder}
-                                </div>
-                              )}
+                            <div className="relative  h-40 w-40 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
+                              <Image
+                                src="/landing/3.png"
+                                alt="Creator 3"
+                                fill
+                                className="object-cover"
+                              />
                             </div>
                           </motion.div>
-                        );
-                      })}
-                    </div>
 
-                    {/* ========= FEATURE LIST SECTION (aligned + no colored bg) ========= */}
-                    <RevealOnScroll>
-                      <section className="mt-20 px-4 sm:px-6 lg:px-8">
-                        <h2 className="mx-auto mb-8 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900 capitalize text-center">
-                          And much more..
-                        </h2>
+                          <div className="px-4 text-center sm:px-0">
+                            <h2 className="mx-auto mb-14 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900">
+                              Features Crafted for Everyday Ease
+                            </h2>
+                          </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3">
-                          {FEATURE_ITEMS.map((item, i) => {
-                            const columns = 3;
-                            const total = FEATURE_ITEMS.length;
+                          {/* 4 feature cards */}
+                          <div className="grid gap-4 px-4 pb-4 sm:px-10 md:grid-cols-2 md:gap-8">
+                            {[
+                              {
+                                title: "Discover unique finds",
+                                desc: "Explore handmade products from real Moroccan makers.",
+                                image: "/landing/a.png",
+                                placeholder: "Home Feed Image",
+                              },
+                              {
+                                title: "Customized shop pages",
+                                desc: "Establish a real brand presence with a personalized page.",
+                                image: "/landing/b.png",
+                                placeholder: "Shop Page Image",
+                              },
+                              {
+                                title: "Dashboard for real sellers",
+                                desc: "Track sales, orders, and performance instantly.",
+                                image: "/landing/dashboard.png",
+                                placeholder: "Product Page Image",
+                              },
+                              {
+                                title: "Built to convert",
+                                desc: "Smart layouts and clear details that guide shoppers to buy.",
+                                image: "/landing/d.png",
+                                placeholder: "Contact Sheet Image",
+                              },
+                            ].map((item, i) => {
+                              const titleColor =
+                                i % 2 === 0 ? "#be7846" : "#ae74e4";
 
-                            const isLastColumn = i % columns === columns - 1;
-                            const isLastRow = i >= total - columns;
+                              return (
+                                <motion.div
+                                  key={i}
+                                  className="rounded-xl text-left border-2 border-neutral-100"
+                                  initial={{ opacity: 0, y: 26 }}
+                                  whileInView={{ opacity: 1, y: 0 }}
+                                  viewport={{
+                                    once: true,
+                                    margin: "0px 0px -80px",
+                                  }}
+                                  transition={{
+                                    duration: 0.7,
+                                    ease: EASE,
+                                    delay: 0.05 * i,
+                                  }}
+                                >
+                                  {/* TEXT BLOCK */}
+                                  <h3
+                                    className="mt-1 text-xl sm:text-2xl font-semibold px-8 pt-8"
+                                    style={{ color: titleColor }}
+                                  >
+                                    {item.title}
+                                  </h3>
 
-                            return (
-                              <div
-                                key={item.title}
-                                className={`
+                                  <p className="max-w-xs mt-2 text-md sm:text-lg font-normal   text-neutral-500 leading-6 sm:leading-7 px-8">
+                                    {item.desc}
+                                  </p>
+
+                                  {/* IMAGE BLOCK */}
+                                  <div className="overflow-hidden rounded-t-xl">
+                                    {item.image ? (
+                                      <div className="pb-0">
+                                        <Image
+                                          src={item.image}
+                                          alt={item.title}
+                                          width={800}
+                                          height={600}
+                                          className="w-full mx-auto h-auto object-contain rounded-xl"
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="aspect-[4/3] w-full bg-neutral-100 flex items-center justify-center text-neutral-400 text-xs">
+                                        {item.placeholder}
+                                      </div>
+                                    )}
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+
+                          {/* ========= FEATURE LIST SECTION (aligned + no colored bg) ========= */}
+                          <RevealOnScroll>
+                            <section className="mt-20 px-4 sm:px-6 lg:px-8">
+                              <h2 className="mx-auto mb-8 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900 capitalize text-center">
+                                And much more..
+                              </h2>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-3">
+                                {FEATURE_ITEMS.map((item, i) => {
+                                  const columns = 3;
+                                  const total = FEATURE_ITEMS.length;
+
+                                  const isLastColumn =
+                                    i % columns === columns - 1;
+                                  const isLastRow = i >= total - columns;
+
+                                  return (
+                                    <div
+                                      key={item.title}
+                                      className={`
           flex flex-col 
           items-center sm:items-center
           justify-center 
@@ -799,52 +835,52 @@ export default function MarketingPage() {
           ${!isLastColumn ? "sm:border-r border-neutral-200" : ""}
           ${!isLastRow ? "border-b border-neutral-200" : ""}
         `}
-                              >
-                                {/* Icon with background star */}
-                                <div className="relative flex items-center justify-center h-12 w-12">
-                                  <BrandStar className="absolute inset-0 h-full w-full scale-[1.5] text-[#f3e3d9] opacity-50" />
-                                  <div className="relative z-10 text-[#997b68]">
-                                    {item.icon}
-                                  </div>
-                                </div>
+                                    >
+                                      {/* Icon with background star */}
+                                      <div className="relative flex items-center justify-center h-12 w-12">
+                                        <BrandStar className="absolute inset-0 h-full w-full scale-[1.5] text-[#f3e3d9] opacity-50" />
+                                        <div className="relative z-10 text-[#997b68]">
+                                          {item.icon}
+                                        </div>
+                                      </div>
 
-                                <h3 className="text-lg sm:text-xl font-semibold text-neutral-600 capitalize mt-3">
-                                  {item.title}
-                                </h3>
+                                      <h3 className="text-lg sm:text-xl font-semibold text-neutral-600 capitalize mt-3">
+                                        {item.title}
+                                      </h3>
 
-                                <p className="max-w-xs text-md sm:text-md text-neutral-500 leading-relaxed">
-                                  {item.description}
-                                </p>
+                                      <p className="max-w-xs text-md sm:text-md text-neutral-500 leading-relaxed">
+                                        {item.description}
+                                      </p>
+                                    </div>
+                                  );
+                                })}
                               </div>
-                            );
-                          })}
-                        </div>
-                      </section>
-                    </RevealOnScroll>
+                            </section>
+                          </RevealOnScroll>
 
-                    {/* ========= FAQ SECTION (Accordion) ========= */}
-                    <RevealOnScroll>
-                      <section className="gap-6 pt-16 sm:pt-20">
-                        <h2 className="mx-auto mb-4 max-w-xl text-3xl sm:text-4xl font-medium text-neutral-900 capitalize text-center">
-                          Frequently Asked Questions
-                        </h2>
+                          {/* ========= FAQ SECTION (Accordion) ========= */}
+                          <RevealOnScroll>
+                            <section className="gap-6 pt-16 sm:pt-20">
+                              <h2 className="mx-auto mb-4 max-w-xl text-3xl sm:text-4xl font-medium text-neutral-900 capitalize text-center">
+                                Frequently Asked Questions
+                              </h2>
 
-                        <div className="mt-8 divide-y divide-neutral-200 mx-auto max-w-2xl container px-4 sm:px-6 lg:px-8">
-                          {FAQ_ITEMS.map((faq, i) => {
-                            const isOpen = openIndex === i;
+                              <div className="mt-8 divide-y divide-neutral-200 mx-auto max-w-2xl container px-4 sm:px-6 lg:px-8">
+                                {FAQ_ITEMS.map((faq, i) => {
+                                  const isOpen = openIndex === i;
 
-                            return (
-                              <details
-                                key={faq.question}
-                                open={isOpen}
-                                className="group py-3 sm:py-4"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setOpenIndex(isOpen ? null : i);
-                                }}
-                              >
-                                <summary
-                                  className={`
+                                  return (
+                                    <details
+                                      key={faq.question}
+                                      open={isOpen}
+                                      className="group py-3 sm:py-4"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        setOpenIndex(isOpen ? null : i);
+                                      }}
+                                    >
+                                      <summary
+                                        className={`
                 flex cursor-pointer items-center justify-between gap-4 list-none
                 text-lg sm:text-lg
                 transition-opacity
@@ -855,188 +891,191 @@ export default function MarketingPage() {
                     : "font-medium text-neutral-800 opacity-70"
                 }    /* INACTIVE */
               `}
-                                >
-                                  <span>{faq.question}</span>
-                                  <ChevronDown
-                                    className={`h-4 w-4 shrink-0 text-neutral-500 transition-transform ${
-                                      isOpen ? "rotate-180" : ""
-                                    }`}
+                                      >
+                                        <span>{faq.question}</span>
+                                        <ChevronDown
+                                          className={`h-4 w-4 shrink-0 text-neutral-500 transition-transform ${
+                                            isOpen ? "rotate-180" : ""
+                                          }`}
+                                        />
+                                      </summary>
+
+                                      <p className="mt-2 max-w-xl text-md sm:text-base text-neutral-700 leading-relaxed">
+                                        {faq.answer}
+                                      </p>
+                                    </details>
+                                  );
+                                })}
+                              </div>
+                            </section>
+                          </RevealOnScroll>
+
+                          {/* Marketplace + scrolling labels */}
+                          <RevealOnScroll>
+                            <section className="flex flex-col gap-6 pb-20 pt-16 sm:pt-20 sm:pb-24">
+                              <div className="text-center">
+                                <h2 className="mx-auto mb-4 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900 capitalize">
+                                  Marketplace built for makers &amp; buyers
+                                </h2>
+                              </div>
+
+                              <div className="space-y-3">
+                                <RevealOnScroll delay={0.02}>
+                                  <AutoScrollRow
+                                    labels={ROW_1}
+                                    reverse={false}
+                                    duration={20}
                                   />
-                                </summary>
-
-                                <p className="mt-2 max-w-xl text-md sm:text-base text-neutral-700 leading-relaxed">
-                                  {faq.answer}
-                                </p>
-                              </details>
-                            );
-                          })}
-                        </div>
-                      </section>
-                    </RevealOnScroll>
-
-                    {/* Marketplace + scrolling labels */}
-                    <RevealOnScroll>
-                      <section className="flex flex-col gap-6 pb-20 pt-16 sm:pt-20 sm:pb-24">
-                        <div className="text-center">
-                          <h2 className="mx-auto mb-4 max-w-sm text-3xl sm:text-4xl font-medium text-neutral-900 capitalize">
-                            Marketplace built for makers &amp; buyers
-                          </h2>
-                        </div>
-
-                        <div className="space-y-3">
-                          <RevealOnScroll delay={0.02}>
-                            <AutoScrollRow
-                              labels={ROW_1}
-                              reverse={false}
-                              duration={20}
-                            />
+                                </RevealOnScroll>
+                                <RevealOnScroll delay={0.08}>
+                                  <AutoScrollRow
+                                    labels={ROW_2}
+                                    reverse={true}
+                                    duration={35}
+                                  />
+                                </RevealOnScroll>
+                                <RevealOnScroll delay={0.14}>
+                                  <AutoScrollRow
+                                    labels={ROW_3}
+                                    reverse={false}
+                                    duration={30}
+                                  />
+                                </RevealOnScroll>
+                              </div>
+                            </section>
                           </RevealOnScroll>
-                          <RevealOnScroll delay={0.08}>
-                            <AutoScrollRow
-                              labels={ROW_2}
-                              reverse={true}
-                              duration={35}
-                            />
-                          </RevealOnScroll>
-                          <RevealOnScroll delay={0.14}>
-                            <AutoScrollRow
-                              labels={ROW_3}
-                              reverse={false}
-                              duration={30}
-                            />
-                          </RevealOnScroll>
-                        </div>
-                      </section>
-                    </RevealOnScroll>
 
-                    {/* CTA Banner */}
-                    <RevealOnScroll>
-                      <section className="relative mx-2 mb-0 sm:mb-0 overflow-hidden rounded-xl bg-gradient-to-b from-[#F5E8FB] to-[#FEF7EB] sm:mx-3">
-                        {/* Background image block on the right */}
-                        <div className="pointer-events-none absolute inset-0 right-0 flex items-center justify-end">
-                          <div className="relative h-[260px] w-14/12 sm:w-7/12 min-w-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] mr:0 sm:-mr-16">
-                            <Image
-                              src="/landing/caftan.png"
-                              alt="Phone"
-                              fill
-                              className="object-contain object-right"
-                              priority
-                            />
-                          </div>
-                        </div>
+                          {/* CTA Banner */}
+                          <RevealOnScroll>
+                            <section className="relative mx-2 mb-0 sm:mb-0 overflow-hidden rounded-xl bg-gradient-to-b from-[#F5E8FB] to-[#FEF7EB] sm:mx-3">
+                              {/* Background image block on the right */}
+                              <div className="pointer-events-none absolute inset-0 right-0 flex items-center justify-end">
+                                <div className="relative h-[260px] w-14/12 sm:w-7/12 min-w-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] mr:0 sm:-mr-16">
+                                  <Image
+                                    src="/landing/caftan.png"
+                                    alt="Phone"
+                                    fill
+                                    className="object-contain object-right"
+                                    priority
+                                  />
+                                </div>
+                              </div>
 
-                        {/* Content */}
-                        <div className="relative z-20 flex flex-col gap-8 md:flex-row md:items-center">
-                          {/* Left text column */}
-                          <div className="max-w-xl py-6 sm:px-8 sm:py-10 md:px-10 px-6">
-                            <h3 className="text-xl sm:text-4xl font-semibold leading-7 text-neutral-900">
-                              <span className="block">
-                                Explore <br className="block sm:hidden" />
-                                handmade
-                              </span>
+                              {/* Content */}
+                              <div className="relative z-20 flex flex-col gap-8 md:flex-row md:items-center">
+                                {/* Left text column */}
+                                <div className="max-w-xl py-6 sm:px-8 sm:py-10 md:px-10 px-6">
+                                  <h3 className="text-xl sm:text-4xl font-semibold leading-7 text-neutral-900">
+                                    <span className="block">
+                                      Explore <br className="block sm:hidden" />
+                                      handmade
+                                    </span>
 
-                              <span
-                                className={`${playfair.className} italic -mt-1 sm:mt-0 block font-serif text-xl sm:text-4xl`}
-                              >
-                                treasures
-                              </span>
-                            </h3>
+                                    <span
+                                      className={`${playfair.className} italic -mt-1 sm:mt-0 block font-serif text-xl sm:text-4xl`}
+                                    >
+                                      treasures
+                                    </span>
+                                  </h3>
 
-                            <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-neutral-800 sm:block hidden">
-                              Browse, shop, and create your store. <br />
-                              All in one app.
-                            </p>
+                                  <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-neutral-800 sm:block hidden">
+                                    Browse, shop, and create your store. <br />
+                                    All in one app.
+                                  </p>
 
-                            <div className="mt-6 sm:mt-8">
-                              <button className="inline-flex sm:hidden items-center gap-2 rounded-full bg-[#23102f] px-6 py-3 text-sm sm:text-base font-medium text-white shadow-[0_14px_32px_rgba(0,0,0,0.35)] transition-colors hover:bg-[#2d183b]">
-                                <Download className="h-4 w-4" />
-                                <span>Install the App now</span>
-                              </button>
+                                  <div className="mt-6 sm:mt-8">
+                                    <button className="inline-flex sm:hidden items-center gap-2 rounded-full bg-[#23102f] px-6 py-3 text-sm sm:text-base font-medium text-white shadow-[0_14px_32px_rgba(0,0,0,0.35)] transition-colors hover:bg-[#2d183b]">
+                                      <Download className="h-4 w-4" />
+                                      <span>Install the App now</span>
+                                    </button>
 
-                              <div className="hidden sm:inline-flex items-center gap-4 rounded-xl border-0 sm:border-2 border-[#e5d6ff] bg-white sm:bg-none px-2 py-3 sm:px-2 sm:py-2 pr-10 w-full">
-                                {/* QR block */}
-                                <div className="flex items-center justify-center rounded-lg bg-white overflow-hidden">
-                                  <div className="relative h-16 w-16 sm:h-16 sm:w-16">
-                                    <Image
-                                      src="/landing/qr.jpg"
-                                      alt="Scan to install the Afus app"
-                                      fill
-                                      className="object-contain"
-                                      priority={false}
-                                    />
+                                    <div className="hidden sm:inline-flex items-center gap-4 rounded-xl border-0 sm:border-2 border-[#e5d6ff] bg-white sm:bg-none px-2 py-3 sm:px-2 sm:py-2 pr-10 w-full">
+                                      {/* QR block */}
+                                      <div className="flex items-center justify-center rounded-lg bg-white overflow-hidden">
+                                        <div className="relative h-16 w-16 sm:h-16 sm:w-16">
+                                          <Image
+                                            src="/landing/qr.jpg"
+                                            alt="Scan to install the Afus app"
+                                            fill
+                                            className="object-contain"
+                                            priority={false}
+                                          />
+                                        </div>
+                                      </div>
+
+                                      {/* Text */}
+                                      <div className="text-left">
+                                        <p className="text-lg sm:text-lg font-semibold text-[#2a1335] leading-6">
+                                          Scan to <br />
+                                          launch the Afus app
+                                        </p>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
 
-                                {/* Text */}
-                                <div className="text-left">
-                                  <p className="text-lg sm:text-lg font-semibold text-[#2a1335] leading-6">
-                                    Scan to <br />
-                                    launch the Afus app
-                                  </p>
-                                </div>
+                                {/* Spacer for two-column layout on desktop */}
+                                <div className="hidden flex-1 md:block" />
                               </div>
-                            </div>
-                          </div>
-
-                          {/* Spacer for two-column layout on desktop */}
-                          <div className="hidden flex-1 md:block" />
+                            </section>
+                          </RevealOnScroll>
                         </div>
-                      </section>
-                    </RevealOnScroll>
-                  </div>
-                </RevealOnScroll>
-
-                {/* Brand footer bar */}
-                <RevealOnScroll>
-                  <section className="mt-6 mb-8 px-1 sm:px-0">
-                    <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-center  border border-[#f3e3d9] sm:flex-row sm:gap-0 sm:text-left">
-                      {/* Left: star + text */}
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100/50 text-[#23102f]">
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 108 110"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M54.1416 0.291992L70.5439 16.6943H92.1592V38.8096L107.913 54.5645L107.991 54.6426L92.1592 70.4746V92.8408H70.5439L54.1416 109.243V109.535L53.9951 109.389L53.8496 109.535V109.243L37.4473 92.8408H15.832V70.4746L0 54.6426L0.078125 54.5645L15.832 38.8096V16.6943H37.4473L53.8496 0.291992V0L53.9951 0.145508L54.1416 0V0.291992Z" />
-                          </svg>
-                        </span>
-
-                        <p className="text-xs sm:text-sm font-normal text-gray-500">
-                          © 2026 Afus.ma
-                        </p>
-                      </div>
-
-                      {/* Right: social icons */}
-                      <div className="flex items-center gap-3 text-[#3b153f]">
-                        <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                          <Facebook className="h-5 w-5" />
-                        </button>
-
-                        <span className="h-5 w-px bg-neutral-200" />
-
-                        <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                          <Twitter className="h-5 w-5" />
-                        </button>
-
-                        <span className="h-5 w-px bg-neutral-200" />
-
-                        <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                          <span className="text-base font-semibold">t</span>
-                        </button>
-
-                        <span className="h-5 w-px bg-neutral-200" />
-
-                        <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                          <Instagram className="h-5 w-5" />
-                        </button>
-                      </div>
+                      </RevealOnScroll>
                     </div>
-                  </section>
-                </RevealOnScroll>
+                  </div>
+                </div>
               </div>
+
+              {/* Brand footer bar */}
+              <RevealOnScroll>
+                <section className="mt-6 mb-8 px-1 sm:px-0">
+                  <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-center  border border-[#f3e3d9] sm:flex-row sm:gap-0 sm:text-left">
+                    {/* Left: star + text */}
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100/50 text-[#23102f]">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 108 110"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M54.1416 0.291992L70.5439 16.6943H92.1592V38.8096L107.913 54.5645L107.991 54.6426L92.1592 70.4746V92.8408H70.5439L54.1416 109.243V109.535L53.9951 109.389L53.8496 109.535V109.243L37.4473 92.8408H15.832V70.4746L0 54.6426L0.078125 54.5645L15.832 38.8096V16.6943H37.4473L53.8496 0.291992V0L53.9951 0.145508L54.1416 0V0.291992Z" />
+                        </svg>
+                      </span>
+
+                      <p className="text-xs sm:text-sm font-normal text-gray-500">
+                        © 2026 Afus.ma
+                      </p>
+                    </div>
+
+                    {/* Right: social icons */}
+                    <div className="flex items-center gap-3 text-[#3b153f]">
+                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
+                        <Facebook className="h-5 w-5" />
+                      </button>
+
+                      <span className="h-5 w-px bg-neutral-200" />
+
+                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
+                        <Twitter className="h-5 w-5" />
+                      </button>
+
+                      <span className="h-5 w-px bg-neutral-200" />
+
+                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
+                        <span className="text-base font-semibold">t</span>
+                      </button>
+
+                      <span className="h-5 w-px bg-neutral-200" />
+
+                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
+                        <Instagram className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              </RevealOnScroll>
             </section>
           </div>
         </div>

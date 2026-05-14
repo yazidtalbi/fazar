@@ -1,4 +1,25 @@
+@import url('https://fonts.cdnfonts.com/css/roslindale');
 @import "tailwindcss";
+
+@theme {
+  --font-roslindale: "Roslindale", serif;
+  --font-fraunces: var(--font-fraunces), serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-instrument);
+  }
+}
+
+@utility font-roslindale {
+  font-family: var(--font-roslindale) !important;
+  font-style: normal !important;
+}
+
+@utility font-arabic {
+  font-family: var(--font-el-messiri), sans-serif !important;
+}
 
 :root {
   /* Light, earthy palette inspired by landing page */
@@ -19,6 +40,8 @@
   --destructive: #d97777;
   --destructive-foreground: #ffffff;
   --ring: #8b6f8b;
+  --popover: #ffffff;
+  --popover-foreground: #2d2d2d;
 }
 
 @theme inline {
@@ -39,9 +62,11 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --font-family-sans: var(--font-instrument), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-mono: var(--font-instrument), monospace;
-  
+
   /* Rounded borders - softer than fully rounded */
   --radius: 12px;
   --radius-sm: 8px;
@@ -60,7 +85,6 @@
 html {
   font-family: var(--font-family-sans);
   letter-spacing: -0.015em;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -75,13 +99,12 @@ body {
 *,
 *::before,
 *::after {
-  font-family: var(--font-family-sans) !important;
   letter-spacing: inherit;
 }
 
-/* Override for Vazirmatn font */
-.vazirmatn-font {
-  font-family: var(--font-vazirmatn), sans-serif !important;
+/* Override for El Messiri font */
+.el-messiri-font {
+  font-family: var(--font-el-messiri), sans-serif !important;
 }
 
 /* Explicitly set font and letter-spacing for form elements */
@@ -131,23 +154,43 @@ input[type="submit"] {
 
 /* Animation utilities for shadcn Sheet/Drawer */
 @keyframes slide-in-from-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-out-to-right {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 @theme inline {
@@ -156,17 +199,20 @@ input[type="submit"] {
 }
 
 .arabic-frame {
-  border-radius: 4px;
-  mask-image: 
-    radial-gradient(circle at 0 0, transparent 16px, black 17px),
-    radial-gradient(circle at 100% 0, transparent 16px, black 17px),
-    radial-gradient(circle at 0 100%, transparent 16px, black 17px),
-    radial-gradient(circle at 100% 100%, transparent 16px, black 17px);
-  mask-composite: intersect;
-  -webkit-mask-image: 
-    radial-gradient(circle at 0 0, transparent 16px, black 17px),
-    radial-gradient(circle at 100% 0, transparent 16px, black 17px),
-    radial-gradient(circle at 0 100%, transparent 16px, black 17px),
-    radial-gradient(circle at 100% 100%, transparent 16px, black 17px);
-  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(circle at 0 0, transparent 16px, black 16.5px),
+    radial-gradient(circle at 100% 0, transparent 16px, black 16.5px),
+    radial-gradient(circle at 0 100%, transparent 16px, black 16.5px),
+    radial-gradient(circle at 100% 100%, transparent 16px, black 16.5px);
+  mask-size: 51% 51%;
+  mask-repeat: no-repeat;
+  mask-position: top left, top right, bottom left, bottom right;
+  -webkit-mask-image:
+    radial-gradient(circle at 0 0, transparent 16px, black 16.5px),
+    radial-gradient(circle at 100% 0, transparent 16px, black 16.5px),
+    radial-gradient(circle at 0 100%, transparent 16px, black 16.5px),
+    radial-gradient(circle at 100% 100%, transparent 16px, black 16.5px);
+  -webkit-mask-size: 51% 51%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: top left, top right, bottom left, bottom right;
 }

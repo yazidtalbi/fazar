@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { capitalize } from "@/lib/utils";
 
 interface Store {
   id: string;
@@ -47,9 +48,9 @@ export function PopularStoresCarousel({ stores }: PopularStoresCarouselProps): R
     <div className="mb-16">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-2xl font-bold text-neutral-900">
-            Boutiques locales populaires
-          </h3>
+          <h2 className="text-xl md:text-4xl font-bold">
+            Nouvelles boutiques locales
+          </h2>
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -72,7 +73,7 @@ export function PopularStoresCarousel({ stores }: PopularStoresCarouselProps): R
           </div>
         </div>
         <p className="text-base text-neutral-600">
-          Découvrez les tendances près de chez vous.
+          Découvrez les derniers artisans à rejoindre notre communauté.
         </p>
       </div>
       <div
@@ -85,55 +86,59 @@ export function PopularStoresCarousel({ stores }: PopularStoresCarouselProps): R
             href={`/store/${store.slug}`}
             className="flex-shrink-0 w-64"
           >
-            <Card className="overflow-hidden hover:border-primary/30 transition-colors border border-border rounded-2xl h-full flex flex-col">
-              {/* Store Avatar and Latest Product Image */}
-              <div className="relative aspect-square w-full bg-muted">
-                {store.latestProductImage ? (
-                  <Image
-                    src={store.latestProductImage}
-                    alt={store.name}
-                    fill
-                    className="object-cover"
-                    sizes="256px"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                    No image
-                  </div>
-                )}
-                {/* Store Avatar Overlay - Top Left */}
-                <div className="absolute top-4 left-4 z-10">
-                  {store.logo_url ? (
-                    <div className="relative w-16 h-16 rounded-full bg-white border-2 border-white overflow-hidden">
-                      <Image
-                        src={store.logo_url}
-                        alt={store.name}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                    </div>
+            <div className="arabic-frame bg-border p-[1px] h-full">
+              <Card className="overflow-hidden hover:border-primary/30 transition-colors border-none rounded-none arabic-frame bg-white h-full flex flex-col">
+                {/* Store Avatar and Latest Product Image */}
+                <div className="relative aspect-square w-full bg-muted">
+                  {store.latestProductImage ? (
+                    <Image
+                      src={store.latestProductImage}
+                      alt={store.name}
+                      fill
+                      className="object-cover"
+                      sizes="256px"
+                    />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-white border-2 border-white flex items-center justify-center text-foreground text-lg font-semibold">
-                      {store.name.charAt(0).toUpperCase()}
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                      No image
                     </div>
                   )}
-                </div>
-              </div>
-              <CardContent className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-lg mb-1">{store.name}</h4>
-                  {store.city && (
-                    <p className="text-sm text-muted-foreground mb-2">{store.city}</p>
-                  )}
-                  <div className="flex items-center gap-1 mb-2">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">{store.rating > 0 ? store.rating.toFixed(1) : '0.0'}</span>
-                    <span className="text-sm text-muted-foreground">({store.reviewCount})</span>
+                  {/* Store Avatar Overlay - Top Left */}
+                  <div className="absolute top-4 left-4 z-10">
+                    {store.logo_url ? (
+                      <div className="relative w-16 h-16 rounded-full bg-white border-2 border-white overflow-hidden">
+                        <Image
+                          src={store.logo_url}
+                          alt={store.name}
+                          fill
+                          className="object-cover"
+                          sizes="64px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-white border-2 border-white flex items-center justify-center text-foreground text-lg font-semibold">
+                        {store.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <CardContent className="p-4 flex-1 flex flex-col">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-lg mb-1">{store.name}</h4>
+                    {store.city && (
+                      <p className="text-sm text-muted-foreground mb-2">{capitalize(store.city)}</p>
+                    )}
+                    {store.reviewCount > 0 && (
+                      <div className="flex items-center gap-1 mb-2">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium">{store.rating.toFixed(1)}</span>
+                        <span className="text-sm text-muted-foreground">({store.reviewCount})</span>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </Link>
         ))}
       </div>

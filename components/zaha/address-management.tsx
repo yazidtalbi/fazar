@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Edit, Trash2, Plus, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { capitalize } from "@/lib/utils";
 
 interface Address {
   id: string;
@@ -217,7 +218,7 @@ export function AddressManagement(): React.ReactElement {
                   )}
                   <p className="text-sm text-muted-foreground">
                     {address.postal_code && `${address.postal_code} `}
-                    {address.city}
+                    {capitalize(address.city)}
                   </p>
                   <p className="text-sm text-muted-foreground">{address.country}</p>
                 </div>

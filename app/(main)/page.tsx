@@ -30,15 +30,15 @@ export default async function HomePage() {
     { data: personalizedProductIds },
     { data: promotionProducts }
   ] = await Promise.all([
-    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_promoted", true).order("created_at", { ascending: false }).limit(10),
-    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_trending", true).order("created_at", { ascending: false }).limit(10),
-    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").order("created_at", { ascending: false }).limit(20),
+    supabase.from("products").select("*, product_media!inner(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_promoted", true).order("created_at", { ascending: false }).limit(10),
+    supabase.from("products").select("*, product_media!inner(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").eq("is_trending", true).order("created_at", { ascending: false }).limit(10),
+    supabase.from("products").select("*, product_media!inner(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").order("created_at", { ascending: false }).limit(20),
     supabase.from("categories").select("id, name, slug").order("name").limit(10),
     supabase.from("product_personalizations").select("product_id").limit(1000),
-    supabase.from("products").select("*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").not("promoted_price", "is", null).order("created_at", { ascending: false }).limit(10)
+    supabase.from("products").select("*, product_media!inner(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)").eq("status", "active").not("promoted_price", "is", null).order("created_at", { ascending: false }).limit(10)
   ]);
 
-  const productIdsWithPersonalization = personalizedProductIds 
+  const productIdsWithPersonalization = personalizedProductIds
     ? Array.from(new Set(personalizedProductIds.map((p: any) => p.product_id)))
     : [];
 
@@ -49,13 +49,13 @@ export default async function HomePage() {
       .from("products")
       .select(`
         *,
-        product_media(media_url, media_type, order_index, is_cover),
+        product_media!inner(media_url, media_type, order_index, is_cover),
         stores!inner(id, name, slug)
       `)
       .eq("status", "active")
       .in("id", productIdsWithPersonalization.slice(0, 10))
       .order("created_at", { ascending: false });
-    
+
     customizedProducts = personalizedProductsData || [];
   }
 
@@ -68,45 +68,45 @@ export default async function HomePage() {
         </div>
       </div>
 
-{/* Desktop Hero - Two Section Layout */}
-<div className="hidden md:block relative w-full h-[500px] bg-background">
-  <div className="max-w-[100rem] mx-auto px-12 py-4 h-full">
-    <div className="grid md:grid-cols-3 gap-6 items-stretch h-full">
-      {/* Left Section - Seller Promotional Banner (2/3 width) */}
-      <div className="md:col-span-2 h-full">
-        <SellerPromoBanner />
-      </div>
-
-      {/* Right Section - Hand Promotional Banner */}
-      <Link href="/landing" className="h-full block group">
-        <div
-          className="overflow-hidden h-full transition-all duration-500 group-hover:scale-[0.99] group-active:scale-[0.97] arabic-frame"
-          style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
-        >
-          <div className="relative flex flex-col h-full pt-10 px-10">
-            {/* Text */}
-            <p className="text-2xl md:text-3xl font-semibold text-right text-[#673399]">
-              The mobile app <br /> is coming soon
-            </p>
-
-            {/* Image wrapper takes remaining height */}
-            <div className="relative flex-1 flex items-end justify-end">
-              <Image
-                src="/landing/hands.png"
-                alt="Hand"
-                fill
-                className="object-contain object-bottom transition-transform duration-700 group-hover:scale-110"
-                priority
-                sizes="(max-w-768px) 100vw, 33vw"
-                quality={90}
-              />
+      {/* Desktop Hero - Two Section Layout */}
+      <div className="hidden md:block relative w-full h-[500px] bg-background">
+        <div className="max-w-[100rem] mx-auto px-12 py-4 h-full">
+          <div className="grid md:grid-cols-3 gap-6 items-stretch h-full">
+            {/* Left Section - Seller Promotional Banner (2/3 width) */}
+            <div className="md:col-span-2 h-full">
+              <SellerPromoBanner />
             </div>
+
+            {/* Right Section - Hand Promotional Banner */}
+            <Link href="/landing" className="h-full block group">
+              <div
+                className="overflow-hidden h-full transition-all duration-500 group-hover:scale-[0.99] group-active:scale-[0.97] arabic-frame"
+                style={{ background: "linear-gradient(to bottom, #fef8ec, #f4e9fa)" }}
+              >
+                <div className="relative flex flex-col h-full pt-10 px-10">
+                  {/* Text */}
+                  <p className="text-2xl md:text-3xl font-semibold text-center text-[#673399]">
+                    The mobile app <br /> is coming soon
+                  </p>
+
+                  {/* Image wrapper takes remaining height */}
+                  <div className="relative flex-1 flex items-end justify-end">
+                    <Image
+                      src="/landing/hands.png"
+                      alt="Hand"
+                      fill
+                      className="object-contain object-bottom transition-transform duration-700 group-hover:scale-110"
+                      priority
+                      sizes="(max-w-768px) 100vw, 33vw"
+                      quality={90}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
-      </Link>
-    </div>
-  </div>
-</div>
+      </div>
 
 
       {/* Browse by Category Section */}
@@ -114,29 +114,29 @@ export default async function HomePage() {
         <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-[30px] text-left md:text-center">
           Browse by Category
         </h2>
-        
+
         {/* Mobile: Horizontal Scroll with Images (same as desktop) */}
         <div className="md:hidden">
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
             {[
-              { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
-              { name: 'Art', slug: 'art', image: '/cat/22.png' },
-              { name: 'Beauty', slug: 'beauty', image: '/cat/11.png' },
-              { name: 'Clothing', slug: 'clothing', image: '/cat/55.png' },
-              { name: 'Bags', slug: 'bags', image: '/cat/33.png' },
+              { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
+              { name: 'Art', slug: 'art', image: '/cat/11.png' },
+              { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
+              { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
+              { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
               { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
-              { name: 'Baby', slug: 'baby', image: '/cat/44.png' },
+              { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
             ].map((cat) => {
               // Try to find matching category in database, otherwise use provided slug
-              const dbCategory = categories?.find(c => 
-                c.name.toLowerCase() === cat.name.toLowerCase() || 
+              const dbCategory = categories?.find(c =>
+                c.name.toLowerCase() === cat.name.toLowerCase() ||
                 c.slug === cat.slug
               );
               const categorySlug = dbCategory?.slug || cat.slug;
-              
+
               return (
-                <Link 
-                  key={cat.slug} 
+                <Link
+                  key={cat.slug}
                   href={`/categories/${categorySlug}`}
                   className="flex flex-col items-center gap-2 flex-shrink-0"
                 >
@@ -161,24 +161,24 @@ export default async function HomePage() {
         {/* Desktop: Horizontal Category Layout - 7 categories in viewport */}
         <div className="hidden md:flex items-center justify-between w-full max-w-auto xl:max-w-7/8 mx-auto gap-1">
           {[
-            { name: 'Jewelry', slug: 'jewelry', image: '/cat/66.png' },
-            { name: 'Art', slug: 'art', image: '/cat/22.png' },
-            { name: 'Beauty', slug: 'beauty', image: '/cat/11.png' },
-            { name: 'Clothing', slug: 'clothing', image: '/cat/55.png' },
-            { name: 'Bags', slug: 'bags', image: '/cat/33.png' },
+            { name: 'Jewelry', slug: 'jewelry', image: '/cat/22.png' },
+            { name: 'Art', slug: 'art', image: '/cat/11.png' },
+            { name: 'Beauty', slug: 'beauty', image: '/cat/33.png' },
+            { name: 'Clothing', slug: 'clothing', image: '/cat/44.png' },
+            { name: 'Bags', slug: 'bags', image: '/cat/55.png' },
             { name: 'Home Living', slug: 'home-living', image: '/cat/77.png' },
-            { name: 'Baby', slug: 'baby', image: '/cat/44.png' },
+            { name: 'Baby', slug: 'baby', image: '/cat/66.png' },
           ].map((cat) => {
             // Try to find matching category in database, otherwise use provided slug
-            const dbCategory = categories?.find(c => 
-              c.name.toLowerCase() === cat.name.toLowerCase() || 
+            const dbCategory = categories?.find(c =>
+              c.name.toLowerCase() === cat.name.toLowerCase() ||
               c.slug === cat.slug
             );
             const categorySlug = dbCategory?.slug || cat.slug;
-            
+
             return (
-              <Link 
-                key={cat.slug} 
+              <Link
+                key={cat.slug}
                 href={`/categories/${categorySlug}`}
                 className="flex flex-col items-center gap-2 lg:gap-3 hover:opacity-80 transition-opacity flex-1"
               >
@@ -214,36 +214,36 @@ export default async function HomePage() {
         </div>
         {/* Desktop: Grid */}
         <div className="hidden md:grid md:grid-cols-5 gap-4">
-          <CityCard 
-            cityName="Meknès" 
+          <CityCard
+            cityName="Meknès"
             imagePath="/cities/meknes.png"
             href="/search?city=meknes"
             backgroundColor="#235C4B"
             textColor="#FFFFFF"
           />
-          <CityCard 
-            cityName="Tétouan" 
+          <CityCard
+            cityName="Tétouan"
             imagePath="/cities/tetouan.png"
             href="/search?city=tetouan"
             backgroundColor="#FEF8EC"
             textColor="#000000"
           />
-          <CityCard 
-            cityName="Marrakech" 
+          <CityCard
+            cityName="Marrakech"
             imagePath="/cities/marrakech.png"
             href="/search?city=marrakech"
             backgroundColor="#E75A3F"
             textColor="#FFFFFF"
           />
-          <CityCard 
-            cityName="Rabat" 
+          <CityCard
+            cityName="Rabat"
             imagePath="/cities/rabat.png"
             href="/search?city=rabat"
             backgroundColor="#1B2E35"
             textColor="#FFFFFF"
           />
-          <CityCard 
-            cityName="Fès" 
+          <CityCard
+            cityName="Fès"
             imagePath="/cities/fes.png"
             href="/search?city=fes"
             backgroundColor="#2B1C28"
@@ -260,8 +260,8 @@ export default async function HomePage() {
             { cityName: "Fès", imagePath: "/cities/fes.png", href: "/search?city=fes", backgroundColor: "#2B1C28", textColor: "#FFFFFF" },
           ].map((city) => (
             <div key={city.cityName} className="flex-shrink-0 w-36">
-              <CityCard 
-                cityName={city.cityName} 
+              <CityCard
+                cityName={city.cityName}
                 imagePath={city.imagePath}
                 href={city.href}
                 backgroundColor={city.backgroundColor}
@@ -271,6 +271,23 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Mobile: New Arrivals Section with Masonry Grid */}
+      {newProducts && newProducts.length > 0 && (
+        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">New Arrivals</h2>
+            <Button variant="ghost" size="icon">
+              <Filter className="h-5 w-5" />
+            </Button>
+          </div>
+          <MasonryGrid columns={{ mobile: 2 }}>
+            {newProducts.map((product: any) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </MasonryGrid>
+        </div>
+      )}
 
       {/* Mobile: Promoted Items First */}
       {promotedProducts && promotedProducts.length > 0 && (
@@ -291,32 +308,6 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Mobile: New Arrivals Section with Masonry Grid */}
-      {newProducts && newProducts.length > 0 && (
-        <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">New Arrivals</h2>
-            <Button variant="ghost" size="icon">
-              <Filter className="h-5 w-5" />
-            </Button>
-          </div>
-          <MasonryGrid columns={{ mobile: 2 }}>
-            {newProducts.map((product: any) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </MasonryGrid>
-        </div>
-      )}
-
-
-      {/* Desktop: Promoted Articles Section */}
-      {promotedProducts && promotedProducts.length > 0 && (
-        <ProductCarousel
-          title="Articles en vedette"
-          products={promotedProducts}
-          viewAllHref="/search?sort=recommended"
-        />
-      )}
 
       {/* Desktop: Newest Rail */}
       {newProducts && newProducts.length > 0 && (
@@ -324,6 +315,15 @@ export default async function HomePage() {
           title="Nouveautés"
           products={newProducts}
           viewAllHref="/search?sort=newest"
+        />
+      )}
+
+      {/* Desktop: Promoted Articles Section */}
+      {promotedProducts && promotedProducts.length > 0 && (
+        <ProductCarousel
+          title="Articles en vedette"
+          products={promotedProducts}
+          viewAllHref="/search?sort=recommended"
         />
       )}
     </>

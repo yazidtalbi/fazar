@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     .eq("status", "active");
 
   if (q) {
-    query = query.ilike("title", `%${q}%`);
+    query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`);
   }
 
   if (category) {

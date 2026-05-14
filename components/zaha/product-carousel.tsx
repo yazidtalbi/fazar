@@ -37,7 +37,7 @@ export function ProductCarousel({ title, products, viewAllHref, viewAllText = "V
   return (
     <div className="hidden md:block max-w-[100rem] mx-auto px-12 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold text-[#222222]">{title}</h2>
+        <h2 className="text-xl md:text-4xl font-bold">{title}</h2>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"

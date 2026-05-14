@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/carousel";
 import { addToGuestCart } from "@/lib/utils/guest-cart";
 import { useSavedItems } from "@/components/saved-items-provider";
+import { cn, isArabic } from "@/lib/utils";
 
 type Product = Database["public"]["Tables"]["products"]["Row"] & {
   product_media: Array<{
@@ -253,7 +254,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
 
   return (
     <div className="group relative w-full">
-      <Card className="overflow-hidden transition-all duration-300 border-0 bg-transparent w-full">
+      <Card className="rounded-none border-0 bg-transparent w-full">
         <Link href={`/p/${product.id}`}>
           {/* Desktop: Hover image, Mobile: Carousel */}
           <div className="relative aspect-square w-full bg-muted overflow-hidden arabic-frame will-change-transform transform-gpu">
@@ -326,34 +327,61 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
               )}
             </div>
 
-            {/* Desktop: Hover image effect */}
+            {/* Desktop: Hover media effect */}
             <div className="hidden md:block relative w-full h-full group/image">
               {coverMedia?.media_url ? (
                 <>
-                  {/* Default Image */}
-                  <Image
-                    src={coverMedia.media_url}
-                    alt={product.title}
-                    fill
-                    className={`object-cover transition-opacity duration-300 ${
-                      secondMedia ? "group-hover/image:opacity-0" : ""
-                    }`}
-                    sizes="(max-width: 1200px) 33vw, 25vw"
-                  />
-                  {/* Hover Image (Second image if available) */}
-                  {secondMedia && secondMedia.media_url && (
+                  {/* Default Media (Cover) */}
+                  {coverMedia.media_type === "video" ? (
+                    <video
+                      src={coverMedia.media_url}
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
+                        secondMedia ? "group-hover/image:opacity-0" : ""
+                      }`}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : (
                     <Image
-                      src={secondMedia.media_url}
-                      alt={`${product.title} hover`}
+                      src={coverMedia.media_url}
+                      alt={product.title}
                       fill
-                      className="object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                      className={`object-cover transition-opacity duration-300 ${
+                        secondMedia ? "group-hover/image:opacity-0" : ""
+                      }`}
                       sizes="(max-width: 1200px) 33vw, 25vw"
                     />
+                  )}
+
+                  {/* Hover Media (Second item if available) */}
+                  {secondMedia && secondMedia.media_url && (
+                    <>
+                      {secondMedia.media_type === "video" ? (
+                        <video
+                          src={secondMedia.media_url}
+                          className="w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                        />
+                      ) : (
+                        <Image
+                          src={secondMedia.media_url}
+                          alt={`${product.title} hover`}
+                          fill
+                          className="object-cover opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 absolute inset-0"
+                          sizes="(max-width: 1200px) 33vw, 25vw"
+                        />
+                      )}
+                    </>
                   )}
                 </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                  No image
+                  No media
                 </div>
               )}
             </div>
@@ -378,14 +406,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
                 }`} 
               />
             </button>
-            {/* Add to Cart Button - Bottom Center (Desktop only on hover) */}
-            <button
-              onClick={handleAddToCart}
-              disabled={isAddingToCart}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-primary text-white px-4 py-2 rounded-xl font-medium text-sm transition-all opacity-0 md:group-hover:opacity-100 hover:bg-primary/90 whitespace-nowrap"
-            >
-              {isAddingToCart ? "Ajout..." : "Ajouter au panier"}
-            </button>
+
             {/* Discount Badge - Top Left */}
             {discount && (
               <div className="absolute top-3 left-3 z-10">
@@ -412,7 +433,13 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         </Link>
         <CardContent className="pt-4 px-0 pb-2">
           <Link href={`/p/${product.id}`}>
-            <h3 className="font-medium text-sm line-clamp-2 text-[#222222] mb-1">
+            <h3 
+              className={cn(
+                "font-medium text-sm line-clamp-2 text-[#222222] mb-1",
+                isArabic(product.title) && "font-arabic"
+              )}
+              dir={isArabic(product.title) ? "rtl" : "ltr"}
+            >
               {product.title}
             </h3>
             <div className="flex items-baseline gap-2 mb-2">
@@ -434,24 +461,36 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
           </Link>
         </CardContent>
       </Card>
-      {/* Reviews and Orders Info - Outside card, under price */}
-      {(reviewCount > 0 || orderCount > 0) && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1 px-0">
-          {reviewCount > 0 && (
-            <>
+      {/* Reviews, Orders and Add to Cart Info */}
+      <div className="flex flex-col gap-2 mt-2 px-0">
+        <div className="flex items-center justify-between min-h-[20px]">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            {reviewCount > 0 ? (
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-primary text-primary" />
                 <span className="text-sm font-medium">{rating.toFixed(1)}</span>
                 <span className="text-sm">({reviewCount})</span>
               </div>
-              {orderCount > 0 && <span>•</span>}
-            </>
-          )}
-          {orderCount > 0 && (
-            <span className="text-sm">{orderCount} {orderCount === 1 ? 'order' : 'orders'}</span>
-          )}
+            ) : (
+              <div className="h-4" /> // Empty space placeholder
+            )}
+            {reviewCount > 0 && orderCount > 0 && <span>•</span>}
+            {orderCount > 0 && (
+              <span className="text-sm">{orderCount} {orderCount === 1 ? 'order' : 'orders'}</span>
+            )}
+          </div>
         </div>
-      )}
+        
+        {/* Add to Cart Button - Visible on hover for desktop, always for mobile */}
+        <Button
+          onClick={handleAddToCart}
+          disabled={isAddingToCart}
+          className="w-full bg-primary hover:bg-primary/90 text-white rounded-2xl py-6 font-semibold text-base transition-all shadow-sm md:opacity-0 md:group-hover:opacity-100"
+        >
+          <ShoppingCart className="h-5 w-5 mr-2" />
+          {isAddingToCart ? "Ajout..." : "Ajouter au panier"}
+        </Button>
+      </div>
     </div>
   );
 }

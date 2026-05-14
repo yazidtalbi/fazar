@@ -9,8 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { X, Upload, ArrowRight, ArrowLeft } from "lucide-react";
+import { X, Upload, ArrowRight, ArrowLeft, Plus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { TagInput } from "./tag-input";
 
 interface Category {
   id: string;
@@ -52,7 +55,7 @@ interface ProductFormData {
   title: string;
   categoryId: string;
   description: string;
-  keywords: string;
+  keywords: string[];
   
   // Step 2: Media
   mediaFiles: File[];
@@ -96,7 +99,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
     title: "",
     categoryId: "",
     description: "",
-    keywords: "",
+    keywords: [],
     mediaFiles: [],
     price: "",
     hasPromotedPrice: false,
@@ -146,6 +149,10 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
         }
         if (!formData.categoryId) {
           setError("Category is required");
+          return false;
+        }
+        if (formData.keywords.length < 2) {
+          setError("Please add at least 2 keywords to help buyers find your product");
           return false;
         }
         return true;
@@ -208,7 +215,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
           categoryId: formData.categoryId || null,
           condition: "new",
           description: formData.description || null,
-          keywords: formData.keywords ? formData.keywords.split(',').map(k => k.trim()).filter(k => k) : [],
+          keywords: formData.keywords,
           materials: formData.hasMaterials ? formData.materials || null : null,
           size: formData.hasSize ? formData.size || null : null,
           weight: formData.hasWeight ? formData.weight || null : null,
@@ -287,7 +294,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
         {currentStep === 1 && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="title">PRODUCT TITLE</Label>
+              <Label htmlFor="title">Product title</Label>
               <Input
                 id="title"
                 placeholder="e.g. Vintage Berber Rug"
@@ -301,25 +308,26 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category">CATEGORY</Label>
-              <select
-                id="category"
-                className="flex h-10 w-full border border-input bg-background px-3 py-2 text-sm"
+              <Label htmlFor="category">Category</Label>
+              <Select
                 value={formData.categoryId}
-                onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                required
+                onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
               >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id="category">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">DESCRIPTION</Label>
+              <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 placeholder="Describe the craftsmanship, history, and any unique features..."
@@ -330,15 +338,14 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="keywords">KEYWORDS (comma-separated)</Label>
-              <Input
-                id="keywords"
+              <Label htmlFor="keywords">Keywords</Label>
+              <TagInput
+                tags={formData.keywords}
+                onChange={(tags) => setFormData({ ...formData, keywords: tags })}
                 placeholder="e.g. vintage, handmade, wool, moroccan"
-                value={formData.keywords}
-                onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                Separate keywords with commas. These help buyers find your product.
+                Type a keyword and press Enter or comma to add. These help buyers find your product.
               </p>
             </div>
 
@@ -349,7 +356,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
         {currentStep === 2 && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label>UPLOAD MEDIA</Label>
+              <Label>Upload media</Label>
               <div className="border border-dashed border-border p-8 text-center">
                 <input
                   type="file"
@@ -373,7 +380,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
 
             {formData.mediaFiles.length > 0 && (
               <div className="space-y-4">
-                <Label>Uploaded Media ({formData.mediaFiles.length})</Label>
+                <Label>Uploaded media ({formData.mediaFiles.length})</Label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {formData.mediaFiles.map((file, index) => (
                     <div key={index} className="relative aspect-square border border-border">
@@ -413,7 +420,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
         {currentStep === 3 && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="price">PRICE (MAD)</Label>
+              <Label htmlFor="price">Price (MAD)</Label>
               <Input
                 id="price"
                 type="number"
@@ -429,7 +436,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             <div className="space-y-4 border-t pt-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="promotedPrice">PROMOTED PRICE</Label>
+                  <Label htmlFor="promotedPrice">Promoted price</Label>
                   <p className="text-xs text-muted-foreground">
                     Set a sale price for a limited time
                   </p>
@@ -443,7 +450,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
               {formData.hasPromotedPrice && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="promotedPrice">PROMOTED PRICE (MAD)</Label>
+                    <Label htmlFor="promotedPrice">Promoted price (MAD)</Label>
                     <Input
                       id="promotedPrice"
                       type="number"
@@ -456,7 +463,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="promotedStartDate">PROMOTION START DATE</Label>
+                    <Label htmlFor="promotedStartDate">Promotion start date</Label>
                     <Input
                       id="promotedStartDate"
                       type="datetime-local"
@@ -466,7 +473,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="promotedEndDate">PROMOTION END DATE</Label>
+                    <Label htmlFor="promotedEndDate">Promotion end date</Label>
                     <Input
                       id="promotedEndDate"
                       type="datetime-local"
@@ -480,16 +487,15 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="daysToCraft">DAYS TO CRAFT / PREPARE</Label>
-                <div className="space-y-2">
-                  <input
+                <Label htmlFor="daysToCraft">Days to craft / prepare</Label>
+                <div className="space-y-4 pt-2">
+                  <Slider
                     id="daysToCraft"
-                    type="range"
-                    min="0"
-                    max="60"
-                    value={formData.daysToCraft}
-                    onChange={(e) => setFormData({ ...formData, daysToCraft: parseInt(e.target.value) })}
-                    className="w-full"
+                    min={0}
+                    max={60}
+                    step={1}
+                    value={[formData.daysToCraft]}
+                    onValueChange={(value) => setFormData({ ...formData, daysToCraft: value[0] })}
                   />
                   <div className="flex items-center justify-between text-sm">
                     <span>0 days (Ready now)</span>
@@ -515,7 +521,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             {/* Variations */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label>PRODUCT VARIATIONS</Label>
+                <Label>Product variations</Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -534,7 +540,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
                     });
                   }}
                 >
-                  <X className="h-4 w-4 mr-2 rotate-45" />
+                  <Plus className="h-4 w-4 mr-2" />
                   Add Variation
                 </Button>
               </div>
@@ -636,7 +642,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             {/* Personalizations */}
             <div className="space-y-4 border-t pt-4">
               <div className="flex items-center justify-between">
-                <Label>PERSONALIZATION OPTIONS</Label>
+                <Label>Personalization options</Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -657,7 +663,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
                     });
                   }}
                 >
-                  <X className="h-4 w-4 mr-2 rotate-45" />
+                  <Plus className="h-4 w-4 mr-2" />
                   Add Personalization
                 </Button>
               </div>
@@ -746,7 +752,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
         {currentStep === 5 && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="deliveryEstimateDays">DELIVERY ESTIMATE (DAYS)</Label>
+              <Label htmlFor="deliveryEstimateDays">Delivery estimate (days)</Label>
               <Input
                 id="deliveryEstimateDays"
                 type="number"
@@ -761,7 +767,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="deliveryConditions">DELIVERY CONDITIONS</Label>
+              <Label htmlFor="deliveryConditions">Delivery conditions</Label>
               <Textarea
                 id="deliveryConditions"
                 placeholder="Describe delivery conditions, shipping methods, and any special instructions..."
@@ -772,7 +778,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="returnPolicy">RETURN POLICY</Label>
+              <Label htmlFor="returnPolicy">Return policy</Label>
               <Input
                 id="returnPolicy"
                 placeholder="e.g. Retours et échanges acceptés sous 30 jours"
@@ -783,7 +789,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="shippingCost">SHIPPING COST (MAD)</Label>
+                <Label htmlFor="shippingCost">Shipping cost (MAD)</Label>
                 <Input
                   id="shippingCost"
                   type="number"
@@ -795,7 +801,7 @@ export function ProductWizard({ storeId, categories }: ProductWizardProps): Reac
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="shippingOriginCountry">SHIPPING ORIGIN COUNTRY</Label>
+                <Label htmlFor="shippingOriginCountry">Shipping origin country</Label>
                 <Input
                   id="shippingOriginCountry"
                   placeholder="e.g. Morocco, France"

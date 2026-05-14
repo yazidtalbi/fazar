@@ -41,7 +41,24 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
     if (onSuccess) {
       onSuccess();
     } else {
-      router.push("/");
+      window.location.href = "/";
+    }
+  }
+
+  async function handleSocialLogin(provider: "google" | "facebook" | "apple") {
+    setIsLoading(true);
+    setError(null);
+    
+    const { error: socialError } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+
+    if (socialError) {
+      setError(socialError.message);
+      setIsLoading(false);
     }
   }
 
@@ -118,6 +135,8 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
         <Button 
           type="button" 
           variant="outline" 
+          onClick={() => handleSocialLogin("google")}
+          disabled={isLoading}
           className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
           <Chrome className="h-5 w-5" />
@@ -126,6 +145,8 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
         <Button 
           type="button" 
           variant="outline" 
+          onClick={() => handleSocialLogin("facebook")}
+          disabled={isLoading}
           className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
           <Facebook className="h-5 w-5 text-[#1877F2]" />
@@ -134,6 +155,8 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
         <Button 
           type="button" 
           variant="outline" 
+          onClick={() => handleSocialLogin("apple")}
+          disabled={isLoading}
           className="h-11 border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all"
         >
           <Apple className="h-5 w-5" />

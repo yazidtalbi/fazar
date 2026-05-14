@@ -36,9 +36,9 @@ export function HeaderDesktop(): React.ReactElement {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      
+
       setUser(user);
-      
+
       // Check if user has a store
       if (user) {
         // First check if they have a seller profile
@@ -47,7 +47,7 @@ export function HeaderDesktop(): React.ReactElement {
           .select("id")
           .eq("id", user.id)
           .single();
-        
+
         if (sellerProfile) {
           // Check if they have a store
           const { data: store } = await supabase
@@ -55,7 +55,7 @@ export function HeaderDesktop(): React.ReactElement {
             .select("id")
             .eq("seller_id", user.id)
             .single();
-          
+
           setHasStore(!!store);
         } else {
           setHasStore(false);
@@ -74,11 +74,11 @@ export function HeaderDesktop(): React.ReactElement {
         .from("categories")
         .select("id, name, slug")
         .order("name");
-      
+
       if (data) {
         setAllCategories(data);
       }
-      
+
       // Use static list of categories matching home page
       const staticCategories = [
         { id: 'rugs-kilims', name: 'Rugs & Kilims', slug: 'rugs-kilims' },
@@ -91,7 +91,7 @@ export function HeaderDesktop(): React.ReactElement {
       ];
       setCategories(staticCategories);
     }
-    
+
     fetchCategories();
   }, []);
 
@@ -115,9 +115,8 @@ export function HeaderDesktop(): React.ReactElement {
 
   return (
     <header
-      className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
-      } bg-white`}
+      className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"
+        } bg-white`}
     >
       {/* Top Bar */}
       <div style={{ backgroundColor: '#f5e8fb', color: 'rebeccapurple' }}>
@@ -136,7 +135,7 @@ export function HeaderDesktop(): React.ReactElement {
 
             {/* Right: Store Selection */}
             {user ? (
-              <Link 
+              <Link
                 href={hasStore ? "/seller" : "/onboarding/seller"}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
               >
@@ -171,24 +170,33 @@ export function HeaderDesktop(): React.ReactElement {
                   className="h-8 w-auto"
                   priority
                 />
-                <span className="text-2xl font-bold text-[#222222]">Afus</span>
+                <span className="text-2xl font-bold text-[#222222] font-roslindale">Afus</span>
               </Link>
-              
+
               {/* Search Bar - Light Grey (next to logo) */}
-              <div className="relative flex items-center flex-1 max-w-4xl">
+              <form 
+                className="relative flex items-center flex-1 max-w-4xl"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const query = (e.currentTarget.querySelector('input') as HTMLInputElement).value;
+                  if (query.trim()) {
+                    router.push(`/search?q=${encodeURIComponent(query)}`);
+                  }
+                }}
+              >
                 <Search className="absolute left-4 h-5 w-5 text-gray-400 z-10" />
                 <input
                   type="text"
                   placeholder="Que cherchez-vous ?"
-                  className="w-full pl-12 pr-4 py-2.5 rounded-full text-[#222222] placeholder-gray-400 border-0 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      const query = (e.target as HTMLInputElement).value;
-                      router.push(`/search?q=${encodeURIComponent(query)}`);
-                    }
-                  }}
+                  className="w-full pl-12 pr-12 py-2.5 rounded-full text-[#222222] placeholder-gray-400 border-0 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
                 />
-              </div>
+                <button 
+                  type="submit"
+                  className="absolute right-2 p-1.5 rounded-full bg-black text-white hover:bg-gray-800 transition-colors"
+                >
+                  <Search className="h-4 w-4" />
+                </button>
+              </form>
             </div>
 
             {/* Right: Icons */}
@@ -217,8 +225,8 @@ export function HeaderDesktop(): React.ReactElement {
               )}
 
               {/* Saved Items */}
-              <Link 
-                href="/saved" 
+              <Link
+                href="/saved"
                 className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors"
                 aria-label="Saved items"
               >
@@ -230,8 +238,8 @@ export function HeaderDesktop(): React.ReactElement {
 
               {/* Dashboard (if seller) */}
               {user && hasStore === true && (
-                <Link 
-                  href="/seller" 
+                <Link
+                  href="/seller"
                   className="text-gray-600 hover:text-primary hover:bg-gray-100 p-2 rounded-lg transition-colors relative"
                   aria-label="Dashboard"
                 >
@@ -316,13 +324,12 @@ export function HeaderDesktop(): React.ReactElement {
           </nav>
         </div>
       </div>
-      
+
       {/* Profile Drawer */}
       <ProfileDrawer open={profileDrawerOpen} onOpenChange={setProfileDrawerOpen} />
-      
+
       {/* Auth Modal */}
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} initialMode="login" />
     </header>
   );
 }
-

@@ -11,7 +11,7 @@ import { ProductCollapsibleSection } from "@/components/zaha/product-collapsible
 import { AddToCartWithQuantity } from "@/components/zaha/add-to-cart-with-quantity";
 import { EstimatedReadyDate } from "@/components/zaha/estimated-ready-date";
 import { ProductStickyHeader } from "@/components/zaha/product-sticky-header";
-import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2, Calendar, Package, Truck, Ruler, Weight, Scissors, Hash } from "lucide-react";
+import { Bookmark, MapPin, ArrowRight, Star, ChevronRight, MessageCircle, Heart, Mail, CheckCircle2, Calendar, Package, Truck, Ruler, Weight, Scissors, Hash, Sparkles, Store } from "lucide-react";
 import { ProductCard } from "@/components/zaha/product-card";
 import { AddToCartButtonDesktop } from "@/components/zaha/add-to-cart-button-desktop";
 import { HeaderDesktop } from "@/components/zaha/header-desktop";
@@ -22,6 +22,7 @@ import { ProductReviewSection } from "@/components/zaha/product-review-section";
 import { ProductReviewsList } from "@/components/zaha/product-reviews-list";
 import { FollowShopButton } from "@/components/zaha/follow-shop-button";
 import { MessageStoreButton } from "@/components/zaha/message-store-button";
+import { cn, isArabic } from "@/lib/utils";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -167,8 +168,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Fetch store rating (from all products in the store)
   const { data: storeReviewsData } = await supabase
     .from("reviews")
-    .select("rating")
-    .in("product_id", storeProductIds.length > 0 ? storeProductIds : ['00000000-0000-0000-0000-000000000000']);
+    .select("id, rating, comment, created_at, buyer_id")
+    .in("product_id", storeProductIds.length > 0 ? storeProductIds : ['00000000-0000-0000-0000-000000000000'])
+    .order("created_at", { ascending: false });
 
   const storeReviews = storeReviewsData || [];
   const storeReviewCount = storeReviews.length;
@@ -185,8 +187,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
     storeSalesCount = orderItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
   }
 
-  // Calculate years on AFUS
-  const yearsOnAfus = new Date().getFullYear() - new Date(store.created_at).getFullYear();
+  // Calculate joined date on AFUS
+  const joinedDate = new Date(store.created_at).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
 
   const coverMedia = media[0]?.media_url || null;
   const category = product.categories as any;
@@ -277,11 +282,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl font-bold leading-tight text-[#222222] mb-2">{product.title}</h1>
+            <h1 
+              className={cn(
+                "text-2xl font-bold leading-tight text-[#222222] mb-2",
+                isArabic(product.title) && "font-arabic"
+              )}
+              dir={isArabic(product.title) ? "rtl" : "ltr"}
+            >
+              {product.title}
+            </h1>
 
             {/* Seller Info with Rating */}
             <div className="flex items-center gap-2 -mt-1">
-              <Link href={`/store/${store.slug}`} className="text-sm font-medium hover:underline">
+              <Link href={`/store/${store.slug}`} className="text-sm font-medium hover:underline ">
                By  {store.name}
               </Link>
               <div className="flex items-center gap-1">
@@ -374,7 +387,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
               {/* Description */}
               <ProductCollapsibleSection title="Description" defaultOpen={true}>
-                <div className="text-sm whitespace-pre-line">
+                <div 
+                  className={cn(
+                    "text-sm whitespace-pre-line",
+                    isArabic(product.description || "") && "font-arabic"
+                  )}
+                  dir={isArabic(product.description || "") ? "rtl" : "ltr"}
+                >
                   {product.description || "No description available."}
                 </div>
               </ProductCollapsibleSection>
@@ -450,7 +469,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
           
           <div className="space-y-4">
-            <h1 className="text-2xl font-bold">{product.title}</h1>
+            <h1 
+              className={cn(
+                "text-2xl font-bold",
+                isArabic(product.title) && "font-arabic"
+              )}
+              dir={isArabic(product.title) ? "rtl" : "ltr"}
+            >
+              {product.title}
+            </h1>
             
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold">{Number(product.price).toLocaleString()} {product.currency || "MAD"}</span>
@@ -477,23 +504,26 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <Card className="border">
               <CardContent className="p-4">
                 <Link href={`/store/${store.slug}`} className="flex items-center gap-3">
-                  <div className="relative w-12 h-12 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                    {store.logo_url ? (
-                      <Image
-                        src={store.logo_url}
-                        alt={store.name}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        {store.name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
+                  <div className="relative w-14 h-14 flex items-center justify-center flex-shrink-0">
+                    <div className="absolute inset-0 bg-[#f0f7ff] arabic-frame" />
+                    <div className="relative w-[42px] h-[42px] rounded-full bg-white overflow-hidden flex-shrink-0 border border-white z-10 shadow-sm">
+                      {store.logo_url ? (
+                        <Image
+                          src={store.logo_url}
+                          alt={store.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          {store.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold">{store.name}</span>
+                      <span className="font-semibold ">{store.name}</span>
                       {sellerProfile?.is_verified && (
                         <Badge variant="outline" className="text-xs">Verified</Badge>
                       )}
@@ -503,10 +533,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <span className="truncate">Marrakech, Morocco</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                      <Star className="h-3 w-3 fill-primary text-primary" />
-                      <span>{storeRating > 0 ? storeRating.toFixed(1) : '0.0'} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
-                      <span>•</span>
-                      <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
+                      {storeReviewCount > 0 && (
+                        <>
+                          <Star className="h-3 w-3 fill-primary text-primary" />
+                          <span>{storeRating.toFixed(1)} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
+                          <span>•</span>
+                        </>
+                      )}
+                      {storeSalesCount > 0 && (
+                        <>
+                          <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
+                          <span>•</span>
+                        </>
+                      )}
+                      <span>Joined {joinedDate}</span>
                     </div>
                   </div>
                   <ArrowRight className="h-5 w-5 text-primary flex-shrink-0" />
@@ -519,7 +559,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
 
             <ProductCollapsibleSection title="Description" defaultOpen={true}>
-              {product.description || "No description available."}
+              <div 
+                className={cn(
+                  "text-sm whitespace-pre-line",
+                  isArabic(product.description || "") && "font-arabic"
+                )}
+                dir={isArabic(product.description || "") ? "rtl" : "ltr"}
+              >
+                {product.description || "No description available."}
+              </div>
             </ProductCollapsibleSection>
 
             <ProductCollapsibleSection title="Specifications">
@@ -581,23 +629,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div className="border-t pt-8">
                 <div className="border rounded-lg p-6">
                   <div className="flex items-start gap-4 mb-6">
-                    <div className="relative w-16 h-16 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                      {store.logo_url ? (
-                        <Image
-                          src={store.logo_url}
-                          alt={store.name}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xl">
-                          {store.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
+                    <div className="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+                      {/* Background with Arabic Frame */}
+                      <div className="absolute inset-0 bg-[#f0f7ff] arabic-frame" />
+                      
+                      {/* Circular Avatar on Top */}
+                      <div className="relative w-[60px] h-[60px] rounded-full bg-white overflow-hidden flex-shrink-0 border-2 border-white z-10 shadow-sm">
+                        {store.logo_url ? (
+                          <Image
+                            src={store.logo_url}
+                            alt={store.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xl">
+                            {store.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <Link href={`/store/${store.slug}`} className="text-xl font-semibold hover:underline">
+                        <Link href={`/store/${store.slug}`} className="text-xl font-semibold hover:underline ">
                           {store.name}
                         </Link>
                         {sellerProfile?.is_verified && (
@@ -608,17 +662,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         Managed by {store.name.split(' ')[0]} • Morocco
                       </div>
                       <div className="flex items-center gap-4 text-sm mb-4">
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${i < Math.floor(storeRating) ? "fill-primary text-primary" : i < storeRating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
-                            />
-                          ))}
-                          <span>{storeRating > 0 ? storeRating.toFixed(1) : '0.0'} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
-                        </div>
-                        <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
-                        <span>{yearsOnAfus > 0 ? `${yearsOnAfus} ${yearsOnAfus === 1 ? 'year' : 'years'}` : new Date(store.created_at).getFullYear()} on AFUS</span>
+                        {storeReviewCount > 0 && (
+                          <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${i < Math.floor(storeRating) ? "fill-primary text-primary" : i < storeRating ? "fill-primary/50 text-primary" : "text-muted-foreground"}`}
+                              />
+                            ))}
+                            <span>{storeRating.toFixed(1)} ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</span>
+                          </div>
+                        )}
+                        {storeReviewCount > 0 && storeSalesCount > 0 && <span>•</span>}
+                        {storeSalesCount > 0 && (
+                          <span>{storeSalesCount > 1000 ? (storeSalesCount / 1000).toFixed(1) + 'K' : storeSalesCount.toLocaleString()} {storeSalesCount === 1 ? 'sale' : 'sales'}</span>
+                        )}
+                        {(storeReviewCount > 0 || storeSalesCount > 0) && <span>•</span>}
+                        <span>Joined {joinedDate} on AFUS</span>
                       </div>
                       <div className="flex gap-2 mb-4">
                         <MessageStoreButton 
@@ -645,35 +705,37 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       </div>
 
                       {/* Shop Reviews Section */}
-                      <div className="border-t pt-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-lg font-semibold">All reviews for this shop ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</h3>
-                          <Link href={`/store/${store.slug}`}>
-                            <Button variant="ghost" size="sm">Show all</Button>
-                          </Link>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                          {/* Mock shop reviews */}
-                          {[
-                            { name: "CHABREYRON", date: "25 nov. 2025", rating: 5, text: "Papier fait main, papier vintage... Fast, compliant, printer-friendly." },
-                            { name: "stecher126", date: "03 déc. 2025", rating: 5, text: "Gorgeous box it was shipped in and the journal itself." },
-                            { name: "Kimberly", date: "06 nov. 2025", rating: 5, text: "Joli papier qui correspond aux besoins et attentes." },
-                          ].map((review, idx) => (
-                            <div key={idx} className="border rounded-lg p-4">
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="font-semibold text-sm">{review.name}</span>
-                                <div className="flex items-center">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className="h-3 w-3 fill-primary text-primary" />
-                                  ))}
+                      {storeReviewCount > 0 && (
+                        <div className="border-t pt-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">All reviews for this shop ({storeReviewCount > 1000 ? (storeReviewCount / 1000).toFixed(1) + 'K' : storeReviewCount})</h3>
+                            <Link href={`/store/${store.slug}`}>
+                              <Button variant="ghost" size="sm">Show all</Button>
+                            </Link>
+                          </div>
+                          <div className="grid grid-cols-3 gap-4">
+                            {storeReviews.slice(0, 3).map((review: any) => (
+                              <div key={review.id} className="border rounded-lg p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="font-semibold text-sm">Customer</span>
+                                  <div className="flex items-center">
+                                    {[...Array(5)].map((_, i) => (
+                                      <Star 
+                                        key={i} 
+                                        className={`h-3 w-3 ${i < review.rating ? "fill-primary text-primary" : "text-muted-foreground"}`} 
+                                      />
+                                    ))}
+                                  </div>
                                 </div>
+                                <p className="text-xs text-muted-foreground mb-2">
+                                  {new Date(review.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                                </p>
+                                <p className="text-sm line-clamp-3">{review.comment || "No comment left"}</p>
                               </div>
-                              <p className="text-xs text-muted-foreground mb-2">{review.date}</p>
-                              <p className="text-sm line-clamp-3">{review.text}</p>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Other items from this shop */}
                       {moreProductsWithCover.length > 0 && (
@@ -760,33 +822,37 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
 
         {/* Related Searches Section */}
-        <div className="hidden md:block mt-12 border-t pt-8">
-          <h2 className="text-xl font-semibold mb-6">Related searches</h2>
-          <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="hidden md:block mt-16 border-t pt-12 pb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-[#222222]">Vous aimerez peut-être aussi ces recherches</h2>
+          </div>
+          
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
             {/* Related Search Cards */}
             {[
-              { title: "Calligraphie", image: "📝" },
-              { title: "Parchemin", image: "📜" },
+              { title: "Calligraphie", icon: <Scissors className="h-6 w-6" />, color: "bg-blue-50" },
+              { title: "Parchemin", icon: <Hash className="h-6 w-6" />, color: "bg-amber-50" },
+              { title: "Papier ancien", icon: <Sparkles className="h-6 w-6" />, color: "bg-purple-50" },
+              { title: "Artisanat", icon: <Store className="h-6 w-6" />, color: "bg-green-50" },
             ].map((item, idx) => (
-              <Link key={idx} href={`/search?q=${encodeURIComponent(item.title)}`}>
-                <Card className="overflow-hidden hover:border-primary/30 transition-colors cursor-pointer">
-                  <div className="flex items-center gap-4 p-4">
-                    <div className="w-16 h-16 bg-muted flex items-center justify-center text-2xl flex-shrink-0">
-                      {item.image}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{item.title}</h3>
-                    </div>
+              <Link key={idx} href={`/search?q=${encodeURIComponent(item.title)}`} className="group">
+                <div className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-white hover:border-primary/50 hover:shadow-sm transition-all duration-300">
+                  <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center text-primary transition-transform group-hover:scale-110", item.color)}>
+                    {item.icon}
                   </div>
-                </Card>
+                  <div>
+                    <h3 className="font-bold text-[#222222] group-hover:text-primary transition-colors">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">Explorer &rarr;</p>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
 
           {/* More Related Search Tags */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-4">See more related searches</h3>
-            <div className="flex flex-wrap gap-2">
+          <div>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6">Plus de recherches associées</h3>
+            <div className="flex flex-wrap gap-3">
               {[
                 "Papier recyclé",
                 "Déchiré à la main",
@@ -803,8 +869,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <Link key={idx} href={`/search?q=${encodeURIComponent(tag)}`}>
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="bg-muted hover:bg-muted/80 text-foreground border-border rounded-full"
+                    className="px-6 py-5 rounded-full border-gray-200 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-sm font-medium bg-white"
                   >
                     {tag}
                   </Button>

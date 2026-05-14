@@ -13,90 +13,28 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  data: any;
-  is_read: boolean;
-  created_at: string;
-}
+import { useNotifications } from "@/components/notifications-provider";
 
 export function NotificationsDropdown(): React.ReactElement {
   const router = useRouter();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const { 
+    notifications, 
+    unreadCount, 
+    isLoading, 
+    refreshNotifications, 
+    markAsRead, 
+    markAllAsRead 
+  } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    fetchNotifications();
-    
-    // Poll for new notifications every 10 seconds
-    const interval = setInterval(fetchNotifications, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Also refresh when dropdown opens
+  // Refresh when dropdown opens
   useEffect(() => {
     if (isOpen) {
-      fetchNotifications();
+      refreshNotifications();
     }
-  }, [isOpen]);
+  }, [isOpen, refreshNotifications]);
 
-  async function fetchNotifications() {
-    try {
-      const response = await fetch("/api/notifications?unread=false");
-      if (response.ok) {
-        const data = await response.json();
-        setNotifications(data.notifications || []);
-        setUnreadCount((data.notifications || []).filter((n: Notification) => !n.is_read).length);
-      }
-    } catch (error) {
-      console.error("Failed to fetch notifications:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function markAsRead(notificationId: string) {
-    try {
-      const response = await fetch("/api/notifications", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ notificationId }),
-      });
-
-      if (response.ok) {
-        setNotifications((prev) =>
-          prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
-        );
-        setUnreadCount((prev) => Math.max(0, prev - 1));
-      }
-    } catch (error) {
-      console.error("Failed to mark notification as read:", error);
-    }
-  }
-
-  async function markAllAsRead() {
-    try {
-      const response = await fetch("/api/notifications", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ markAllAsRead: true }),
-      });
-
-      if (response.ok) {
-        setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
-        setUnreadCount(0);
-      }
-    } catch (error) {
-      console.error("Failed to mark all as read:", error);
-    }
-  }
-
-  function handleNotificationClick(notification: Notification) {
+  function handleNotificationClick(notification: any) {
     if (!notification.is_read) {
       markAsRead(notification.id);
     }
