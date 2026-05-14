@@ -107,6 +107,11 @@ body {
   font-family: var(--font-el-messiri), sans-serif !important;
 }
 
+/* Vazirmatn font */
+.vazirmatn-font {
+  font-family: var(--font-vazirmatn), sans-serif !important;
+}
+
 /* Explicitly set font and letter-spacing for form elements */
 input,
 textarea,

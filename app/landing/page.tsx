@@ -345,11 +345,10 @@ export default function MarketingPage() {
       px-4 sm:px-6 lg:px-8 lg:pr-4 py-3
       transition-all duration-300 ease-[cubic-bezier(0.19,1,0.22,1)]
       pointer-events-auto
-      ${
-        scrolled
-          ? "max-w-5xl  bg-white  rounded-full border border-[#f3e3d9]"
-          : "max-w-[1400px] bg-transparent shadow-none rounded-none  border-none "
-      }
+      ${scrolled
+              ? "max-w-5xl  bg-white  arabic-frame border border-[#f3e3d9]"
+              : "max-w-[1400px] bg-transparent shadow-none rounded-none  border-none "
+            }
     `}
           style={{
             marginBottom: "18px", // ✅ invisible space under the navbar
@@ -368,7 +367,7 @@ export default function MarketingPage() {
               className="h-6 w-auto sm:h-8"
               priority
             />
-            <span className="text-sm sm:text-xl font-bold text-[#2a1335]">
+            <span className="text-2xl font-bold text-[#2a1335] font-roslindale">
               Afus
             </span>
           </Link>
@@ -394,7 +393,7 @@ export default function MarketingPage() {
 
           {/* CTA */}
           <Link
-            href="/app"
+            href="/"
             className="inline-flex items-center gap-1.5 rounded-full bg-[#23102f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#2d183b] transition-colors"
           >
             <span>Open the app</span>
@@ -591,10 +590,10 @@ export default function MarketingPage() {
 
             {/* ================= WHITE SECTION ================= */}
             <section className="content relative z-10 " ref={contentRef}>
-              <div className="mx-auto container px-4 py-8">
-                <div className="arabic-frame bg-[#f3e3d9] p-[1px]">
-                  <div className="arabic-frame bg-white pt-16 pb-12">
-                    <div className="flex flex-col gap-1 px-4 sm:pb-10 sm:px-6 lg:px-4">
+              <div className="mx-auto container   py-8">
+                <div className="arabic-frame bg-[#f3e3d9] p-[1px] max-w-4xl mx-auto">
+                  <div className="arabic-frame bg-white pt-16 pb-12 lg:pb-0">
+                    <div className="flex flex-col gap-1   pb-10 lg:pb-0 ">
                       {/* Manifesto card */}
                       <RevealOnScroll>
                         <div className="mx-auto w-full max-w-4xl bg-white pt-10 pb-2 sm:pb-4 sm:pt-12">
@@ -885,18 +884,16 @@ export default function MarketingPage() {
                 text-lg sm:text-lg
                 transition-opacity
 
-                ${
-                  isOpen
-                    ? "font-semibold text-neutral-900 opacity-100" /* ACTIVE */
-                    : "font-medium text-neutral-800 opacity-70"
-                }    /* INACTIVE */
+                ${isOpen
+                                            ? "font-semibold text-neutral-900 opacity-100" /* ACTIVE */
+                                            : "font-medium text-neutral-800 opacity-70"
+                                          }    /* INACTIVE */
               `}
                                       >
                                         <span>{faq.question}</span>
                                         <ChevronDown
-                                          className={`h-4 w-4 shrink-0 text-neutral-500 transition-transform ${
-                                            isOpen ? "rotate-180" : ""
-                                          }`}
+                                          className={`h-4 w-4 shrink-0 text-neutral-500 transition-transform ${isOpen ? "rotate-180" : ""
+                                            }`}
                                         />
                                       </summary>
 
@@ -947,77 +944,79 @@ export default function MarketingPage() {
 
                           {/* CTA Banner */}
                           <RevealOnScroll>
-                            <section className="relative mx-2 mb-0 sm:mb-0 overflow-hidden rounded-xl bg-gradient-to-b from-[#F5E8FB] to-[#FEF7EB] sm:mx-3">
-                              {/* Background image block on the right */}
-                              <div className="pointer-events-none absolute inset-0 right-0 flex items-center justify-end">
-                                <div className="relative h-[260px] w-14/12 sm:w-7/12 min-w-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] mr:0 sm:-mr-16">
-                                  <Image
-                                    src="/landing/caftan.png"
-                                    alt="Phone"
-                                    fill
-                                    className="object-contain object-right"
-                                    priority
-                                  />
-                                </div>
-                              </div>
-
-                              {/* Content */}
-                              <div className="relative z-20 flex flex-col gap-8 md:flex-row md:items-center">
-                                {/* Left text column */}
-                                <div className="max-w-xl py-6 sm:px-8 sm:py-10 md:px-10 px-6">
-                                  <h3 className="text-xl sm:text-4xl font-semibold leading-7 text-neutral-900">
-                                    <span className="block">
-                                      Explore <br className="block sm:hidden" />
-                                      handmade
-                                    </span>
-
-                                    <span
-                                      className={`${playfair.className} italic -mt-1 sm:mt-0 block font-serif text-xl sm:text-4xl`}
-                                    >
-                                      treasures
-                                    </span>
-                                  </h3>
-
-                                  <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-neutral-800 sm:block hidden">
-                                    Browse, shop, and create your store. <br />
-                                    All in one app.
-                                  </p>
-
-                                  <div className="mt-6 sm:mt-8">
-                                    <button className="inline-flex sm:hidden items-center gap-2 rounded-full bg-[#23102f] px-6 py-3 text-sm sm:text-base font-medium text-white shadow-[0_14px_32px_rgba(0,0,0,0.35)] transition-colors hover:bg-[#2d183b]">
-                                      <Download className="h-4 w-4" />
-                                      <span>Install the App now</span>
-                                    </button>
-
-                                    <div className="hidden sm:inline-flex items-center gap-4 rounded-xl border-0 sm:border-2 border-[#e5d6ff] bg-white sm:bg-none px-2 py-3 sm:px-2 sm:py-2 pr-10 w-full">
-                                      {/* QR block */}
-                                      <div className="flex items-center justify-center rounded-lg bg-white overflow-hidden">
-                                        <div className="relative h-16 w-16 sm:h-16 sm:w-16">
-                                          <Image
-                                            src="/landing/qr.jpg"
-                                            alt="Scan to install the Afus app"
-                                            fill
-                                            className="object-contain"
-                                            priority={false}
-                                          />
-                                        </div>
-                                      </div>
-
-                                      {/* Text */}
-                                      <div className="text-left">
-                                        <p className="text-lg sm:text-lg font-semibold text-[#2a1335] leading-6">
-                                          Scan to <br />
-                                          launch the Afus app
-                                        </p>
-                                      </div>
-                                    </div>
+                            <div className="arabic-frame bg-[#e5d6ff] p-[1px] mx-2 sm:mx-3 rounded-xl overflow-hidden">
+                              <section className="arabic-frame relative overflow-hidden bg-gradient-to-b from-[#F5E8FB] to-[#FEF7EB]">
+                                {/* Background image block on the right */}
+                                <div className="pointer-events-none absolute inset-0 right-0 flex items-center justify-end">
+                                  <div className="relative h-[260px] w-14/12 sm:w-7/12 min-w-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] mr:0 sm:-mr-16">
+                                    <Image
+                                      src="/landing/caftan.png"
+                                      alt="Phone"
+                                      fill
+                                      className="object-contain object-right"
+                                      priority
+                                    />
                                   </div>
                                 </div>
 
-                                {/* Spacer for two-column layout on desktop */}
-                                <div className="hidden flex-1 md:block" />
-                              </div>
-                            </section>
+                                {/* Content */}
+                                <div className="relative z-20 flex flex-col gap-8 md:flex-row md:items-center">
+                                  {/* Left text column */}
+                                  <div className="max-w-xl py-6 sm:px-8 sm:py-10 md:px-10 px-6">
+                                    <h3 className="text-xl sm:text-4xl font-semibold leading-7 text-neutral-900">
+                                      <span className="block">
+                                        Explore <br className="block sm:hidden" />
+                                        handmade
+                                      </span>
+
+                                      <span
+                                        className={`${playfair.className} italic -mt-1 sm:mt-0 block font-serif text-xl sm:text-4xl`}
+                                      >
+                                        treasures
+                                      </span>
+                                    </h3>
+
+                                    <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-neutral-800 sm:block hidden">
+                                      Browse, shop, and create your store. <br />
+                                      All in one app.
+                                    </p>
+
+                                    <div className="mt-6 sm:mt-8">
+                                      <button className="inline-flex sm:hidden items-center gap-2 rounded-full bg-[#23102f] px-6 py-3 text-sm sm:text-base font-medium text-white shadow-[0_14px_32px_rgba(0,0,0,0.35)] transition-colors hover:bg-[#2d183b]">
+                                        <Download className="h-4 w-4" />
+                                        <span>Install the App now</span>
+                                      </button>
+
+                                      <div className="hidden sm:inline-flex items-center gap-4 rounded-xl border-0 sm:border-2 border-[#e5d6ff] bg-white sm:bg-none px-2 py-3 sm:px-2 sm:py-2 pr-10 w-full">
+                                        {/* QR block */}
+                                        <div className="flex items-center justify-center rounded-lg bg-white overflow-hidden">
+                                          <div className="relative h-16 w-16 sm:h-16 sm:w-16">
+                                            <Image
+                                              src="/landing/qr.jpg"
+                                              alt="Scan to install the Afus app"
+                                              fill
+                                              className="object-contain"
+                                              priority={false}
+                                            />
+                                          </div>
+                                        </div>
+
+                                        {/* Text */}
+                                        <div className="text-left">
+                                          <p className="text-lg sm:text-lg font-semibold text-[#2a1335] leading-6">
+                                            Scan to <br />
+                                            launch the Afus app
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Spacer for two-column layout on desktop */}
+                                  <div className="hidden flex-1 md:block" />
+                                </div>
+                              </section>
+                            </div>
                           </RevealOnScroll>
                         </div>
                       </RevealOnScroll>
@@ -1027,9 +1026,9 @@ export default function MarketingPage() {
               </div>
 
               {/* Brand footer bar */}
-              <RevealOnScroll>
+              <div style={{ opacity: 1, transform: "none" }}>
                 <section className="mt-6 mb-8 px-1 sm:px-0">
-                  <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-center  border border-[#f3e3d9] sm:flex-row sm:gap-0 sm:text-left">
+                  <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 arabic-frame bg-white px-5 py-4 text-center border border-[#f3e3d9] sm:flex-row sm:gap-0 sm:text-left">
                     {/* Left: star + text */}
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100/50 text-[#23102f]">
@@ -1052,30 +1051,13 @@ export default function MarketingPage() {
                     {/* Right: social icons */}
                     <div className="flex items-center gap-3 text-[#3b153f]">
                       <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                        <Facebook className="h-5 w-5" />
-                      </button>
-
-                      <span className="h-5 w-px bg-neutral-200" />
-
-                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                        <Twitter className="h-5 w-5" />
-                      </button>
-
-                      <span className="h-5 w-px bg-neutral-200" />
-
-                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
-                        <span className="text-base font-semibold">t</span>
-                      </button>
-
-                      <span className="h-5 w-px bg-neutral-200" />
-
-                      <button className="inline-flex items-center justify-center rounded-full p-1.5 hover:opacity-80">
                         <Instagram className="h-5 w-5" />
                       </button>
                     </div>
                   </div>
                 </section>
-              </RevealOnScroll>
+              </div>
+              <div className="h-24" /> {/* Extra spacing beneath */}
             </section>
           </div>
         </div>

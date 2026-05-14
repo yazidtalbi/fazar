@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Sans, El_Messiri } from "next/font/google";
+import { Instrument_Sans, El_Messiri, Vazirmatn } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 import { Toaster } from "@/components/ui/toaster";
@@ -14,6 +14,12 @@ const elMessiri = El_Messiri({
   subsets: ["arabic", "latin"],
   display: "swap",
   variable: "--font-el-messiri",
+});
+
+const vazirmatn = Vazirmatn({
+  subsets: ["arabic", "latin"],
+  display: "swap",
+  variable: "--font-vazirmatn",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${instrumentSans.variable} ${elMessiri.variable}`}>
+    <html lang="en" className={`${instrumentSans.variable} ${elMessiri.variable} ${vazirmatn.variable}`}>
       <head>
         <link href="https://fonts.cdnfonts.com/css/roslindale" rel="stylesheet" />
       </head>
