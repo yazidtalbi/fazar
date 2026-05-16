@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, El_Messiri, Vazirmatn } from "next/font/google";
 import "./globals.css";
-import { NuqsAdapterProvider } from "@/components/providers/nuqs-adapter";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/react";
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { ScrollToTop } from "@/components/zaha/scroll-to-top";
+
 
 export default function RootLayout({
   children,
@@ -47,6 +47,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: false,
   },
+  turbopack: {
+    root: ".",
+  },
 };
 
 export default nextConfig;
