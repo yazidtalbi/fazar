@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
     unoptimized: false,
   },
   turbopack: {
-    root: ".",
+    root: process.cwd(),
   },
 };
 
