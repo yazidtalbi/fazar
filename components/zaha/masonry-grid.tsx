@@ -43,20 +43,16 @@ export function MasonryGrid({
   return (
     <div
       ref={containerRef}
-      className={cn("masonry-grid", className)}
+      className={cn(
+        "masonry-grid",
+        className,
+        "[&>*]:break-inside-avoid [&>*]:mb-4 [&>*]:inline-block [&>*]:w-full"
+      )}
       style={{
         columnCount: "auto",
         columnGap: "1rem",
       }}
     >
-      <style jsx>{`
-        .masonry-grid > * {
-          break-inside: avoid;
-          margin-bottom: 1rem;
-          display: inline-block;
-          width: 100%;
-        }
-      `}</style>
       {children}
     </div>
   );

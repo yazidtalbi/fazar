@@ -1,6 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef, type ReactNode } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 interface Notification {
   id: string;
@@ -27,30 +29,45 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastFetched, setLastFetched] = useState(0);
+  const lastFetchedRef = useRef(0);
+  const isFetchingRef = useRef(false);
+  const [hasAuthError, setHasAuthError] = useState(false);
 
   const fetchNotifications = useCallback(async (force = false) => {
+    if (isFetchingRef.current) return;
+    if (hasAuthError && !force) return;
+
     // Only fetch if forced or if it's been more than 30 seconds since last fetch
     const now = Date.now();
-    if (!force && now - lastFetched < 30000) {
+    if (!force && now - lastFetchedRef.current < 30000) {
       return;
     }
 
+    isFetchingRef.current = true;
     try {
       const response = await fetch("/api/notifications?unread=false");
+      
+      if (response.status === 401) {
+        setHasAuthError(true);
+        setIsLoading(false);
+        return;
+      }
+
       if (response.ok) {
+        setHasAuthError(false);
         const data = await response.json();
         const fetchedNotifications = data.notifications || [];
         setNotifications(fetchedNotifications);
         setUnreadCount(fetchedNotifications.filter((n: Notification) => !n.is_read).length);
-        setLastFetched(now);
+        lastFetchedRef.current = now;
       }
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
     } finally {
       setIsLoading(false);
+      isFetchingRef.current = false;
     }
-  }, [lastFetched]);
+  }, [hasAuthError]);
 
   const refreshNotifications = useCallback(async () => {
     await fetchNotifications(true);
@@ -93,20 +110,47 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (hasAuthError) return;
+
     fetchNotifications();
-    
-    // Poll for new notifications every 60 seconds (instead of 10)
-    const interval = setInterval(() => fetchNotifications(true), 60000);
     
     // Also fetch when window becomes focused
     const handleFocus = () => fetchNotifications();
     window.addEventListener("focus", handleFocus);
     
     return () => {
-      clearInterval(interval);
       window.removeEventListener("focus", handleFocus);
     };
-  }, [fetchNotifications]);
+  }, [fetchNotifications, hasAuthError]);
+
+  // Supabase Realtime subscription
+  useEffect(() => {
+    if (hasAuthError) return;
+
+    const supabase = createClient();
+    
+    const channel = supabase
+      .channel('notifications-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+        },
+        (payload) => {
+          const newNotification = payload.new as Notification;
+          setNotifications((prev) => [newNotification, ...prev]);
+          setUnreadCount((prev) => prev + 1);
+          toast.success(newNotification.title || "New notification");
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [hasAuthError]);
 
   return (
     <NotificationsContext.Provider

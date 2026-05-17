@@ -85,8 +85,8 @@ export default async function HomePage() {
               >
                 <div className="relative flex flex-col h-full pt-10 px-10">
                   {/* Text */}
-                  <p className="text-2xl md:text-3xl font-semibold text-center text-[#673399]">
-                    The mobile app <br /> is coming soon
+                  <p className="text-2xl md:text-3xl font-semibold text-center text-[#673399] font-ariom">
+                    Mobile <br /> Coming Soon
                   </p>
 
                   {/* Image wrapper takes remaining height */}

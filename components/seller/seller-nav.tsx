@@ -57,13 +57,20 @@ export function SellerNav(): React.ReactElement {
             <Link href="/seller" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <Image
                 src="/icon.png"
-                alt="Afus"
-                width={120}
+                alt="Afus Logo"
+                width={40}
                 height={40}
                 className="h-8 w-auto"
                 priority
               />
-              <span className="text-2xl font-bold text-[#222222]">Afus</span>
+              <Image
+                src="/afus.svg"
+                alt="Afus Logotype"
+                width={64}
+                height={24}
+                className="h-5 w-auto"
+                priority
+              />
             </Link>
             <p className="text-xs text-muted-foreground mt-1">Seller Dashboard</p>
             <Link 

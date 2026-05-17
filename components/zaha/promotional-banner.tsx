@@ -64,7 +64,7 @@ export function PromotionalBanner(): React.ReactElement {
           <CarouselItem key={slide.id} className="h-full pl-0 basis-full">
             <div className={`${slide.bgColor} h-full rounded-lg flex flex-col justify-center px-4 md:px-8 py-8 md:py-12 text-white`}>
               <div className="space-y-3 md:space-y-4">
-                <h2 className="text-2xl md:text-3xl font-bold">{slide.title}</h2>
+                <h2 className="text-2xl md:text-3xl font-bold font-ariom">{slide.title}</h2>
                 <p className="text-lg md:text-xl">{slide.subtitle}</p>
                 <Link href={slide.buttonLink}>
                   <Button

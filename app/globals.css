@@ -1,6 +1,18 @@
 @import url('https://fonts.cdnfonts.com/css/roslindale');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Ariom';
+  src: url('/ariom-bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.font-ariom {
+  font-family: 'Ariom', sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+
 @theme {
   --font-roslindale: "Roslindale", serif;
   --font-fraunces: var(--font-fraunces), serif;

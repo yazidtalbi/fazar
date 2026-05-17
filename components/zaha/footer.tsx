@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Facebook, Linkedin, Twitter } from "lucide-react";
+import { Instagram } from "lucide-react";
 
 export function Footer(): React.ReactElement {
   return (
@@ -13,12 +13,18 @@ export function Footer(): React.ReactElement {
             <div className="flex items-center gap-3 mb-4">
               <Image
                 src="/icon.png"
-                alt="Afus"
-                width={120}
-                height={40}
-                className="h-6 w-auto"
+                alt="Afus Logo"
+                width={32}
+                height={32}
+                className="h-8 w-auto"
               />
-              <span className="text-xl font-bold font-roslindale">Afus</span>
+              <Image
+                src="/afus.svg"
+                alt="Afus Logotype"
+                width={56}
+                height={20}
+                className="h-4 w-auto brightness-0 invert"
+              />
             </div>
 
             {/* Description */}
@@ -28,21 +34,21 @@ export function Footer(): React.ReactElement {
 
             {/* Social Media Icons */}
             <div className="flex gap-3 mt-8">
-              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Facebook">
-                <span className="text-sm font-bold">f</span>
-              </Link>
-              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="LinkedIn">
-                <Linkedin className="h-4 w-4" />
-              </Link>
-              <Link href="#" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Twitter">
-                <Twitter className="h-4 w-4" />
+              <Link
+                href="https://www.instagram.com/afus_ma/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-4 w-4" />
               </Link>
             </div>
           </div>
 
           {/* Afus Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4 font-roslindale">Afus</h3>
+            <h3 className="font-bold mb-4 font-ariom">Afus</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">
@@ -59,7 +65,7 @@ export function Footer(): React.ReactElement {
 
           {/* For shopping Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4 font-roslindale">Pour les achats</h3>
+            <h3 className="font-bold mb-4 font-ariom">Pour les achats</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">
@@ -91,7 +97,7 @@ export function Footer(): React.ReactElement {
 
           {/* For business Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4 font-roslindale">Pour les vendeurs</h3>
+            <h3 className="font-bold mb-4 font-ariom">Pour les vendeurs</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/onboarding/seller" className="text-white/80 hover:text-white transition-colors">
@@ -118,7 +124,7 @@ export function Footer(): React.ReactElement {
 
           {/* Support Column */}
           <div className="md:col-span-1">
-            <h3 className="font-bold mb-4 font-roslindale">Support</h3>
+            <h3 className="font-bold mb-4 font-ariom">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/search" className="text-white/80 hover:text-white transition-colors">
@@ -142,7 +148,7 @@ export function Footer(): React.ReactElement {
         {/* Bottom Bar */}
         <div className="border-t border-white/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-            <div className="text-white/80">
+            <div className="text-white/80" suppressHydrationWarning>
               {new Date().getFullYear()} © Afus. All rights reserved.
             </div>
             <div className="flex gap-4">

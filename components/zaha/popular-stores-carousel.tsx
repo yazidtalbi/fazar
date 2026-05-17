@@ -89,34 +89,22 @@ export function PopularStoresCarousel({ stores }: PopularStoresCarouselProps): R
             <div className="arabic-frame bg-border p-[1px] h-full">
               <Card className="overflow-hidden hover:border-primary/30 transition-colors border-none rounded-none arabic-frame bg-white h-full flex flex-col">
                 {/* Store Avatar and Latest Product Image */}
-                <div className="relative aspect-square w-full bg-muted">
-                  {store.latestProductImage ? (
-                    <Image
-                      src={store.latestProductImage}
-                      alt={store.name}
-                      fill
-                      className="object-cover"
-                      sizes="256px"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                      No image
-                    </div>
-                  )}
-                  {/* Store Avatar Overlay - Top Left */}
-                  <div className="absolute top-4 left-4 z-10">
+                <div className="relative aspect-square w-full flex items-center justify-center">
+                  {/* Background with Arabic Frame */}
+                  <div className="absolute inset-0 bg-[#f0f7ff] arabic-frame" />
+
+                  {/* Circular Avatar on Top */}
+                  <div className="relative w-28 h-28 rounded-full bg-white overflow-hidden flex-shrink-0 border-4 border-white z-10 shadow-md">
                     {store.logo_url ? (
-                      <div className="relative w-16 h-16 rounded-full bg-white border-2 border-white overflow-hidden">
-                        <Image
-                          src={store.logo_url}
-                          alt={store.name}
-                          fill
-                          className="object-cover"
-                          sizes="64px"
-                        />
-                      </div>
+                      <Image
+                        src={store.logo_url}
+                        alt={store.name}
+                        fill
+                        className="object-cover"
+                        sizes="112px"
+                      />
                     ) : (
-                      <div className="w-16 h-16 rounded-full bg-white border-2 border-white flex items-center justify-center text-foreground text-lg font-semibold">
+                      <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-muted-foreground bg-muted">
                         {store.name.charAt(0).toUpperCase()}
                       </div>
                     )}

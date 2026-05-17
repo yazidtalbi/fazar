@@ -44,7 +44,7 @@ function EstimatedReadyDate({ daysToCraft }: { daysToCraft: number }): React.Rea
   
   const readyDate = addDays(new Date(), daysToCraft);
   return (
-    <span className="text-xs text-muted-foreground">
+    <span className="text-xs text-muted-foreground" suppressHydrationWarning>
       Ready by {format(readyDate, "EEE, d MMM")}
     </span>
   );

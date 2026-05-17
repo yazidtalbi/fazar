@@ -44,7 +44,7 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.cdnfonts.com/css/roslindale" rel="stylesheet" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         {children}
         <Toaster />
         <Analytics />

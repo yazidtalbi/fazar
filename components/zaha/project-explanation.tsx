@@ -36,7 +36,7 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
     const firstProduct = activeProducts[0];
     const mediaArray = firstProduct?.product_media || [];
     const coverMedia = mediaArray.find((m: any) => m.is_cover) || mediaArray[0];
-    
+
     return {
       id: store.id,
       name: store.name,
@@ -54,8 +54,8 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
         {/* Title */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900">Qu&apos;est-ce qu&apos;Afus ?</h2>
-          <Link 
-            href="/search" 
+          <Link
+            href="/search"
             className="text-sm text-neutral-700 underline hover:text-neutral-900 transition-colors"
           >
             Découvrez notre merveilleuse histoire
@@ -75,7 +75,7 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
                 Une plateforme qui célèbre l&apos;expression artistique et la créativité
               </p>
               <p className="text-base text-neutral-700 leading-relaxed">
-                Ici, les artisans du monde entier se rassemblent pour partager leurs créations avec plus de 88 millions d&apos;acheteurs passionnés. Produits artisanaux, décoration vintage, accessoires à offrir et vêtements faits main : Afus est la parfaite destination pour découvrir des articles exceptionnels, soutenir l&apos;achat local et le savoir-faire des vendeurs indépendants.
+                Ici, les artisans se rassemblent pour partager leurs créations avec une communauté grandissante d&apos;acheteurs passionnés. Produits artisanaux, décoration vintage, accessoires à offrir et vêtements faits main : Afus est la parfaite destination pour découvrir des articles exceptionnels, soutenir l&apos;achat local et le savoir-faire des vendeurs indépendants.
               </p>
             </div>
 
@@ -112,8 +112,8 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
                 Vous avez une question ? Ça tombe bien, nous avons des réponses.
               </p>
               <Link href="/search">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="rounded-xl border-2 border-neutral-900 bg-white text-neutral-900 hover:bg-neutral-50 px-6 py-3"
                 >
                   Voir le Centre d&apos;aide
@@ -126,8 +126,8 @@ export async function ProjectExplanation(): Promise<React.ReactElement> {
         {/* Store Cards - Centered */}
         <div className="flex gap-4 justify-center max-w-4xl mx-auto">
           {storesWithImages.map((store) => (
-            <Link 
-              key={store.id} 
+            <Link
+              key={store.id}
               href={`/store/${store.slug}`}
               className="flex-1 bg-white rounded-2xl overflow-hidden hover:border-primary/30 transition-colors border border-border"
             >

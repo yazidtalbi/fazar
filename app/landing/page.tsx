@@ -362,14 +362,19 @@ export default function MarketingPage() {
             <Image
               src="/icon.png"
               alt="Afus"
-              width={120}
+              width={40}
               height={40}
               className="h-6 w-auto sm:h-8"
               priority
             />
-            <span className="text-2xl font-bold text-[#2a1335] font-roslindale">
-              Afus
-            </span>
+            <Image
+              src="/afus.svg"
+              alt="Afus"
+              width={60}
+              height={24}
+              className="h-3.5 w-auto sm:h-4"
+              priority
+            />
           </Link>
 
           {/* Center links */}

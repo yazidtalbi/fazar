@@ -164,13 +164,20 @@ export function HeaderDesktop(): React.ReactElement {
               <Link href="/" className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
                 <Image
                   src="/icon.png"
-                  alt="Afus"
-                  width={120}
+                  alt="Afus Logo"
+                  width={40}
                   height={40}
                   className="h-8 w-auto"
                   priority
                 />
-                <span className="text-2xl font-bold text-[#222222] font-roslindale">Afus</span>
+                <Image
+                  src="/afus.svg"
+                  alt="Afus Logotype"
+                  width={64}
+                  height={24}
+                  className="h-5 w-auto"
+                  priority
+                />
               </Link>
 
               {/* Search Bar - Light Grey (next to logo) */}

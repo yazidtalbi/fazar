@@ -36,12 +36,18 @@ export function MobileHeader(): React.ReactElement {
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/icon.png"
-                alt="Afus"
+                alt="Afus Logo"
                 width={32}
                 height={32}
                 className="h-8 w-auto"
               />
-              <span className="text-lg font-bold">Afus</span>
+              <Image
+                src="/afus.svg"
+                alt="Afus Logotype"
+                width={56}
+                height={20}
+                className="h-4 w-auto"
+              />
             </Link>
 
             {/* Right side: Notifications and Profile */}
