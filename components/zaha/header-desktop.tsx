@@ -163,7 +163,7 @@ export function HeaderDesktop(): React.ReactElement {
             <div className="flex items-center gap-8 flex-1">
               <Link href="/" className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
                 <Image
-                  src="/icon.png"
+                  src="/icon2.png"
                   alt="Afus Logo"
                   width={40}
                   height={40}

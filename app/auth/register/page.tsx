@@ -23,7 +23,7 @@ export default async function RegisterPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <Image
-                src="/icon.png"
+                src="/icon2.png"
                 alt="Afus"
                 width={120}
                 height={40}

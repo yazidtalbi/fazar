@@ -65,7 +65,7 @@ export function Hero({
         }}
       >
         <span className="vazirmatn-font select-none text-[22vw] sm:text-[18vw] mt-0 sm:mt-10 font-bold leading-none text-[#E5C0F4]">
-          أفــوس
+          آفــوس
         </span>
       </motion.div>
 

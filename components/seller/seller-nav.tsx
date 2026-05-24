@@ -56,7 +56,7 @@ export function SellerNav(): React.ReactElement {
           <div className="p-6 border-b border-border">
             <Link href="/seller" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <Image
-                src="/icon.png"
+                src="/icon2.png"
                 alt="Afus Logo"
                 width={40}
                 height={40}

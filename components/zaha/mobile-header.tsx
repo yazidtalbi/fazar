@@ -35,7 +35,7 @@ export function MobileHeader(): React.ReactElement {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/icon.png"
+                src="/icon2.png"
                 alt="Afus Logo"
                 width={32}
                 height={32}

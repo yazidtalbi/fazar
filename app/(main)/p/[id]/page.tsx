@@ -55,13 +55,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .eq("status", "active")
     .single();
 
+  if (productError || !product) {
+    notFound();
+  }
+
+  const categoryId = (product.categories as any)?.id;
+  const storeId = product.stores.id;
+
   // Get product variations
   const { data: variations } = await supabase
     .from("product_variations")
-    .select(`
-      *,
-      product_variation_options(*)
-    `)
+    .select(`*, product_variation_options(*)`)
     .eq("product_id", id)
     .order("order_index");
 
@@ -72,39 +76,39 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .eq("product_id", id)
     .order("order_index");
 
-  if (productError || !product) {
-    notFound();
-  }
-
   // Get more products from the same artisan/store
   const { data: moreProducts } = await supabase
     .from("products")
-    .select(`
-      *,
-      product_media(media_url, media_type, order_index, is_cover),
-      stores!inner(id, name, slug)
-    `)
-    .eq("store_id", product.stores.id)
+    .select(`*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)`)
+    .eq("store_id", storeId)
     .eq("status", "active")
-    .neq("id", product.id)
+    .neq("id", id)
     .limit(10);
 
   // Get similar products from the same category
-  const categoryId = (product.categories as any)?.id;
   const { data: similarProducts } = categoryId
     ? await supabase
         .from("products")
-        .select(`
-          *,
-          product_media(media_url, media_type, order_index, is_cover),
-          stores!inner(id, name, slug)
-        `)
+        .select(`*, product_media(media_url, media_type, order_index, is_cover), stores!inner(id, name, slug)`)
         .eq("category_id", categoryId)
         .eq("status", "active")
-        .neq("id", product.id)
-        .neq("store_id", product.stores.id) // Exclude products from the same store
+        .neq("id", id)
+        .neq("store_id", storeId)
         .limit(12)
     : { data: null };
+
+  // Fetch real reviews data for this product
+  const { data: productReviewsData } = await supabase
+    .from("reviews")
+    .select("rating")
+    .eq("product_id", id);
+
+  // Fetch real sales count for the store and get store product IDs
+  const { data: storeProducts } = await supabase
+    .from("products")
+    .select("id")
+    .eq("store_id", storeId)
+    .eq("status", "active");
 
   // Get cover media for more products
   const moreProductsWithCover = (moreProducts || []).map((p: any) => {
@@ -144,24 +148,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
     order_index: number;
   }>;
 
-  // Fetch real reviews data for this product
-  const { data: productReviewsData } = await supabase
-    .from("reviews")
-    .select("rating")
-    .eq("product_id", product.id);
-
   const productReviews = productReviewsData || [];
   const productReviewCount = productReviews.length;
   const productRating = productReviewCount > 0
     ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviewCount
     : 0;
-
-  // Fetch real sales count for the store and get store product IDs
-  const { data: storeProducts } = await supabase
-    .from("products")
-    .select("id")
-    .eq("store_id", store.id)
-    .eq("status", "active");
 
   const storeProductIds = storeProducts?.map(p => p.id) || [];
 
@@ -177,6 +168,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const storeRating = storeReviewCount > 0
     ? storeReviews.reduce((sum, r) => sum + r.rating, 0) / storeReviewCount
     : 0;
+  
   let storeSalesCount = 0;
   if (storeProductIds.length > 0) {
     const { data: orderItems } = await supabase

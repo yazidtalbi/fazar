@@ -48,7 +48,7 @@ export function Navbar() {
         style={{ marginBottom: "18px" }}
       >
         <Link href="/" className="flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
-          <Image src="/icon.png" alt="Afus" width={40} height={40} className="h-6 w-auto sm:h-8" priority />
+          <Image src="/icon2.png" alt="Afus" width={40} height={40} className="h-6 w-auto sm:h-8" priority />
           <Image src="/afus.svg" alt="Afus" width={60} height={24} className="h-3.5 w-auto sm:h-4" priority />
         </Link>
 

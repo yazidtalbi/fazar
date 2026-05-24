@@ -436,7 +436,7 @@ export default function MarketingPage() {
           {/* CTA */}
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#23102f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#2d183b] transition-colors"
+            className="hidden items-center gap-1.5 rounded-full bg-[#23102f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#2d183b] transition-colors"
           >
             <span>Open the app</span>
           </Link>

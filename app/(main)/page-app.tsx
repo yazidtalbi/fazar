@@ -19,6 +19,7 @@ import { HeaderDesktop } from "@/components/zaha/header-desktop";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 
 export default async function HomePage() {
+  redirect("/comingsoon");
   const supabase = await createClient();
 
   // Fetch all data in parallel for better performance and to avoid the 'white page' delay
@@ -39,7 +40,7 @@ export default async function HomePage() {
   ]);
 
   const productIdsWithPersonalization = personalizedProductIds
-    ? Array.from(new Set(personalizedProductIds.map((p: any) => p.product_id)))
+    ? Array.from(new Set(personalizedProductIds?.map((p: any) => p.product_id)))
     : [];
 
   // Fetch customized products if needed
@@ -273,7 +274,7 @@ export default async function HomePage() {
       </div>
 
       {/* Mobile: New Arrivals Section with Masonry Grid */}
-      {newProducts && newProducts.length > 0 && (
+      {(newProducts?.length ?? 0) > 0 && (
         <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">New Arrivals</h2>
@@ -282,7 +283,7 @@ export default async function HomePage() {
             </Button>
           </div>
           <MasonryGrid columns={{ mobile: 2 }}>
-            {newProducts.map((product: any) => (
+            {newProducts?.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </MasonryGrid>
@@ -290,7 +291,7 @@ export default async function HomePage() {
       )}
 
       {/* Mobile: Promoted Items First */}
-      {promotedProducts && promotedProducts.length > 0 && (
+      {(promotedProducts?.length ?? 0) > 0 && (
         <div className="max-w-[100rem] mx-auto px-2 md:px-12 py-4 md:hidden">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">Promoted Items</h2>
@@ -301,7 +302,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <MasonryGrid columns={{ mobile: 2 }}>
-            {promotedProducts.map((product: any) => (
+            {promotedProducts?.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </MasonryGrid>
@@ -310,19 +311,19 @@ export default async function HomePage() {
 
 
       {/* Desktop: Newest Rail */}
-      {newProducts && newProducts.length > 0 && (
+      {(newProducts?.length ?? 0) > 0 && (
         <ProductCarousel
           title="Nouveautés"
-          products={newProducts}
+          products={newProducts || []}
           viewAllHref="/search?sort=newest"
         />
       )}
 
       {/* Desktop: Promoted Articles Section */}
-      {promotedProducts && promotedProducts.length > 0 && (
+      {(promotedProducts?.length ?? 0) > 0 && (
         <ProductCarousel
           title="Articles en vedette"
-          products={promotedProducts}
+          products={promotedProducts || []}
           viewAllHref="/search?sort=recommended"
         />
       )}

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/carousel";
 import { addToGuestCart } from "@/lib/utils/guest-cart";
 import { useSavedItems } from "@/components/saved-items-provider";
+import { useAccount } from "@/components/account-provider";
 import { cn, isArabic } from "@/lib/utils";
 
 type Product = Database["public"]["Tables"]["products"]["Row"] & {
@@ -53,12 +54,10 @@ function EstimatedReadyDate({ daysToCraft }: { daysToCraft: number }): React.Rea
 export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const router = useRouter();
   const { savedItems, refreshSavedItems } = useSavedItems();
+  const account = useAccount();
+  const user = account?.user;
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [reviewCount, setReviewCount] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [orderCount, setOrderCount] = useState(0);
   
   // Compute isSaved from savedItems
   const isSaved = useMemo(() => {
@@ -116,44 +115,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
       }).format(originalPrice)
     : null;
 
-  useEffect(() => {
-    async function checkUser() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    }
-    checkUser();
-  }, []);
 
-  useEffect(() => {
-    async function fetchProductStats() {
-      const supabase = createClient();
-      
-      // Fetch reviews
-      const { data: reviews } = await supabase
-        .from("reviews")
-        .select("rating")
-        .eq("product_id", product.id);
-      
-      if (reviews && reviews.length > 0) {
-        setReviewCount(reviews.length);
-        const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-        setRating(avgRating);
-      }
-      
-      // Fetch order count
-      const { data: orderItems } = await supabase
-        .from("order_items")
-        .select("quantity")
-        .eq("product_id", product.id);
-      
-      if (orderItems) {
-        const totalOrders = orderItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
-        setOrderCount(totalOrders);
-      }
-    }
-    fetchProductStats();
-  }, [product.id]);
 
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
@@ -465,19 +427,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
       <div className="flex flex-col gap-2 mt-2 px-0">
         <div className="flex items-center justify-between min-h-[20px]">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            {reviewCount > 0 ? (
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-primary text-primary" />
-                <span className="text-sm font-medium">{rating.toFixed(1)}</span>
-                <span className="text-sm">({reviewCount})</span>
-              </div>
-            ) : (
-              <div className="h-4" /> // Empty space placeholder
-            )}
-            {reviewCount > 0 && orderCount > 0 && <span>•</span>}
-            {orderCount > 0 && (
-              <span className="text-sm">{orderCount} {orderCount === 1 ? 'order' : 'orders'}</span>
-            )}
+            <div className="h-4" /> {/* Empty space placeholder for alignment */}
           </div>
         </div>
         
